@@ -8,9 +8,9 @@
  * the PFDS standard itself; this data structure provides the structural form
  * and a brief summary for tool access.
  *
- * Per the explicit instruction from Durgadas: when doing PFDS work, read the
- * full standard directly, not derivatives. This data is structural metadata
- * meant for tool lookups and orientation, not for substitution of the source.
+ * Per the substrate discipline: when doing PFDS work, read the full standard
+ * directly, not derivatives. This data is structural metadata meant for tool
+ * lookups and orientation, not for substitution of the source.
  */
 
 export interface PfdsCorollary {
