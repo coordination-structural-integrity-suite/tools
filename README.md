@@ -8,7 +8,7 @@ This repo contains two MCP servers, each surfacing a different layer of the subs
 
 2. **Frame Language MCP server** (`packages/frame-language-mcp-server/`) provides operational access to the Frame Language precision discipline derived from CSIS. Five tools cover the watchlist of Frame 1 vocabulary, the seven Pre-Replacement Admissibility cases, the eight Frame 2 functioning-check failure modes (with falsifiability-context variants), the three Frames with the guna typology mapping, and a text auditor for own-voice writing.
 
-Both servers are CC0-1.0 tooling. The CSIS and Frame Language standards themselves are CC BY 4.0 and live in the suite repo.
+Both servers are licensed Apache 2.0, matching the CSIS suite repo's convention for code artifacts. The CSIS standards and the Frame Language Foundational Vocabulary Specification themselves are CC BY 4.0 specifications and live in the suite repo.
 
 ---
 
@@ -110,6 +110,6 @@ Each package builds independently. The root `bundle` script produces two zero-in
 
 ## License
 
-Both server packages are dedicated to the public domain under Creative Commons Zero v1.0 Universal (CC0).
+Both server packages and the code in this repository are licensed under the Apache License 2.0. See `LICENSE` for the full text. This matches the CSIS suite convention for code artifacts (the suite repo applies Apache 2.0 to code and CC BY 4.0 to specifications).
 
-The substrate vocabulary surfaced by these servers (the CSIS standards and Frame Language) is published under CC BY 4.0 at github.com/coordination-structural-integrity-suite/suite. The MCP tooling itself is CC0.
+The substrate vocabulary surfaced by these servers (the CSIS standards and the Frame Language Foundational Vocabulary Specification) is published under CC BY 4.0 at github.com/coordination-structural-integrity-suite/suite. The MCP server code in this repo (Apache 2.0) is operational infrastructure that reads from those specifications; the specifications themselves remain CC BY 4.0.

@@ -82,7 +82,7 @@ Per PFDS Section 2 and the Innate Totality primer: precision and non-harming are
 
 ## License
 
-CC0-1.0. Substrate vocabulary served by this tool (Frame Language, derived from CSIS) is CC BY 4.0; this server itself as tooling infrastructure is CC0.
+Apache-2.0, matching the CSIS suite convention for code artifacts. The substrate vocabulary served by this tool (the Frame Language Foundational Vocabulary Specification, derived from CSIS) is published as a CC BY 4.0 specification at the suite repo; this server is the code that surfaces operational access to that vocabulary.
 
 ## See also
 

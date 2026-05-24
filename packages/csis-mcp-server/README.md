@@ -92,7 +92,7 @@ v0.2.0 expands from the v0.1.0 scaffold by adding four data files and four tool 
 
 ## License
 
-CC0-1.0. The substrate this server provides access to (CSIS) is CC BY 4.0; this server itself, as tooling infrastructure, is CC0 like the CrossWalkri/tools sibling.
+Apache-2.0, matching the CSIS suite convention for code artifacts. The substrate this server provides access to (the CSIS standards) is published as CC BY 4.0 specifications at the suite repo; this server is the code that surfaces structural metadata about those specifications.
 
 ## See also
 

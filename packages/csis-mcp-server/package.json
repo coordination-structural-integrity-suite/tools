@@ -2,7 +2,7 @@
   "name": "@csis/mcp-server",
   "version": "0.3.0",
   "description": "MCP server exposing the Coordination Structural Integrity Suite as AI tools",
-  "license": "CC0-1.0",
+  "license": "Apache-2.0",
   "type": "module",
   "bin": {
     "csis": "dist/index.js"

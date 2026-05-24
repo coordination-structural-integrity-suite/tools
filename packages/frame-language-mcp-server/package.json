@@ -2,7 +2,7 @@
   "name": "@frame-language/mcp-server",
   "version": "0.1.0",
   "description": "MCP server exposing Frame Language precision discipline as AI tools",
-  "license": "CC0-1.0",
+  "license": "Apache-2.0",
   "type": "module",
   "bin": {
     "frame-language": "dist/index.js"

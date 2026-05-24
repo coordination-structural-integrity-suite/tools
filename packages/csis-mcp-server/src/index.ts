@@ -19,7 +19,7 @@
  * provides pointers and structural metadata; the full source remains canonical
  * at github.com/coordination-structural-integrity-suite/suite.
  *
- * License: CC0-1.0
+ * License: Apache-2.0
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js'

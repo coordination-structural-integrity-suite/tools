@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "description": "MCP server tooling for the Coordination Structural Integrity Suite (CSIS) and Frame Language substrate",
-  "license": "CC0-1.0",
+  "license": "Apache-2.0",
   "scripts": {
     "build": "pnpm -r build",
     "bundle": "node_modules/.bin/esbuild packages/csis-mcp-server/src/index.ts --bundle --platform=node --format=esm --outfile=csis-server.mjs && node_modules/.bin/esbuild packages/frame-language-mcp-server/src/index.ts --bundle --platform=node --format=esm --outfile=frame-language-server.mjs",
