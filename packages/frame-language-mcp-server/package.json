@@ -1,0 +1,27 @@
+{
+  "name": "@frame-language/mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server exposing Frame Language precision discipline as AI tools",
+  "license": "CC0-1.0",
+  "type": "module",
+  "bin": {
+    "frame-language": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "bundle": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=server.mjs",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "esbuild": "^0.28.0",
+    "typescript": "^5.4.0"
+  }
+}
