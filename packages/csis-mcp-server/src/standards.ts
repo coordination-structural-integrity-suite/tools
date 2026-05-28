@@ -38,10 +38,10 @@ export const STANDARDS: readonly CsisStandard[] = [
     name: 'Precision-First Design Standard',
     id: 'pfds',
     family: 'compressive',
-    version: '2.1.7',
+    version: '2.2.0',
     githubPath: 'tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_1_7.md',
     description:
-      'The suite meta-standard. Specifies what precision requires across every standard. Precision-First Design is the discipline of keeping instruments precise enough that violations are detectable and compliance meaningful, before deployment, not after a failure has made those questions urgent. Defines the precision-first invariant (precision deficit and precision imposition as two failure directions of one commitment), nine corollaries, the precision review checklist, and obligation loop tier requirements.',
+      'The suite meta-standard. Specifies what precision requires across every standard. Precision-First Design is the discipline of keeping instruments precise enough that violations are detectable and compliance meaningful, before deployment, not after a failure has made those questions urgent. Defines two foundational principles: the precision-first invariant (precision deficit and precision imposition as two failure directions of one commitment) and Method-Structure Congruence (the epistemic method used must match the structural character of what is being known; congruence deficits are self-concealing because the absent content leaves no gap marker). Nine corollaries, the precision review checklist, and obligation loop tier requirements.',
   },
   {
     name: 'Adverse-Signal Engagement Principle Core Standard',
