@@ -20,7 +20,7 @@ export interface FoundationalCommitments {
 }
 
 export interface SubstrateInheritance {
-  /** Deepest substrate. */
+  /** The active normative foundation. Context-dependent: actively constraining during specification design and revision; recedes to background during routine operation of derived systems. */
   csis: string
   /** Methodology derived from CSIS. */
   frameLanguage: string
@@ -44,7 +44,7 @@ export const FOUNDATIONAL_COMMITMENTS: FoundationalCommitments = {
   outcome:
     'Held together (which PFDS defines as one principle via transclusion), they produce the structural conditions under which genuine presence is possible. For people who have been harmed by informality used against them, explicit structure is not a bureaucratic imposition. It is what trust requires before it can be extended again. The precision is the compassion.',
   inheritanceHierarchy: {
-    csis: 'CSIS (Coordination Structural Integrity Suite) is the substrate. Ten standards: seven Tensegrity Compressive Standards plus three Tensegrity Generative Standards. Specifications CC BY 4.0; co-released with CROSS (CC0). Repository: github.com/coordination-structural-integrity-suite/suite.',
+    csis: 'CSIS (Coordination Structural Integrity Suite) is the active normative foundation from which derived work inherits its structural integrity requirements. Ten standards: seven Tensegrity Compressive Standards plus three Tensegrity Generative Standards. The relationship between CSIS and what inherits from it is context-dependent: during specification design or revision, CSIS standards actively constrain what can be proposed (a requirement that contradicts a CSIS compressive standard requires CSIS-level resolution before it can be finalized); during routine operation of derived systems, CSIS recedes to background (its constraints were satisfied at specification time). The degree of activity is a function of what is being done with the derived work, not a fixed property of the relationship. Specifications CC BY 4.0; co-released with CROSS (CC0). Repository: github.com/coordination-structural-integrity-suite/suite.',
     frameLanguage:
       'Frame Language is derived from CSIS as the precision methodology. Without CSIS, Frame Language would not exist. Frame Language enacts PFDS Corollary 1 (operational definition) precisely: the Frame 1 to Frame 2 conversion replaces vague vocabulary that fails the independent-observer test with typed vocabulary that passes it. Three frames: Frame 1 access (seasonal expressions); Frame 2 access (conditions and configurations); Frame 3 access (the Innate Totality itself). The gunas are the procedural map of these access levels (tamas, rajas, sattva, trigunatita).',
     poc: 'Proof of Coordination (PoC) is an applied protocol about coordination generally. PoC inherits from CSIS. Chronologically, work on PoC surfaced the need for the CSIS standards. Structurally, CSIS is upstream of PoC. The general truth: inheritance order is independent of chronological development order.',

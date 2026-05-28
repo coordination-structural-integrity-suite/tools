@@ -18108,7 +18108,7 @@ var FOUNDATIONAL_COMMITMENTS = {
   nonHarmingWithoutPrecision: "Non-harming without precision becomes an attack surface: the good faith and informal trust that sufficiently adversarial actors exploit most reliably, operating in the spaces where formal instruments have no purchase. The intent is present; the structural form is absent.",
   outcome: "Held together (which PFDS defines as one principle via transclusion), they produce the structural conditions under which genuine presence is possible. For people who have been harmed by informality used against them, explicit structure is not a bureaucratic imposition. It is what trust requires before it can be extended again. The precision is the compassion.",
   inheritanceHierarchy: {
-    csis: "CSIS (Coordination Structural Integrity Suite) is the substrate. Ten standards: seven Tensegrity Compressive Standards plus three Tensegrity Generative Standards. Specifications CC BY 4.0; co-released with CROSS (CC0). Repository: github.com/coordination-structural-integrity-suite/suite.",
+    csis: "CSIS (Coordination Structural Integrity Suite) is the active normative foundation from which derived work inherits its structural integrity requirements. Ten standards: seven Tensegrity Compressive Standards plus three Tensegrity Generative Standards. The relationship between CSIS and what inherits from it is context-dependent: during specification design or revision, CSIS standards actively constrain what can be proposed (a requirement that contradicts a CSIS compressive standard requires CSIS-level resolution before it can be finalized); during routine operation of derived systems, CSIS recedes to background (its constraints were satisfied at specification time). The degree of activity is a function of what is being done with the derived work, not a fixed property of the relationship. Specifications CC BY 4.0; co-released with CROSS (CC0). Repository: github.com/coordination-structural-integrity-suite/suite.",
     frameLanguage: "Frame Language is derived from CSIS as the precision methodology. Without CSIS, Frame Language would not exist. Frame Language enacts PFDS Corollary 1 (operational definition) precisely: the Frame 1 to Frame 2 conversion replaces vague vocabulary that fails the independent-observer test with typed vocabulary that passes it. Three frames: Frame 1 access (seasonal expressions); Frame 2 access (conditions and configurations); Frame 3 access (the Innate Totality itself). The gunas are the procedural map of these access levels (tamas, rajas, sattva, trigunatita).",
     poc: "Proof of Coordination (PoC) is an applied protocol about coordination generally. PoC inherits from CSIS. Chronologically, work on PoC surfaced the need for the CSIS standards. Structurally, CSIS is upstream of PoC. The general truth: inheritance order is independent of chronological development order.",
     crossWalkri: "CROSS+WALKRI is one coordination specialty (grants) inheriting from CSIS. It is a sibling of PoC under CSIS, not a child of PoC. Future coordination specialties (AI evaluation, ESG, scientific research integrity, policy evaluation, standards-development meta) will also inherit from CSIS as siblings.",
@@ -18189,6 +18189,14 @@ var PFDS_COROLLARIES = [
     underSpecificationFailure: "A system without this requirement has an undocumented false-negative class at the interpretation layer: correct readings for one condition produce incorrect response prescriptions for the other.",
     overSpecificationFailure: "A baseline requirement over-specifies when establishing it takes longer than the detection it is meant to enable, or when its conditions are so exact that no real organizational case can satisfy them. The requirement has become the obstacle to what it was supposed to make possible.",
     exampleFromPfds: "The structural inheritance statement: an organization's current coordination state cannot be accurately classified without knowing the structural conditions it was founded within or inherited."
+  },
+  {
+    number: 10,
+    name: "Claim-object grounding",
+    requirement: "An evaluation claim is grounded only when the type of object the claim is about has been declared: either a criterion (a directly observable property, or a property with an established external validation standard) or a construct (an abstract property not directly observable, requiring systematization and proxy specification before measurement can proceed). For construct claims, operational grounding requires a nomological network declaration naming the sub-constructs, the observable criteria that proxy for each, and the expected relationships between them. Coverage adequacy applies to both claim types: the evidence must address the case space the claim requires, not merely declare the evaluation's scope limits.",
+    underSpecificationFailure: "An evaluation claim without a declared claim-object type cannot be assessed for whether the evidence supports it: the evidence standard for criterion claims and construct claims differs structurally. A construct claim without a nomological network declaration has no declared basis for determining whether the measurement is measuring the intended construct or a correlated surface property or a subset of it.",
+    overSpecificationFailure: "A nomological network requirement that demands complete documentation of all construct relationships before any construct-based evaluation can proceed blocks construct-based assessment entirely. A declared-partial nomological network naming what is established and explicitly identifying the gaps is in a better precision state than an undeclared or absent one, and is the correct operating state when the network is under development.",
+    exampleFromPfds: null
   }
 ];
 function getPfdsCorollary(number3) {
@@ -18384,7 +18392,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "get_foundational_commitments",
-        description: "Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the substrate inheritance hierarchy (CSIS at the base; Frame Language derived from CSIS; PoC and CROSS+WALKRI and future specialties inheriting from CSIS). Includes the general principle that inheritance order is independent of chronological order.",
+        description: "Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the inheritance hierarchy (CSIS as the active normative foundation; Frame Language derived from CSIS; PoC and CROSS+WALKRI and future specialties inheriting from CSIS). The CSIS relationship to derived work is context-dependent: actively constraining during specification design and revision; receding to background during routine operation. Includes the general principle that inheritance order is independent of chronological order.",
         inputSchema: {
           type: "object",
           properties: {}
@@ -18456,7 +18464,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "get_inheritance_graph_with_specialty",
-        description: "Return the substrate inheritance hierarchy with a named coordination specialty placed correctly. Without an argument: returns CSIS at base, Frame Language derived, PoC and CROSS+WALKRI as established applied specialties. With a specialty argument: places the named specialty in the hierarchy as a sibling of PoC and CROSS+WALKRI under CSIS (per the substrate-to-applied pattern named in the Evolution Rules).",
+        description: "Return the inheritance hierarchy with a named coordination specialty placed correctly. Without an argument: returns CSIS as the active normative foundation, Frame Language derived from CSIS, PoC and CROSS+WALKRI as established applied specialties. With a specialty argument: places the named specialty in the hierarchy as a sibling of PoC and CROSS+WALKRI under CSIS. Note: CSIS's relationship to derived work is context-dependent (active during design and revision; background during routine operation); the graph shows structural inheritance, not a fixed activity level.",
         inputSchema: {
           type: "object",
           properties: {
@@ -18526,7 +18534,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           text: JSON.stringify(
             {
               corollary,
-              note: "PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_1_7.md"
+              note: "PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md"
             },
             null,
             2
@@ -18601,7 +18609,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         name: corollary.name
       },
       structural_test: structuralTest,
-      source_reference: "PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_1_7.md"
+      source_reference: "PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md"
     };
     if (input.text) {
       const promptTemplate = `Apply PFDS Corollary ${corollary.number} (${corollary.name}) as a structural test on the following text.
@@ -18646,7 +18654,7 @@ Apply the corollary as a precision-first invariant: both failure directions must
     const input = GetInheritanceGraphInputSchema.parse(args ?? {});
     const baseHierarchy = FOUNDATIONAL_COMMITMENTS.inheritanceHierarchy;
     const graph = {
-      substrate: {
+      normative_foundation: {
         csis: baseHierarchy.csis,
         frameLanguage: baseHierarchy.frameLanguage
       },

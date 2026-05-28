@@ -7,8 +7,8 @@
  *
  * v0.3.0 tools:
  * - list_standards: enumerate the ten CSIS standards
- * - get_foundational_commitments: unified precision/non-harming principle and substrate inheritance
- * - lookup_corollary: return one of the nine PFDS corollaries
+ * - get_foundational_commitments: unified precision/non-harming principle and inheritance hierarchy (context-dependent activity)
+ * - lookup_corollary: return one of the ten PFDS corollaries
  * - lookup_structural_pattern: return one of the ten named structural patterns
  * - lookup_descriptive_class: return one of the six descriptive classes (PFDS Corollary 8)
  * - get_inheritance_graph_with_specialty: substrate inheritance hierarchy with named specialty placed
@@ -141,7 +141,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: 'get_foundational_commitments',
         description:
-          'Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the substrate inheritance hierarchy (CSIS at the base; Frame Language derived from CSIS; PoC and CROSS+WALKRI and future specialties inheriting from CSIS). Includes the general principle that inheritance order is independent of chronological order.',
+          'Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the inheritance hierarchy (CSIS as the active normative foundation; Frame Language derived from CSIS; PoC and CROSS+WALKRI and future specialties inheriting from CSIS). The CSIS relationship to derived work is context-dependent: actively constraining during specification design and revision; receding to background during routine operation. Includes the general principle that inheritance order is independent of chronological order.',
         inputSchema: {
           type: 'object',
           properties: {},
@@ -221,7 +221,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: 'get_inheritance_graph_with_specialty',
         description:
-          'Return the substrate inheritance hierarchy with a named coordination specialty placed correctly. Without an argument: returns CSIS at base, Frame Language derived, PoC and CROSS+WALKRI as established applied specialties. With a specialty argument: places the named specialty in the hierarchy as a sibling of PoC and CROSS+WALKRI under CSIS (per the substrate-to-applied pattern named in the Evolution Rules).',
+          'Return the inheritance hierarchy with a named coordination specialty placed correctly. Without an argument: returns CSIS as the active normative foundation, Frame Language derived from CSIS, PoC and CROSS+WALKRI as established applied specialties. With a specialty argument: places the named specialty in the hierarchy as a sibling of PoC and CROSS+WALKRI under CSIS. Note: CSIS\'s relationship to derived work is context-dependent (active during design and revision; background during routine operation); the graph shows structural inheritance, not a fixed activity level.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -303,7 +303,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               corollary,
               note:
-                'PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_1_7.md',
+                'PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md',
             },
             null,
             2,
@@ -386,7 +386,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       },
       structural_test: structuralTest,
       source_reference:
-        'PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_1_7.md',
+        'PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md',
     }
 
     if (input.text) {
@@ -428,7 +428,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const input = GetInheritanceGraphInputSchema.parse(args ?? {})
     const baseHierarchy = FOUNDATIONAL_COMMITMENTS.inheritanceHierarchy
     const graph = {
-      substrate: {
+      normative_foundation: {
         csis: baseHierarchy.csis,
         frameLanguage: baseHierarchy.frameLanguage,
       },

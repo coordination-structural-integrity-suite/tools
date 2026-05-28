@@ -1,8 +1,8 @@
 /**
- * The nine corollaries of the Precision-First Design Standard, plus analogous
+ * The ten corollaries of the Precision-First Design Standard, plus analogous
  * structural conditions from other CSIS standards where applicable.
  *
- * Sourced from PFDS v2.1.7 Section 2. Each corollary specifies its precision
+ * Sourced from PFDS v2.3.0 Section 2. Each corollary specifies its precision
  * condition in two directions: what under-specification fails to prevent, and
  * what over-specification produces. The full text of each corollary lives in
  * the PFDS standard itself; this data structure provides the structural form
@@ -14,7 +14,7 @@
  */
 
 export interface PfdsCorollary {
-  /** Corollary number 1 through 9. */
+  /** Corollary number 1 through 10. */
   number: number
   /** Canonical name of the corollary. */
   name: string
@@ -137,9 +137,20 @@ export const PFDS_COROLLARIES: readonly PfdsCorollary[] = [
     exampleFromPfds:
       'The structural inheritance statement: an organization\'s current coordination state cannot be accurately classified without knowing the structural conditions it was founded within or inherited.',
   },
+  {
+    number: 10,
+    name: 'Claim-object grounding',
+    requirement:
+      'An evaluation claim is grounded only when the type of object the claim is about has been declared: either a criterion (a directly observable property, or a property with an established external validation standard) or a construct (an abstract property not directly observable, requiring systematization and proxy specification before measurement can proceed). For construct claims, operational grounding requires a nomological network declaration naming the sub-constructs, the observable criteria that proxy for each, and the expected relationships between them. Coverage adequacy applies to both claim types: the evidence must address the case space the claim requires, not merely declare the evaluation\'s scope limits.',
+    underSpecificationFailure:
+      'An evaluation claim without a declared claim-object type cannot be assessed for whether the evidence supports it: the evidence standard for criterion claims and construct claims differs structurally. A construct claim without a nomological network declaration has no declared basis for determining whether the measurement is measuring the intended construct or a correlated surface property or a subset of it.',
+    overSpecificationFailure:
+      'A nomological network requirement that demands complete documentation of all construct relationships before any construct-based evaluation can proceed blocks construct-based assessment entirely. A declared-partial nomological network naming what is established and explicitly identifying the gaps is in a better precision state than an undeclared or absent one, and is the correct operating state when the network is under development.',
+    exampleFromPfds: null,
+  },
 ] as const
 
-/** Return a corollary by its number (1 through 9). */
+/** Return a corollary by its number (1 through 10). */
 export function getPfdsCorollary(number: number): PfdsCorollary | undefined {
   return PFDS_COROLLARIES.find((c) => c.number === number)
 }
