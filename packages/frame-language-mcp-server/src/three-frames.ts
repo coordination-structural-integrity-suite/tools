@@ -2,8 +2,8 @@
  * The three Frames of Frame Language plus the guna typology that names the
  * procedural texture of operating at each Frame access level.
  *
- * Sourced from `bucket/lens-frameworks/bucket-innate-totality-guna-frame-language-0_1_0.md`
- * (sensemaking-level; April 2026). Frame Language has three frames (not two);
+ * Sourced from internal Frame Language lens research
+ * (April 2026). Frame Language has three frames (not two);
  * the gunas are the procedural map of the structural access levels.
  *
  * Per the Innate Totality primer: precision and non-harming are the same move

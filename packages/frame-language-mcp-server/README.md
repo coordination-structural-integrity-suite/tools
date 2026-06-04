@@ -74,7 +74,7 @@ Frame Language has THREE frames:
 - **Frame 2**: conditions and configurations (the structural arrangement layer; guna: rajas)
 - **Frame 3**: the Innate Totality itself (the orientation that operates from the totality; guna: sattva, pointing toward trigunatita)
 
-This is sharper than the common Frame 1 / Frame 2 binary. The three-frame model is sourced from `bucket/lens-frameworks/bucket-innate-totality-guna-frame-language-0_1_0.md`.
+This is sharper than the common Frame 1 / Frame 2 binary. The three-frame model is sourced from internal Frame Language lens research.
 
 ## Precision and non-harming as one move
 
