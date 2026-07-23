@@ -11,7 +11,7 @@
  * - lookup_corollary: return one of the ten PFDS corollaries
  * - lookup_structural_pattern: return one of the ten named structural patterns
  * - lookup_descriptive_class: return one of the six descriptive classes (PFDS Corollary 8)
- * - get_inheritance_graph_with_specialty: substrate inheritance hierarchy with named specialty placed
+ * - get_inheritance_graph_with_specialty: content-inheritance structure (PFDS root, two families, FOCAL domains) with named FOCAL domain placed
  * - audit_against_corollary: apply a corollary's precision-first invariant as a structural test on text
  *
  * The substrate discipline requires that PFDS and other substrate work read
@@ -85,7 +85,7 @@ const GetInheritanceGraphInputSchema = z.object({
     .string()
     .optional()
     .describe(
-      'Optional: a coordination specialty to place in the inheritance graph (e.g., "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation", "standards-development meta"). If not provided, returns the canonical hierarchy with only the established specialties (PoC, CROSS+WALKRI).',
+      'Optional: a FOCAL domain (Form Of Coordination Activity Locus) to place in the inheritance graph (e.g., "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation"). A FOCAL domain rests on the coordination floors and is held to the precision instruments. If not provided, returns the canonical structure with only the established FOCAL domains (PoC, CROSS+WALKRI).',
     ),
 })
 
@@ -141,7 +141,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: 'get_foundational_commitments',
         description:
-          'Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the inheritance hierarchy (CSIS as the active normative foundation; Frame Language derived from CSIS; PoC and CROSS+WALKRI and future specialties inheriting from CSIS). The CSIS relationship to derived work is context-dependent: actively constraining during specification design and revision; receding to background during routine operation. Includes the general principle that inheritance order is independent of chronological order.',
+          'Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the content-inheritance structure rooted at PFDS (the root commitment; two cross-domain families under it, the precision instruments of CRAFT and WALKRI and the coordination floors of the nine other CSIS standards, siblings to each other, with Frame Language as the root\'s twin articulation rather than an instrument; FOCAL domains such as PoC and CROSS+WALKRI resting on the coordination floors and held to the precision instruments). The normative force of CSIS on derived work is context-dependent: actively constraining during specification design and revision; receding to background during routine operation. Includes the general principle that inheritance order is independent of chronological order.',
         inputSchema: {
           type: 'object',
           properties: {},
@@ -221,14 +221,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: 'get_inheritance_graph_with_specialty',
         description:
-          'Return the inheritance hierarchy with a named coordination specialty placed correctly. Without an argument: returns CSIS as the active normative foundation, Frame Language derived from CSIS, PoC and CROSS+WALKRI as established applied specialties. With a specialty argument: places the named specialty in the hierarchy as a sibling of PoC and CROSS+WALKRI under CSIS. Note: CSIS\'s relationship to derived work is context-dependent (active during design and revision; background during routine operation); the graph shows structural inheritance, not a fixed activity level.',
+          'Return the content-inheritance structure with an optional named FOCAL domain placed correctly. Without an argument: returns the root (the PFDS commitment), the two cross-domain families under it (the precision instruments of CRAFT and WALKRI, with Frame Language as the root\'s twin articulation rather than an instrument; the coordination floors of the nine other CSIS standards), CRAFT as the one meta-standard and sibling of the floors, and PoC and CROSS+WALKRI as established FOCAL domains resting on the floors and held to the instruments. With a specialty argument: places the named FOCAL domain as a sibling of PoC and CROSS+WALKRI. Note: this is the content-inheritance graph (a tree), not the constitutive interaction (a mesh, described in the interaction-architecture document); the normative force of CSIS on derived work is context-dependent, active during design and revision and background during routine operation.',
         inputSchema: {
           type: 'object',
           properties: {
             specialty: {
               type: 'string',
               description:
-                'Optional. A coordination specialty to place in the graph. Examples: "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation", "standards-development meta".',
+                'Optional. A FOCAL domain to place in the graph. Examples: "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation".',
             },
           },
         },
@@ -428,27 +428,32 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const input = GetInheritanceGraphInputSchema.parse(args ?? {})
     const baseHierarchy = FOUNDATIONAL_COMMITMENTS.inheritanceHierarchy
     const graph = {
-      normative_foundation: {
-        csis: baseHierarchy.csis,
-        frameLanguage: baseHierarchy.frameLanguage,
-      },
+      root: baseHierarchy.root,
+      precision_instruments: baseHierarchy.precisionInstruments,
+      coordination_floors: baseHierarchy.coordinationFloors,
+      meta_standard: baseHierarchy.craft,
+      frame_language: baseHierarchy.frameLanguage,
+      suite: baseHierarchy.csis,
       applied_specialties: [
         {
           name: 'Proof of Coordination (PoC)',
           description: baseHierarchy.poc,
           established: true,
+          focal: true,
         },
         {
           name: 'CROSS+WALKRI',
           description: baseHierarchy.crossWalkri,
           established: true,
           domain: 'grants',
+          focal: true,
         },
       ] as Array<{
         name: string
         description: string
         established: boolean
         domain?: string
+        focal?: boolean
         prospective?: boolean
         note?: string
       }>,
@@ -458,11 +463,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     if (input.specialty) {
       graph.applied_specialties.push({
         name: input.specialty,
-        description: `${input.specialty} as a coordination specialty inheriting from CSIS as a sibling of PoC and CROSS+WALKRI. Not yet built; structural placement under CSIS substrate would follow the same inheritance pattern (Frame Language as precision methodology applies; PFDS corollaries apply at decomposition; the foundational commitments hold).`,
+        description: `${input.specialty} placed as a prospective FOCAL domain: if its defining activity is multiple parties brought into coordination, it rests on the coordination floors and is held to the precision instruments (CRAFT and WALKRI), inheriting from the root commitment, as a sibling of PoC and CROSS+WALKRI. If the named work is instead a precision instrument or a meta-standard (for example CRAFT), it belongs in the precision-instrument family as a sibling of the coordination floors, not as a FOCAL domain; CRAFT is already built at specification v0.4.0.`,
         established: false,
         prospective: true,
+        focal: true,
         note:
-          'Placement is prospective. Building this specialty would require its own primitives, schemas, and compatibility statements, all on the same CSIS substrate. See the Cross-Domain Applicability Analysis (held in reserve at CROSS+WALKRI corpus) for the structural pattern for emerging specialties.',
+          'Placement is prospective. Apply the FOCAL test first: can an independent observer name the parties whose activity must be brought into coordination as the defining feature. A new FOCAL domain would require its own primitives, schemas, and compatibility statements, all inheriting the coordination floors and held to the precision instruments. See the Cross-Domain Applicability Analysis (held in reserve at CROSS+WALKRI corpus).',
       })
     }
 

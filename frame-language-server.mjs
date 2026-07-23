@@ -18008,216 +18008,797 @@ var StdioServerTransport = class {
   }
 };
 
+// packages/frame-language-mcp-server/src/term-registry.json
+var term_registry_default = {
+  version: "0.1.0",
+  date: "2026-06-12",
+  description: "Canonical machine-readable Frame 1 vocabulary registry. Merged from three drifted encodings: the Frame Language Grammar Appendix A and Part II tables (human-readable authority), the Frame Language MCP server watchlist (why_frame_1, replacement_pattern, primitive_anchors, common_phrasings), and the analyzer term-registry (imports, replace_with, forecloses, slippage_note). This registry is ABOUT Frame 1 terms, so it names them throughout, which is admissible. The skill, the MCP server, and the analyzer will all derive from this registry in Phase 4.",
+  terms: [
+    {
+      term: "accountability",
+      frame: 1,
+      imports: "Abstracts the obligation direction, the verification procedure, and the response to non-conformance into a single noun that hides each; structurally imports that obligation flows upward toward whoever holds formal authority (terminal-upward reporting).",
+      frame_2_replacement: [
+        "Obligation",
+        "Multiplex Obligation Directions",
+        "obligation direction"
+      ],
+      strengthened_form: "Obligation to [named parties] with [named verification] and [named response to non-conformance]; Multiplex Obligation Directions (define on first use)",
+      procedure: "plain-english",
+      forecloses: "Requirements that obligation run toward cost-bearing parties rather than upward toward formal authority.",
+      slippage_note: "Reform language ('multi-directional accountability', 'community accountability') does not change the structural direction. The terminal-upward mechanism remains regardless of modifier.",
+      primitive_anchors: [
+        "Obligation Fulfillment Record (CROSS+WALKRI Layer 3)",
+        "Gate Type and Gate Character (Layer 3)",
+        "CROSS Part XI funder obligations"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "held accountable",
+          frame_2: "bound to obligation to [named parties] with named redress procedure under Part XI"
+        },
+        {
+          frame_1: "accountability mechanism",
+          frame_2: "obligation with redress under Part XI"
+        },
+        {
+          frame_1: "accountability runs from X to Y",
+          frame_2: "obligation directions run from X to Y with [verification procedure] and [response to non-conformance]"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp",
+        "analyzer"
+      ]
+    },
+    {
+      term: "authority",
+      frame: 1,
+      imports: "A role, body, or person holds licensed power derived from position or title; enforcement capacity imported as legitimate standing, without origination grounding.",
+      frame_2_replacement: [
+        "Positional gravity",
+        "Gravitas"
+      ],
+      strengthened_form: "Define on first use: weight arising from origination, not appointment",
+      procedure: "technical-corpus",
+      forecloses: "Weight arising from structural grounding, origination capacity, or demonstrated domain expertise rather than positional license.",
+      slippage_note: "Positional authority (enforcement capacity imported as legitimate standing without origination grounding) is a harm precursor: authority misuse leads to power concentration leads to extraction. The same structural condition that specifies what is forbidden (authority without origination grounding) simultaneously specifies what is required (positional gravity, weight arising from genuine inquiry, lived experience in the conditions specified, or demonstrated coordination capacity). When a document uses authority vocabulary with origination grounding conditions partially named, apply the Class C (tradition-grounded) structural test before flagging as bare Frame 1. Traditions in political philosophy (Raz's service conception, Habermas's communicative rationality, Arendt's power/authority/violence distinction) have established partial normative and procedural grounding toward the same structural condition; PoC adds the structural design conditions level.",
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "analyzer"
+      ]
+    },
+    {
+      term: "beneficiary",
+      frame: 1,
+      imports: "Positions the less-powerful party as the passive recipient of another party's delivery, embedding a power relation in the syntactic structure rather than naming the party's own cost-bearing relation to the system.",
+      frame_2_replacement: [
+        "Named parties with specified cost-bearing relation"
+      ],
+      strengthened_form: "[Named parties] whose cost-bearing relation to the system is [specified]",
+      procedure: "relational-inversion",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: "Admissible in the destination slot of stewardship specifications ('stewardship of [x] for [named beneficiaries]') where the term names the parties the stewardship obligation runs toward, not where it positions them as passive recipients of delivery.",
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "capacity building",
+      frame: 1,
+      imports: "Positions the funder as the subject who builds the grantee's capacity, placing in object position the development that should be the grantee's own.",
+      frame_2_replacement: [
+        "Structural development of [function]"
+      ],
+      strengthened_form: "Structural development of [named function] within [named party] under [named completion criteria]",
+      procedure: "relational-inversion",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "compliance",
+      frame: 1,
+      imports: "Frames the relationship as one-way: the applicant complies with externally imposed standards and submits to external authority rather than aligning with structural conditions. Hides the bidirectional precision obligation.",
+      frame_2_replacement: [
+        "Conformance"
+      ],
+      strengthened_form: "Conformance with [named conditions] verified by [named procedure]",
+      procedure: "plain-english",
+      forecloses: "Alignment architectures that do not depend on coercive authority.",
+      slippage_note: null,
+      primitive_anchors: [
+        "Criterion Specification Elements / Compliance Threshold (CROSS+WALKRI Layer 5; citation use admissible for the field name)",
+        "Bidirectional Precision (CROSS+WALKRI Layer 1)"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "in compliance with",
+          frame_2: "conforming to"
+        },
+        {
+          frame_1: "compliance threshold",
+          frame_2: "compliance threshold (WALKRI canonical field name; citation use admissible)"
+        }
+      ],
+      admissibility_note: "'Compliance threshold' is admissible as the WALKRI canonical field name (citation use). Use 'conformance' in own voice.",
+      sources: [
+        "grammar",
+        "mcp",
+        "analyzer"
+      ]
+    },
+    {
+      term: "credibility",
+      frame: 1,
+      imports: "A deference claim: asserts that a claim warrants acceptance (trustworthiness) without naming the source of standing or the conditions, common in disclosure-and-rating-framework contexts.",
+      frame_2_replacement: [
+        "Standing Evidence per named source"
+      ],
+      strengthened_form: "[Claim] grounded in [named evidence type] verifiable by [named party]",
+      procedure: "deference-claim",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [
+        "Standing Evidence (CROSS+WALKRI Layer 4 Evidence Type)",
+        "Independent Verifiability (Layer 1)",
+        "Attestation Corpus (Layer 4)"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "highly credible",
+          frame_2: "standing per [named attesting body] in [named scope] currently as of [named date], publicly verifiable at [named record]"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp"
+      ]
+    },
+    {
+      term: "decentralization",
+      frame: 1,
+      imports: "In the process sense, names movement away from centralization without naming the destination parties, domain, or criteria for the transition of decision-standing.",
+      frame_2_replacement: [
+        "Transition of decision-standing"
+      ],
+      strengthened_form: "Transition of decision-standing to [named parties] in [named domain] under [named criteria]",
+      procedure: "split-by-use",
+      forecloses: null,
+      slippage_note: "Splits by use: in the structural sense ('the governance structure is Multiplex') the technical corpus replacement applies; in the claim-about-state sense ('we are transitioning to decentralized governance') the plain-English procedure applies, adding destination parties, domain, and criteria.",
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "decentralized governance",
+      frame: 1,
+      imports: "Treats governance as the right frame, just distributed more widely; distributes Frame 1 control without changing the frame.",
+      frame_2_replacement: [
+        "Multiplex coordination architecture",
+        "distributed coordination architecture"
+      ],
+      strengthened_form: "Define on first use",
+      procedure: "technical-corpus",
+      forecloses: "Coordination architectures where the frame itself changes, not just the distribution of control.",
+      slippage_note: "Most common slippage: feels like Frame 2 because it opposes centralization, but 'governance' remains Frame 1 regardless of distribution.",
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "analyzer"
+      ]
+    },
+    {
+      term: "decision authority",
+      frame: 1,
+      imports: "Imports that some role or party holds authority over decisions.",
+      frame_2_replacement: [
+        "decision standing"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: "Coordination architectures where no single party holds decision authority and outcomes emerge from distributed coordination standing.",
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "analyzer"
+      ]
+    },
+    {
+      term: "delegate",
+      frame: 1,
+      imports: "Imports that voting power is an asset that can be transferred rather than standing exercised directly.",
+      frame_2_replacement: [
+        "representative"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: "Standing architectures where participation cannot be transferred as an asset.",
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "analyzer"
+      ]
+    },
+    {
+      term: "due diligence",
+      frame: 1,
+      imports: "Names a verification activity through institutional borrowed-prior weight without naming the claims checked, the evidence standard, or the response to discrepancy.",
+      frame_2_replacement: [
+        "Verification"
+      ],
+      strengthened_form: "Verification of [named claims] against [named evidence standard] with [named response to discrepancy]",
+      procedure: "plain-english",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "empowerment",
+      frame: 1,
+      imports: "A Frame 1 deference claim about transferred capacity; positions an actor as empowering a community, with a standing that should be the community's instead derived from another party's action.",
+      frame_2_replacement: [
+        "Named structural conditions",
+        "Demonstrated function to deliver [named obligation]"
+      ],
+      strengthened_form: "[Named party] holds [named standing] in [named domain] through [named structural conditions]",
+      procedure: "relational-inversion",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [
+        "Beneficiary Validation Mechanism (Layer 3)",
+        "Affected Population Verification Gate (Layer 4)"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "community empowerment",
+          frame_2: "demonstrated community function under named structural conditions (validation at entry; verification at completion)"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp"
+      ]
+    },
+    {
+      term: "enforcement",
+      frame: 1,
+      imports: "Frame 1 force vocabulary: violations are answered with coercive power. Hides the named detection procedure and the named response to non-conformance.",
+      frame_2_replacement: [
+        "Detection with named response"
+      ],
+      strengthened_form: "Named detection procedure AND named response (both required; either absent weakens the form)",
+      procedure: "plain-english",
+      forecloses: "Response architectures that do not require coercive capacity.",
+      slippage_note: null,
+      primitive_anchors: [
+        "CROSS Part XI redress provisions"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "enforcement mechanism",
+          frame_2: "named response procedure for non-conformance under Part XI"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp",
+        "analyzer"
+      ]
+    },
+    {
+      term: "fiduciary duty",
+      frame: 1,
+      imports: "A Frame 1 deference claim about a special duty; obligation is binding but narrow, running only to formally named parties (terminal-upward). Alias: the MCP carries this term as 'fiduciary'.",
+      frame_2_replacement: [
+        "Multiplex stewardship obligation",
+        "stewardship obligation"
+      ],
+      strengthened_form: "Define on first use",
+      procedure: "technical-corpus",
+      forecloses: "Obligation architectures that run toward cost-bearing parties not named as formal stakeholders.",
+      slippage_note: null,
+      primitive_anchors: [
+        "Position-derived obligation vs Consequence-arising obligation distinction"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "fiduciary responsibility",
+          frame_2: "obligation to [named party] under [named statute or instrument]; structural type: position-derived (Frame 1) or consequence-arising (Frame 2)"
+        }
+      ],
+      admissibility_note: "Admissible in regulatory citation use: 'fiduciary duty under [named statute]'. In own voice: 'obligation to [named party] under [named instrument]'.",
+      sources: [
+        "grammar",
+        "mcp",
+        "analyzer"
+      ]
+    },
+    {
+      term: "governance",
+      frame: 1,
+      imports: "Abstracts authority, control, decision rights, removal mechanisms, and disclosure into a single noun; imports that a structure exists to exercise authority over participants.",
+      frame_2_replacement: [
+        "Coordination instrument",
+        "Declared decision-standing rules, named maintainers, and named removal mechanism",
+        "structural conditions"
+      ],
+      strengthened_form: "Coordination instrument for [named decision domain] with [named standing of participating parties]",
+      procedure: "plain-english",
+      forecloses: "Coordination architectures where no authority structure exists: only named obligation directions and condition specifications.",
+      slippage_note: null,
+      primitive_anchors: [
+        "Disbursement Authority (CROSS+WALKRI Layer 2)",
+        "Continuity Capacity (CROSS+WALKRI Layer 2; renamed from Governance Resilience at v0.1.7)",
+        "Determination Body Separation (CROSS+WALKRI Layer 4)"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "governance document",
+          frame_2: "rules-of-evolution document or principles document"
+        },
+        {
+          frame_1: "governance process",
+          frame_2: "declared decision-standing rules and named maintainers"
+        },
+        {
+          frame_1: "governed by X",
+          frame_2: "under X, or subject to X's declared decision-standing rules"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp",
+        "analyzer"
+      ]
+    },
+    {
+      term: "governed_by",
+      frame: 1,
+      imports: "Imports that entities exist in a governance relationship where some have authority over others; built into the semantic kernel.",
+      frame_2_replacement: [
+        "coordinates_with",
+        "specifies_conditions_for"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: "Ontological architectures where entities are not inherently subject to authority from other entities. When in the semantic kernel, this converts every entity it types before any other vocabulary is applied.",
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "analyzer"
+      ]
+    },
+    {
+      term: "governs",
+      frame: 1,
+      imports: "Imports that authority is exercised over participants by a role or structure.",
+      frame_2_replacement: [
+        "coordinates",
+        "specifies structural conditions for"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: "Relations between structural elements that are not authority-bearing.",
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "analyzer"
+      ]
+    },
+    {
+      term: "impact",
+      frame: 1,
+      imports: "Philanthropic vocabulary naming outputs: effects assessed from outside the system by formal stakeholders, importing the assessor-as-outsider position.",
+      frame_2_replacement: [
+        "Named effect on named parties",
+        "cost-bearing relations",
+        "structural effects on coordination actors"
+      ],
+      strengthened_form: "[Named effect] on [named cost-bearing parties] as measured by [named indicator]",
+      procedure: "plain-english",
+      forecloses: "Assessments made from within the coordination architecture by cost-bearing parties.",
+      slippage_note: "Feels neutral but imports the assessor-as-outsider position of philanthropic Frame 1.",
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "analyzer"
+      ]
+    },
+    {
+      term: "incentive",
+      frame: 1,
+      imports: "Imports extrinsic reward design, conflating it with structural participation arising from a cost-bearing relation.",
+      frame_2_replacement: [
+        "Contribution condition"
+      ],
+      strengthened_form: "Contribution condition arising from [cost-bearing relation / named structural basis]; distinguish structural participation from extrinsic reward design",
+      procedure: "plain-english",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "integrity",
+      frame: 1,
+      imports: "An organizational deference claim: asserts that an organization keeps its commitments, without making those commitments independently verifiable.",
+      frame_2_replacement: [
+        "stated commitments made independently verifiable by named structural conditions"
+      ],
+      strengthened_form: "[Stated commitments] made independently verifiable by [named structural conditions]",
+      procedure: "deference-claim",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "legitimacy",
+      frame: 1,
+      imports: "One of the strongest Frame 1 deference claims: asserts an institution warrants acceptance (rightful authority) without naming the source of standing or the conditions.",
+      frame_2_replacement: [
+        "Named source of standing plus declared conditions of deference"
+      ],
+      strengthened_form: "[Claim or institution] meets [named conditions] whose basis is [origination / demonstrated capacity / cost-bearing relation]",
+      procedure: "deference-claim",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [
+        "Determination Body Separation (CROSS+WALKRI Layer 4)",
+        "Authority Source lens (Lenses Framework Lens 2)"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "legitimate authority",
+          frame_2: "authority sourced in [named source] with [named removal mechanism]"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp"
+      ]
+    },
+    {
+      term: "management",
+      frame: 1,
+      imports: "Imports that a role holder optimizes assets for financial stakeholders.",
+      frame_2_replacement: [
+        "Stewardship"
+      ],
+      strengthened_form: "Stewardship of [what is held] under [named responsibility criteria] for [named beneficiaries]",
+      procedure: "plain-english",
+      forecloses: "Custodial relations that run toward the mission, the commons, or future parties rather than current financial stakeholders.",
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "analyzer"
+      ]
+    },
+    {
+      term: "mandatory",
+      frame: 1,
+      imports: "Force substitution term: asserts a requirement through Frame 1 force vocabulary rather than naming the structural reason or the source of the obligation.",
+      frame_2_replacement: [
+        "Required plus the structural reason",
+        "named obligation under [named source]"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [
+        "Gate Type Entry Specification gate (Layer 3)"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "mandatory requirement",
+          frame_2: "named obligation under [named source]"
+        },
+        {
+          frame_1: "mandatory disclosure",
+          frame_2: "required disclosure under [named rule]"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "mcp"
+      ]
+    },
+    {
+      term: "oversight",
+      frame: 1,
+      imports: "Hides who watches, what they watch, what authority they have to act, and what mechanism enforces their findings.",
+      frame_2_replacement: [
+        "Monitoring",
+        "Body composition / scope of authority / intervention powers / response mechanism"
+      ],
+      strengthened_form: "Monitoring by [named monitoring party] with [named authority to act on findings]",
+      procedure: "plain-english",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [
+        "Determination Body Separation (CROSS+WALKRI Layer 4)",
+        "Portfolio-level Continuation Benchmark (Layer 7)",
+        "Inter-cycle Reflection Stage (Layer 4)"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "independent oversight",
+          frame_2: "named independent panel with published charter; appointment and removal mechanisms named; binding determinations subject to published redress procedure"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp"
+      ]
+    },
+    {
+      term: "participation",
+      frame: 1,
+      imports: "Splits by use. As a named role it abstracts decision-standing, the domain, and the mechanism for affecting outcomes; as an inclusion claim it asserts that presence constitutes more than presence without naming the structural conditions.",
+      frame_2_replacement: [
+        "Decision-standing"
+      ],
+      strengthened_form: "[Party] holds [named decision-standing] in [named domain] with [named mechanism for affecting outcomes]; as inclusion claim: [Named structural conditions] under which participation constitutes more than presence",
+      procedure: "split-by-use",
+      forecloses: null,
+      slippage_note: "When naming a structural condition ('this party holds decision-standing in this domain') the plain-English procedure applies. When making a claim about state ('all stakeholders participated') the deference-claim procedure applies: name the structural conditions making participation more than presence.",
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "position",
+      frame: 1,
+      imports: "Mandate-derived assignment without constitutive acceptance of consequences; authority defined by appointment, title, or formal assignment rather than by acceptance of the causal chain between the holder's actions and those who bear the effects.",
+      frame_2_replacement: [
+        "role"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: "Consequence-arising obligations (obligations constituted by what the holder's actions actually produce for those who bear their effects); the dissolution obligation (structurally incompatible with position-derived obligation, since you cannot genuinely accept when to give up a position when the obligation itself derives from the position); genuine stewardship in any of the seven Multiplex Obligation Directions.",
+      slippage_note: "Governance documents use 'position' and 'role' interchangeably. The structural distinction: a role is constituted by acceptance of four dimensions, (1) consequences: what your actions produce for others; (2) responsibilities: taking those consequences up as things to act on; (3) obligations: what you owe to specific named parties who bear the consequences; (4) temporality: the full arc including the dissolution obligation. A position is defined by mandate: what the appointment specifies, revisable by whoever controls the definition, with the holder structurally insulated from the consequences their decisions produce. Frame 2 detection test: does the document specify what consequences the holder has accepted, toward which named cost-bearing parties, and what the succession/dissolution arc looks like? If not, 'role' in the document is functioning as 'position'.",
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "analyzer"
+      ]
+    },
+    {
+      term: "power structure",
+      frame: 1,
+      imports: "Imports that power is organized hierarchically; formal authority, operational control, and resource control name levels of hierarchy.",
+      frame_2_replacement: [
+        "obligation and control map"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: "Coordination architectures where there is no formal authority: only named obligation directions and resource stewardship commitments.",
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "analyzer"
+      ]
+    },
+    {
+      term: "representation",
+      frame: 1,
+      imports: "Splits by use. As a structural role it abstracts the derivation basis, scope, and recall mechanism of standing; as an inclusion claim it asserts that a community is represented without naming the structural conditions grounding the decision-standing.",
+      frame_2_replacement: [
+        "Named standing"
+      ],
+      strengthened_form: "[Party] holds standing in [named domain] on basis of [derivation] with [named scope and recall mechanism]; as inclusion claim: [Named structural conditions] under which [party]'s decision-standing is grounded in cost-bearing relation or demonstrated knowledge",
+      procedure: "split-by-use",
+      forecloses: null,
+      slippage_note: "When naming a structural condition ('this role carries the interests of this party') the plain-English procedure applies: add derivation basis, scope, recall mechanism. When making a claim about state ('the community is represented') the deference-claim procedure applies: name the structural conditions grounding the decision-standing.",
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "rules",
+      frame: 1,
+      imports: "Imports that coordination works by issuing behavioral directives to actors.",
+      frame_2_replacement: [
+        "structural conditions"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: "Coordination architectures that specify auditable system states rather than behavioral directives.",
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "analyzer"
+      ]
+    },
+    {
+      term: "stakeholder",
+      frame: 1,
+      imports: "Collapses cost-bearing parties, beneficiaries, named-population members, funders, reviewers, and observers into a single noun that hides each; structurally names only parties with formal legal or financial standing, excluding cost-bearing parties without formal standing.",
+      frame_2_replacement: [
+        "Coordination actor",
+        "Cost-bearing party"
+      ],
+      strengthened_form: "Use cost-bearing party when the structural point is the absence of formal standing; use coordination actor when naming any structurally relevant party",
+      procedure: "technical-corpus",
+      forecloses: "Recognition of parties who bear costs from decisions but lack formal standing.",
+      slippage_note: "Often used to mean 'everyone affected' but structurally names only formally standing parties.",
+      primitive_anchors: [
+        "Cost-Bearing Party (CROSS Part II)",
+        "Affected Population Verification Gate (CROSS+WALKRI Layer 4)"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "stakeholder engagement",
+          frame_2: "[named role] engagement, or Affected Population Verification Gate participation, or cost-bearing party consultation"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp",
+        "analyzer"
+      ]
+    },
+    {
+      term: "transparency",
+      frame: 1,
+      imports: "The most common deference claim in grant-program vocabulary: information is disclosed upward to formal authorities and investors (financial/legal disclosure). The Frame 2 form names what is legible, to whom, and through what mechanism.",
+      frame_2_replacement: [
+        "Legibility",
+        "multi-directional visibility"
+      ],
+      strengthened_form: "Legibility of [what is made visible] to [named participants] through [named mechanism]",
+      procedure: "plain-english",
+      forecloses: "Visibility architectures designed for participant use rather than upward disclosure.",
+      slippage_note: "Feels like Frame 2 because it opposes opacity, but the structural direction remains upward and outward to formal stakeholders.",
+      primitive_anchors: [
+        "Attestation Corpus (CROSS+WALKRI Layer 4)",
+        "Gate Record Legibility (CROSS Part IV)",
+        "WALKRI evidence access path requirement"
+      ],
+      common_phrasings: [
+        {
+          frame_1: "transparency commitment",
+          frame_2: "named publication commitment or Attestation Corpus contribution commitment"
+        },
+        {
+          frame_1: "transparent process",
+          frame_2: "process legible to [named recipients] through [named publication mechanism]"
+        }
+      ],
+      admissibility_note: null,
+      sources: [
+        "grammar",
+        "mcp",
+        "analyzer"
+      ]
+    },
+    {
+      term: "trust",
+      frame: 1,
+      imports: "An institutional deference claim: asserts that a party warrants deference without specifying the structural basis.",
+      frame_2_replacement: [
+        "the conditions a party meets, verified by a named procedure"
+      ],
+      strengthened_form: "[Party] meets [named conditions] verified by [named procedure]",
+      procedure: "deference-claim",
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "grammar"
+      ]
+    },
+    {
+      term: "voting power",
+      frame: 1,
+      imports: "Imports that influence scales as a property right with token accumulation.",
+      frame_2_replacement: [
+        "coordination standing"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: "Minimum distribution requirements (floors) and maximum concentration limits (ceilings): both are incoherent if influence is a property right.",
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "analyzer"
+      ]
+    }
+  ]
+};
+
 // packages/frame-language-mcp-server/src/watchlist.ts
-var WATCHLIST = [
-  {
-    term: "accountability",
-    why_frame_1: "Abstracts the obligation direction, the verification procedure, and the response to non-conformance into a single noun that hides each.",
-    replacement_pattern: "Obligation directions to [named parties] with [named verification procedure] and [named response to non-conformance].",
-    primitive_anchors: [
-      "Obligation Fulfillment Record (CROSS+WALKRI Layer 3)",
-      "Gate Type and Gate Character (Layer 3)",
-      "CROSS Part XI funder obligations"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "held accountable",
-        frame_2: "bound to obligation to [named parties] with named redress procedure under Part XI"
-      },
-      {
-        frame_1: "accountability mechanism",
-        frame_2: "obligation with redress under Part XI"
-      },
-      {
-        frame_1: "accountability runs from X to Y",
-        frame_2: "obligation directions run from X to Y with [verification procedure] and [response to non-conformance]"
-      }
-    ]
-  },
-  {
-    term: "governance",
-    why_frame_1: "Abstracts authority, control, decision rights, removal mechanisms, and disclosure into a single noun.",
-    replacement_pattern: "Declared decision-standing rules, named maintainers, and named removal mechanism.",
-    primitive_anchors: [
-      "Disbursement Authority (CROSS+WALKRI Layer 2)",
-      "Continuity Capacity (CROSS+WALKRI Layer 2; renamed from Governance Resilience at v0.1.7)",
-      "Determination Body Separation (CROSS+WALKRI Layer 4)"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "governance document",
-        frame_2: "rules-of-evolution document or principles document"
-      },
-      {
-        frame_1: "governance process",
-        frame_2: "declared decision-standing rules and named maintainers"
-      },
-      {
-        frame_1: "governed by X",
-        frame_2: "under X, or subject to X's declared decision-standing rules"
-      }
-    ]
-  },
-  {
-    term: "transparency",
-    why_frame_1: "Most common deference claim in grant-program vocabulary. The Frame 2 form names what is legible, to whom, and through what mechanism.",
-    replacement_pattern: "Gate record legibility under [named publication mechanism] to [named recipients] of [named declared content].",
-    primitive_anchors: [
-      "Attestation Corpus (CROSS+WALKRI Layer 4)",
-      "Gate Record Legibility (CROSS Part IV)",
-      "WALKRI evidence access path requirement"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "transparency commitment",
-        frame_2: "named publication commitment or Attestation Corpus contribution commitment"
-      },
-      {
-        frame_1: "transparent process",
-        frame_2: "process legible to [named recipients] through [named publication mechanism]"
-      }
-    ]
-  },
-  {
-    term: "stakeholder",
-    why_frame_1: "Collapses cost-bearing parties, beneficiaries, named-population members, funders, reviewers, observers into a single noun that hides each.",
-    replacement_pattern: "Coordination actor, or more precisely one of: cost-bearing party, named-population member, funder, reviewer, observer, applicant, grantee, evaluator, affected-population member.",
-    primitive_anchors: [
-      "Cost-Bearing Party (CROSS Part II)",
-      "Affected Population Verification Gate (CROSS+WALKRI Layer 4)"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "stakeholder engagement",
-        frame_2: "[named role] engagement, or Affected Population Verification Gate participation, or cost-bearing party consultation"
-      }
-    ]
-  },
-  {
-    term: "oversight",
-    why_frame_1: "Hides who watches, what they watch, what authority they have to act, and what mechanism enforces their findings.",
-    replacement_pattern: "Body composition (who watches); scope of authority (what is watched); intervention powers (what authority to act); response mechanism (how findings are enforced).",
-    primitive_anchors: [
-      "Determination Body Separation (CROSS+WALKRI Layer 4)",
-      "Portfolio-level Continuation Benchmark (Layer 7)",
-      "Inter-cycle Reflection Stage (Layer 4)"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "independent oversight",
-        frame_2: "named independent panel with published charter; appointment and removal mechanisms named; binding determinations subject to published redress procedure"
-      }
-    ]
-  },
-  {
-    term: "compliance",
-    why_frame_1: "Frames the relationship as one-way: applicant complies with externally imposed standards. Frame 2 names bidirectional precision obligation.",
-    replacement_pattern: 'Conformance (in own voice); "compliance threshold" admissible as WALKRI canonical field name.',
-    primitive_anchors: [
-      "Criterion Specification Elements / Compliance Threshold (CROSS+WALKRI Layer 5; citation use admissible for the field name)",
-      "Bidirectional Precision (CROSS+WALKRI Layer 1)"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "in compliance with",
-        frame_2: "conforming to"
-      },
-      {
-        frame_1: "compliance threshold",
-        frame_2: "compliance threshold (WALKRI canonical field name; citation use admissible)"
-      }
-    ]
-  },
-  {
-    term: "enforcement",
-    why_frame_1: "Frame 1 force vocabulary. Replace with named response to non-conformance.",
-    replacement_pattern: "Named response to non-conformance under [named procedure].",
-    primitive_anchors: ["CROSS Part XI redress provisions"],
-    common_phrasings: [
-      {
-        frame_1: "enforcement mechanism",
-        frame_2: "named response procedure for non-conformance under Part XI"
-      }
-    ]
-  },
-  {
-    term: "legitimacy",
-    why_frame_1: "One of the strongest Frame 1 deference claims. Asserts rightful authority without naming the source or the conditions.",
-    replacement_pattern: "Named source of standing plus declared conditions of deference (statutory, regulatory, contractual, voluntary published, civil-society advisory, professional-society standard per Lenses Framework Lens 2).",
-    primitive_anchors: [
-      "Determination Body Separation (CROSS+WALKRI Layer 4)",
-      "Authority Source lens (Lenses Framework Lens 2)"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "legitimate authority",
-        frame_2: "authority sourced in [named source] with [named removal mechanism]"
-      }
-    ]
-  },
-  {
-    term: "empowerment",
-    why_frame_1: "Frame 1 deference claim about transferred capacity. Replace with structural form.",
-    replacement_pattern: "Demonstrated function to deliver [named obligation] in [named population] under [named conditions].",
-    primitive_anchors: [
-      "Beneficiary Validation Mechanism (Layer 3)",
-      "Affected Population Verification Gate (Layer 4)"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "community empowerment",
-        frame_2: "demonstrated community function under named structural conditions (validation at entry; verification at completion)"
-      }
-    ]
-  },
-  {
-    term: "fiduciary",
-    why_frame_1: "Frame 1 deference claim about a special duty. Admissible in regulatory citation use.",
-    replacement_pattern: 'In citation: "fiduciary duty under [named statute]". In own voice: "obligation to [named party] under [named instrument]."',
-    primitive_anchors: ["Position-derived obligation vs Consequence-arising obligation distinction"],
-    common_phrasings: [
-      {
-        frame_1: "fiduciary responsibility",
-        frame_2: "obligation to [named party] under [named statute or instrument]; structural type: position-derived (Frame 1) or consequence-arising (Frame 2)"
-      }
-    ]
-  },
-  {
-    term: "credibility",
-    why_frame_1: "Deference claim common in disclosure-and-rating-framework contexts; trustworthiness without naming what authority is being deferred to.",
-    replacement_pattern: "Standing Evidence per named source (named source of standing; named scope; named currency window; public verification path).",
-    primitive_anchors: [
-      "Standing Evidence (CROSS+WALKRI Layer 4 Evidence Type)",
-      "Independent Verifiability (Layer 1)",
-      "Attestation Corpus (Layer 4)"
-    ],
-    common_phrasings: [
-      {
-        frame_1: "highly credible",
-        frame_2: "standing per [named attesting body] in [named scope] currently as of [named date], publicly verifiable at [named record]"
-      }
-    ]
-  },
-  {
-    term: "mandatory",
-    why_frame_1: "Force substitution term. Use declarative form.",
-    replacement_pattern: '"Required" plus the structural reason, or "named obligation under [named source]".',
-    primitive_anchors: ["Gate Type Entry Specification gate (Layer 3)"],
-    common_phrasings: [
-      {
-        frame_1: "mandatory requirement",
-        frame_2: "named obligation under [named source]"
-      },
-      {
-        frame_1: "mandatory disclosure",
-        frame_2: "required disclosure under [named rule]"
-      }
-    ]
-  }
-];
+var typedRegistry = term_registry_default;
+var REGISTRY_VERSION = typedRegistry.version;
+function toWatchlistEntry(t) {
+  return {
+    term: t.term,
+    why_frame_1: t.imports,
+    frame_2_replacement: t.frame_2_replacement,
+    strengthened_form: t.strengthened_form,
+    procedure: t.procedure,
+    forecloses: t.forecloses,
+    slippage_note: t.slippage_note,
+    primitive_anchors: t.primitive_anchors,
+    common_phrasings: t.common_phrasings,
+    admissibility_note: t.admissibility_note,
+    replacement_pattern: t.frame_2_replacement.join("; ")
+  };
+}
+var WATCHLIST = typedRegistry.terms.map(
+  toWatchlistEntry
+);
 function getWatchlistEntry(term) {
   const lower = term.toLowerCase();
-  return WATCHLIST.find((e) => e.term === lower);
+  return WATCHLIST.find((e) => e.term.toLowerCase() === lower);
 }
 function getAllWatchlistTerms() {
   return WATCHLIST.map((e) => e.term);
@@ -18225,7 +18806,8 @@ function getAllWatchlistTerms() {
 function scanTextForWatchlist(text) {
   const results = [];
   for (const entry of WATCHLIST) {
-    const regex = new RegExp(`\\b${entry.term}\\b`, "gi");
+    const escaped = entry.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`\\b${escaped}\\b`, "gi");
     const matches = text.match(regex);
     if (matches && matches.length > 0) {
       results.push({
@@ -18401,6 +18983,104 @@ var THREE_FRAMES = {
   bridge_vocabulary_note: "Frame 1 and Frame 2 are bridge vocabulary in some contexts (e.g., PoC normative documents use Multiplex/Uniplex as canonical for coordination architecture frames; Frame 1/Frame 2 are practitioner-facing bridge terms there). At the Frame Language substrate level, Frame 1/2/3 are canonical. Within CROSS+WALKRI applied work, Frame 1/Frame 2 are used as substrate vocabulary; whether to upgrade to Uniplex/Multiplex or other terms is a CROSS+WALKRI-specific decision."
 };
 
+// packages/frame-language-mcp-server/src/regen-check.ts
+var FRAME2_DONE_WELL_VS_IMITATION = `Frame 2 done well produces independently evaluable structural conditions: who owes what to whom, through what mechanism, verifiable by any reader without the organization's cooperation. Frame 2 imitation produces the feeling of that precision without the substance. The operative test: can a party outside the organization verify this condition from the document alone, without relying on the organization's interpretation or cooperation? If not, it is imitation regardless of how structural the vocabulary appears. The sophistication trap applies here specifically: the more rigorous the values framework and the more structural-sounding the vocabulary, the more convincing the imitation, which is why it persists in the ecosystem's most thoughtful documents and in the academic frameworks designed to evaluate them. Values alignment and orientation language performing structural description ("we are regenerative," "we operate from living systems principles," "we prioritize relationships") is Frame 2 imitation, not Frame 2 presence.`;
+var ROUTING_NOTE = 'Most failures from this audit route to frame2_imitation_signals with imitation_type: "values_without_grounding". Exceptions: Check 2 (direction/destination confusion) and Check 4 (theory of build) may surface as foreclosed_protections when the vocabulary actively makes the missing structural condition unimaginable. Check 6 (pre-specification identity capture) routes as a slippage_points finding with slippage_class: "aspirational" plus an arrested finding note.';
+var TRIGGER_CONDITIONS = [
+  'The document uses "regenerative," "regen," or "ReFi" as identity or structural claims.',
+  "The organization describes itself as part of a regenerative movement.",
+  "The document presents a return instrument (credits, tokens, impact certificates) as regenerative."
+];
+var ROS_AUDIT_ROUTING = "When Check 5 produces ros_non_conformance findings, the Regenerative Obligation Standard Audit provides the full structural mechanics assessment the Frame Language check cannot complete alone. This check identifies that a return architecture fails non-fungibility, proximity, or embeddedness at the vocabulary level; the ROS audit determines whether the underlying mechanics satisfy the three validity conditions and whether failures are categorical (instrument architecture wrong) or addressable through adjustment. The two instruments assess different layers and can each fail independently. Run both when the document makes regenerative claims about its return architecture.";
+var REGEN_CHECKS = [
+  {
+    id: "identity-vs-structure",
+    number: 1,
+    name: "Identity vs. Structure",
+    description: 'Is "regenerative" describing who the organization is, or what its internal mechanics do? Identity use is Class D2 performative vocabulary. Detection: does "what makes this regenerative?" produce values, orientations, or community memberships, or independently evaluable structural conditions?',
+    routing: "identity_marker"
+  },
+  {
+    id: "direction-vs-destination",
+    number: 2,
+    name: "Direction vs. Destination",
+    description: "Does the document describe regeneration as what is funded externally (destination) or how internal extraction and return mechanics operate (direction)? The Regenerative Obligation Standard applies to direction. A system funding externally regenerative projects while failing the validity conditions for its own contributors is not structurally regenerative. Route as D2 when internal mechanics are absent from the claim.",
+    routing: "direction_destination_confusion"
+  },
+  {
+    id: "from-specification",
+    number: 3,
+    name: "FROM Specification",
+    description: 'Can the document name what is being restored, from what depleted state, through what mechanism? Two distinct failure modes. FROM ABSENT: No FROM is named at all. The document describes what is being built but not what depleted condition it addresses. Route as D2. FROM TOO VAST: A FROM is named, but at a scale that cannot ground any specific intervention. "Ecological collapse," "metacrisis," "extractive capitalism," "the meaning crisis," "legacy systems" name real conditions, but at a scale where any action aligned with the label is automatically strategic. Nothing can be excluded. The test: given this FROM, what would the organization NOT build, and who would NOT be served? If the FROM cannot answer that question (if everything plausible in the regen space remains equally justified) the FROM is too vast to be operational. This is the more structurally significant failure: the organization believes it has a diagnosis because a real condition was named. The absence of felt gap makes correction harder. Route as D2 with a note distinguishing vast FROM from absent FROM. The correction is not "name a FROM" but "narrow the FROM to a scale at which specific interventions can be excluded."',
+    routing: "from_specification_gap (FROM absent); vast_from (FROM too vast)"
+  },
+  {
+    id: "theory-of-change-vs-theory-of-build",
+    number: 4,
+    name: "Theory of Change vs. Theory of Build",
+    description: "Does the document specify the mechanism connecting infrastructure to regenerative outcomes, or assume outcomes follow from the infrastructure? Detection: remove the infrastructure from the argument. Does the outcome claim retain support? If not, the document is theory of build. Route as D2.",
+    routing: "theory_of_build"
+  },
+  {
+    id: "regenerative-obligation-conformance",
+    number: 5,
+    name: "Regenerative Obligation Conformance",
+    description: "Does the return architecture satisfy non-fungibility, proximity, and embeddedness simultaneously? Check for categorical disqualifiers: additionality logic, SROI aggregation, temporal deferral trap (Stance B declarations substituted for proximate return delivery). Route non-conformant instruments as D2 imitation of the embeddedness or proximity conditions.",
+    routing: "ros_non_conformance"
+  },
+  {
+    id: "pre-specification-identity-capture",
+    number: 6,
+    name: "Pre-specification Identity Capture",
+    description: 'Has "regenerative" acquired identity weight before structural conditions were specified? Apply the identity formation arc test: can the community state structural requirements for the term without defensiveness? If not, note as arrested D2 finding. Cultural architecture work is required alongside vocabulary work; forcing specification triggers defensive consolidation.',
+    routing: "identity_capture"
+  },
+  {
+    id: "temporal-deferral",
+    number: 7,
+    name: "Temporal Deferral",
+    description: "Is the organization claiming regenerative stance while deferring structural regenerative work indefinitely? Detection: does the claim use present-tense language but describe future-conditional conditions? Temporal deferral in regenerative claims appears as pledges, visions, and Stance B declarations without a current proximate return architecture. Route as D2.",
+    routing: "temporal_deferral"
+  },
+  {
+    id: "financial-conversion",
+    number: 8,
+    name: "Financial Conversion",
+    description: `Does the document explicitly reframe a product purchase, membership fee, or service payment as a regenerative investment without specifying the return architecture that would make the investment claim valid? Detection: language that names a financial exchange as something other than what it is: "you are not paying for a learning journey; you are contributing to Earth's regeneration through this planetary network." Non-fungibility, proximity, and embeddedness are all absent; mission identity substitutes for structural return architecture. Distinct from Check 5 ros_non_conformance in that the product relationship is explicitly named and then denied rather than simply unaddressed. Route as D2, detection_type: financial_conversion.`,
+    routing: "financial_conversion"
+  },
+  {
+    id: "commons-without-governance",
+    number: 9,
+    name: "Commons Without Governance",
+    description: "Does the document describe building a commons (shared resource pool, collective knowledge system, network infrastructure, community learning system) without applying the structural conditions under which commons succeed? Detection: commons-building vocabulary (shared resources, collective learning, distributed network, pooled resources, learning exchange) present alongside absence of: (1) clearly defined membership boundaries specifying who participates and on what terms; (2) monitoring architecture by accountable parties; (3) graduated response mechanisms; (4) accessible conflict resolution mechanisms. Absence of any two or more constitutes the finding. This is not theory_of_build; it is specifically the commons institutional form being constructed without the empirically established structural conditions for that form. Route as D2, detection_type: commons_without_governance.",
+    routing: "commons_without_governance"
+  }
+];
+var REGEN_IMITATION_TYPES = [
+  {
+    id: "propagation_without_feedback",
+    name: "Propagation without feedback",
+    description: 'An organization explicitly excludes detection or feedback architecture from its strategy, justified by the complexity or scale of the problem. Distinct from theory_of_build in that the absence is named as a feature, not an oversight. Canonical form: "We cannot know which seeds will germinate, therefore we do not try to detect which ones do." The vast_from typically provides the justification. Route as propagation_without_feedback.'
+  },
+  {
+    id: "governance_deferral",
+    name: "Governance deferral",
+    description: 'Governance architecture explicitly deferred to after network or community formation rather than constituted before it. Canonical form: "The network will establish its own governance and coordination mechanisms among the members." Route as governance_deferral.'
+  },
+  {
+    id: "sovereignty_without_derivation",
+    name: "Sovereignty without derivation",
+    description: "A value (sovereignty, freedom, regeneration, autonomy) asserted as foundational without specifying the structural and social conditions from which it derives. The FROM is the value itself, making the derivation circular. Distinct from from_specification_gap (absent FROM) in that the FROM is present but self-referential. Route as sovereignty_without_derivation."
+  }
+];
+function getRegenCheck(id) {
+  return REGEN_CHECKS.find((c) => c.id === id);
+}
+function getAllRegenCheckIds() {
+  return REGEN_CHECKS.map((c) => c.id);
+}
+
 // packages/frame-language-mcp-server/src/index.ts
 var CheckWatchlistInputSchema = external_exports.object({
   term: external_exports.string().describe("The term to check against the Frame 1 watchlist (case-insensitive).")
@@ -18418,6 +19098,11 @@ var Frame2FunctioningCheckInputSchema = external_exports.object({
 var LookupThreeFramesInputSchema = external_exports.object({}).strict();
 var AuditTextInputSchema = external_exports.object({
   text: external_exports.string().describe("The text to audit for Frame 1 watchlist hits.")
+});
+var RegenRealityCheckInputSchema = external_exports.object({
+  id: external_exports.string().optional().describe(
+    "Optional: a specific regen check to return by id. If omitted, returns all nine checks plus the Frame 2 imitation types and routing context."
+  )
 });
 var server = new Server(
   {
@@ -18493,6 +19178,19 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             }
           },
           required: ["text"]
+        }
+      },
+      {
+        name: "regen_reality_check",
+        description: 'Return the Regenerative Claim Audit (Regen Reality Check): nine independent checks for documents that claim to be regenerative, use "regen" as an identity marker, operate in the Web3 regen space, or present as a ReFi instrument. Each check can fail while the others pass. Returns the checks, the Frame 2 done well vs. imitation contrast, the new Frame 2 imitation types (propagation without feedback, governance deferral, sovereignty without derivation), routing notes, trigger conditions, and the Regenerative Obligation Standard Audit cross-reference. Pass an optional id to return a single check.',
+        inputSchema: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              description: "Optional. Specific check to return. Available: identity-vs-structure, direction-vs-destination, from-specification, theory-of-change-vs-theory-of-build, regenerative-obligation-conformance, pre-specification-identity-capture, temporal-deferral, financial-conversion, commons-without-governance."
+            }
+          }
         }
       }
     ]
@@ -18637,6 +19335,47 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               terms_found: hits.length,
               hits,
               note: totalHits > 0 ? "Each hit must be evaluated against the Pre-Replacement Admissibility seven cases. Citation use of source-framework terms, citation use of CROSS+WALKRI primitive names (e.g., Beneficiary Validation Mechanism), and other admissible-use cases are NOT replacement triggers. Own-voice use of these terms is. Use check_admissibility to review the seven cases." : "No watchlist terms found in the audited text. Note that this audit only catches the watchlist terms; other Frame Language failures (Frame 2 functioning check failures, etc.) require separate audits."
+            },
+            null,
+            2
+          )
+        }
+      ]
+    };
+  }
+  if (name === "regen_reality_check") {
+    const input = RegenRealityCheckInputSchema.parse(args ?? {});
+    if (input.id) {
+      const check2 = getRegenCheck(input.id);
+      if (!check2) {
+        const ids = getAllRegenCheckIds().join(", ");
+        throw new Error(
+          `Regen check "${input.id}" not found. Available: ${ids}.`
+        );
+      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({ check: check2 }, null, 2)
+          }
+        ]
+      };
+    }
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            {
+              total_checks: REGEN_CHECKS.length,
+              checks: REGEN_CHECKS,
+              frame2_done_well_vs_imitation: FRAME2_DONE_WELL_VS_IMITATION,
+              frame2_imitation_types: REGEN_IMITATION_TYPES,
+              routing_note: ROUTING_NOTE,
+              ros_audit_routing: ROS_AUDIT_ROUTING,
+              trigger_conditions: TRIGGER_CONDITIONS,
+              note: "Run this audit as a domain-specific extension of the standard Frame Language analysis when a document makes regenerative claims. Each of the nine checks is independent and can fail while the others pass. The operative test throughout is external verification: can a party outside the organization verify the condition from the document alone?"
             },
             null,
             2

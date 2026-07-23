@@ -18108,10 +18108,15 @@ var FOUNDATIONAL_COMMITMENTS = {
   nonHarmingWithoutPrecision: "Non-harming without precision becomes an attack surface: the good faith and informal trust that sufficiently adversarial actors exploit most reliably, operating in the spaces where formal instruments have no purchase. The intent is present; the structural form is absent.",
   outcome: "Held together (which PFDS defines as one principle via transclusion), they produce the structural conditions under which genuine presence is possible. For people who have been harmed by informality used against them, explicit structure is not a bureaucratic imposition. It is what trust requires before it can be extended again. The precision is the compassion.",
   inheritanceHierarchy: {
-    csis: "CSIS (Coordination Structural Integrity Suite) is the active normative foundation from which derived work inherits its structural integrity requirements. Ten standards: seven Tensegrity Compressive Standards plus three Tensegrity Generative Standards. The relationship between CSIS and what inherits from it is context-dependent: during specification design or revision, CSIS standards actively constrain what can be proposed (a requirement that contradicts a CSIS compressive standard requires CSIS-level resolution before it can be finalized); during routine operation of derived systems, CSIS recedes to background (its constraints were satisfied at specification time). The degree of activity is a function of what is being done with the derived work, not a fixed property of the relationship. Specifications CC BY 4.0; co-released with CROSS (CC0). Repository: github.com/coordination-structural-integrity-suite/suite.",
-    frameLanguage: "Frame Language is derived from CSIS as the precision methodology. Without CSIS, Frame Language would not exist. Frame Language enacts PFDS Corollary 1 (operational definition) precisely: the Frame 1 to Frame 2 conversion replaces vague vocabulary that fails the independent-observer test with typed vocabulary that passes it. Three frames: Frame 1 access (seasonal expressions); Frame 2 access (conditions and configurations); Frame 3 access (the Innate Totality itself). The gunas are the procedural map of these access levels (tamas, rajas, sattva, trigunatita).",
-    poc: "Proof of Coordination (PoC) is an applied protocol about coordination generally. PoC inherits from CSIS. Chronologically, work on PoC surfaced the need for the CSIS standards. Structurally, CSIS is upstream of PoC. The general truth: inheritance order is independent of chronological development order.",
-    crossWalkri: "CROSS+WALKRI is one coordination specialty (grants) inheriting from CSIS. It is a sibling of PoC under CSIS, not a child of PoC. Future coordination specialties (AI evaluation, ESG, scientific research integrity, policy evaluation, standards-development meta) will also inherit from CSIS as siblings.",
+    root: "The root of the standards body is the one commitment specified by the Precision-First Design Standard (PFDS): precision and non-harming held as a single move via transclusion. Every standard gets its content by specializing this commitment to a layer or a domain, so the root is genetic rather than positional: trace any standard back through what it specializes and the path ends here. PFDS is itself the specification-layer standing-down of contact with the Innate Totality (Frame 3); the body grounds in that contact, not in any one of its own documents. That contact has two articulations and only one is a standard: PFDS is the structural articulation, and Dimensional Frame Language is the ontological articulation, the access-level reading of how a describer stands to what is described, neither deriving from the other. Frame Language is therefore the root's twin rather than a standard or an instrument beneath it. Inheritance order is structural and independent of the order in which standards were written.",
+    csis: "CSIS (Coordination Structural Integrity Suite) is the suite of ten standards in which this body does its normative work: seven Tensegrity Compressive plus three Tensegrity Generative. Within it, PFDS is the root and keystone, and the other nine standards are the coordination floors (see coordinationFloors). CSIS is the active normative foundation in the sense that derived work answers to its root commitment and its coordination floors, context-dependently: during specification design or revision they actively constrain what can be proposed (a requirement that contradicts a compressive standard requires resolution at that standard before it can be finalized); during routine operation they recede to background. Specifications CC BY 4.0; co-released with CROSS (CC0). Repository: github.com/coordination-structural-integrity-suite/suite.",
+    twoFamilies: "Two cross-domain families stand directly under the root, both inheriting from it and neither inheriting from the other. (1) The precision instruments (CRAFT and WALKRI): PFDS precision worked out into general-purpose tools, holding even for non-coordination, data-heavy work. (2) The coordination floors (the nine CSIS standards other than PFDS): PFDS non-harming worked out into the conditions of human multi-party activity. A lens that mostly holds is that the instruments are the precision face of the one commitment and the floors its non-harming face; it bends, so hold it loosely, because the Sensemaking and Adverse-Signal Engagement standards are coordination floors with strong precision character. The two families are siblings, not a clean partition.",
+    precisionInstruments: "CRAFT and WALKRI, both inheriting from the root and not from the coordination floors. CRAFT is the one meta-standard of the body, the only instrument whose object is a standard as such; it is held to consistency with the coordination floors in deployment, which is a constitutive relation and not an inheritance one. WALKRI specializes precision to per-axis measurement and sits under CRAFT. Both apply across domains, including domains that are not coordination at all. Frame Language is not in this family; it is the root's twin articulation (see frameLanguage), and the vocabulary discipline it supplies runs across both instruments and floors as a cross-cutting practice.",
+    coordinationFloors: "The nine CSIS standards other than PFDS: consent legibility, power obligation, information-asymmetry classification, regenerative obligation, coordination scaling, adverse-signal engagement, and the three generative standards (sensemaking, four-batteries capacity, conflict transformation). They are PFDS non-harming specialized to the conditions of human multi-party activity, and they are inherited by FOCAL domains. A FOCAL domain (Form Of Coordination Activity Locus) is one whose defining activity is multiple parties brought into coordination; the operational test is whether an independent observer can name those parties as the defining feature of the domain. Non-FOCAL work (pure specification or measurement, one party, no consent or exposure of a second party) inherits only the precision instruments.",
+    frameLanguage: "Frame Language (Dimensional Frame Language) is the root's twin articulation, not one of the precision instruments. PFDS articulates contact with the Innate Totality (Frame 3) structurally, as a specification; Frame Language articulates the same contact ontologically, as the access-level reading of how a describer stands to what is described. Neither derives from the other, so the development fact that this work surfaced through coordination practice is not an inheritance fact. What Frame Language supplies the body runs as a cross-cutting practice: the vocabulary discipline that enacts PFDS Corollary 1 (operational definition) at the term layer, the Frame 1 to Frame 2 conversion that replaces vocabulary failing the independent-observer test with vocabulary that passes it, and the decomposition method the per-axis standard uses. Three frames: Frame 1 access (seasonal expressions); Frame 2 access (conditions and configurations); Frame 3 access (the Innate Totality itself). The gunas are the procedural map of these access levels (tamas, rajas, sattva, trigunatita).",
+    craft: "CRAFT is the one meta-standard of the body, a precision instrument and a sibling of the coordination floors under the root. It inherits the root commitment (precision and non-harming); it does not inherit from the coordination floors. It is separately held to consistency with the coordination floors when it is deployed, which is a constitutive and process relation rather than an inheritance one. CRAFT is built (specification v0.4.0). A FOCAL domain application of CRAFT, for example the grants specialty, inherits the coordination floors and is held to the precision instruments including CRAFT.",
+    poc: "Proof of Coordination (PoC) is a FOCAL domain (general coordination): it rests on the coordination floors and is held to the precision instruments. PoC inherits the floors; chronologically, work on PoC surfaced the need for the CSIS standards, but structurally the root and the floors are upstream of PoC. Inheritance order is independent of chronological development order.",
+    crossWalkri: "CROSS+WALKRI is the grants FOCAL domain: it rests on the coordination floors and is held to the precision instruments (CROSS is CRAFT applied to grants; WALKRI supplies per-axis quality). It is a sibling of PoC as a domain, not a child of PoC. Future FOCAL domains (AI evaluation, ESG, scientific research integrity, policy evaluation) likewise rest on the floors and are held to the instruments. Standards-development meta-work is not a FOCAL domain: that is CRAFT, a precision instrument already built, a sibling of the coordination floors rather than a domain under them.",
     inheritanceOrderRule: 'Inheritance order is structural; chronological order is temporal. They are independent. Even if X was developed before Y in time, Y can be structurally upstream of X. Conflating chronological order with inheritance order is itself a precision failure (the assertion "Y comes from X" is ambiguous between "Y was developed after X" and "Y depends on X structurally"; the precision form names which is meant).'
   }
 };
@@ -18353,7 +18358,7 @@ var LookupDescriptiveClassInputSchema = external_exports.object({
 });
 var GetInheritanceGraphInputSchema = external_exports.object({
   specialty: external_exports.string().optional().describe(
-    'Optional: a coordination specialty to place in the inheritance graph (e.g., "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation", "standards-development meta"). If not provided, returns the canonical hierarchy with only the established specialties (PoC, CROSS+WALKRI).'
+    'Optional: a FOCAL domain (Form Of Coordination Activity Locus) to place in the inheritance graph (e.g., "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation"). A FOCAL domain rests on the coordination floors and is held to the precision instruments. If not provided, returns the canonical structure with only the established FOCAL domains (PoC, CROSS+WALKRI).'
   )
 });
 var AuditAgainstCorollaryInputSchema = external_exports.object({
@@ -18392,7 +18397,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "get_foundational_commitments",
-        description: "Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the inheritance hierarchy (CSIS as the active normative foundation; Frame Language derived from CSIS; PoC and CROSS+WALKRI and future specialties inheriting from CSIS). The CSIS relationship to derived work is context-dependent: actively constraining during specification design and revision; receding to background during routine operation. Includes the general principle that inheritance order is independent of chronological order.",
+        description: "Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the content-inheritance structure rooted at PFDS (the root commitment; two cross-domain families under it, the precision instruments of CRAFT and WALKRI and the coordination floors of the nine other CSIS standards, siblings to each other, with Frame Language as the root's twin articulation rather than an instrument; FOCAL domains such as PoC and CROSS+WALKRI resting on the coordination floors and held to the precision instruments). The normative force of CSIS on derived work is context-dependent: actively constraining during specification design and revision; receding to background during routine operation. Includes the general principle that inheritance order is independent of chronological order.",
         inputSchema: {
           type: "object",
           properties: {}
@@ -18464,13 +18469,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "get_inheritance_graph_with_specialty",
-        description: "Return the inheritance hierarchy with a named coordination specialty placed correctly. Without an argument: returns CSIS as the active normative foundation, Frame Language derived from CSIS, PoC and CROSS+WALKRI as established applied specialties. With a specialty argument: places the named specialty in the hierarchy as a sibling of PoC and CROSS+WALKRI under CSIS. Note: CSIS's relationship to derived work is context-dependent (active during design and revision; background during routine operation); the graph shows structural inheritance, not a fixed activity level.",
+        description: "Return the content-inheritance structure with an optional named FOCAL domain placed correctly. Without an argument: returns the root (the PFDS commitment), the two cross-domain families under it (the precision instruments of CRAFT and WALKRI, with Frame Language as the root's twin articulation rather than an instrument; the coordination floors of the nine other CSIS standards), CRAFT as the one meta-standard and sibling of the floors, and PoC and CROSS+WALKRI as established FOCAL domains resting on the floors and held to the instruments. With a specialty argument: places the named FOCAL domain as a sibling of PoC and CROSS+WALKRI. Note: this is the content-inheritance graph (a tree), not the constitutive interaction (a mesh, described in the interaction-architecture document); the normative force of CSIS on derived work is context-dependent, active during design and revision and background during routine operation.",
         inputSchema: {
           type: "object",
           properties: {
             specialty: {
               type: "string",
-              description: 'Optional. A coordination specialty to place in the graph. Examples: "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation", "standards-development meta".'
+              description: 'Optional. A FOCAL domain to place in the graph. Examples: "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation".'
             }
           }
         }
@@ -18654,21 +18659,25 @@ Apply the corollary as a precision-first invariant: both failure directions must
     const input = GetInheritanceGraphInputSchema.parse(args ?? {});
     const baseHierarchy = FOUNDATIONAL_COMMITMENTS.inheritanceHierarchy;
     const graph = {
-      normative_foundation: {
-        csis: baseHierarchy.csis,
-        frameLanguage: baseHierarchy.frameLanguage
-      },
+      root: baseHierarchy.root,
+      precision_instruments: baseHierarchy.precisionInstruments,
+      coordination_floors: baseHierarchy.coordinationFloors,
+      meta_standard: baseHierarchy.craft,
+      frame_language: baseHierarchy.frameLanguage,
+      suite: baseHierarchy.csis,
       applied_specialties: [
         {
           name: "Proof of Coordination (PoC)",
           description: baseHierarchy.poc,
-          established: true
+          established: true,
+          focal: true
         },
         {
           name: "CROSS+WALKRI",
           description: baseHierarchy.crossWalkri,
           established: true,
-          domain: "grants"
+          domain: "grants",
+          focal: true
         }
       ],
       inheritance_order_rule: baseHierarchy.inheritanceOrderRule
@@ -18676,10 +18685,11 @@ Apply the corollary as a precision-first invariant: both failure directions must
     if (input.specialty) {
       graph.applied_specialties.push({
         name: input.specialty,
-        description: `${input.specialty} as a coordination specialty inheriting from CSIS as a sibling of PoC and CROSS+WALKRI. Not yet built; structural placement under CSIS substrate would follow the same inheritance pattern (Frame Language as precision methodology applies; PFDS corollaries apply at decomposition; the foundational commitments hold).`,
+        description: `${input.specialty} placed as a prospective FOCAL domain: if its defining activity is multiple parties brought into coordination, it rests on the coordination floors and is held to the precision instruments (CRAFT and WALKRI), inheriting from the root commitment, as a sibling of PoC and CROSS+WALKRI. If the named work is instead a precision instrument or a meta-standard (for example CRAFT), it belongs in the precision-instrument family as a sibling of the coordination floors, not as a FOCAL domain; CRAFT is already built at specification v0.4.0.`,
         established: false,
         prospective: true,
-        note: "Placement is prospective. Building this specialty would require its own primitives, schemas, and compatibility statements, all on the same CSIS substrate. See the Cross-Domain Applicability Analysis (held in reserve at CROSS+WALKRI corpus) for the structural pattern for emerging specialties."
+        focal: true,
+        note: "Placement is prospective. Apply the FOCAL test first: can an independent observer name the parties whose activity must be brought into coordination as the defining feature. A new FOCAL domain would require its own primitives, schemas, and compatibility statements, all inheriting the coordination floors and held to the precision instruments. See the Cross-Domain Applicability Analysis (held in reserve at CROSS+WALKRI corpus)."
       });
     }
     return {

@@ -48,6 +48,16 @@ import {
   getAllFunctioningCheckModeIds,
 } from './functioning-check.js'
 import { THREE_FRAMES } from './three-frames.js'
+import {
+  REGEN_CHECKS,
+  REGEN_IMITATION_TYPES,
+  FRAME2_DONE_WELL_VS_IMITATION,
+  ROUTING_NOTE,
+  TRIGGER_CONDITIONS,
+  ROS_AUDIT_ROUTING,
+  getRegenCheck,
+  getAllRegenCheckIds,
+} from './regen-check.js'
 
 // ---------------------------------------------------------------------------
 // Tool input schemas
@@ -83,6 +93,15 @@ const AuditTextInputSchema = z.object({
   text: z
     .string()
     .describe('The text to audit for Frame 1 watchlist hits.'),
+})
+
+const RegenRealityCheckInputSchema = z.object({
+  id: z
+    .string()
+    .optional()
+    .describe(
+      'Optional: a specific regen check to return by id. If omitted, returns all nine checks plus the Frame 2 imitation types and routing context.',
+    ),
 })
 
 // ---------------------------------------------------------------------------
@@ -171,6 +190,21 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
           },
           required: ['text'],
+        },
+      },
+      {
+        name: 'regen_reality_check',
+        description:
+          'Return the Regenerative Claim Audit (Regen Reality Check): nine independent checks for documents that claim to be regenerative, use "regen" as an identity marker, operate in the Web3 regen space, or present as a ReFi instrument. Each check can fail while the others pass. Returns the checks, the Frame 2 done well vs. imitation contrast, the new Frame 2 imitation types (propagation without feedback, governance deferral, sovereignty without derivation), routing notes, trigger conditions, and the Regenerative Obligation Standard Audit cross-reference. Pass an optional id to return a single check.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description:
+                'Optional. Specific check to return. Available: identity-vs-structure, direction-vs-destination, from-specification, theory-of-change-vs-theory-of-build, regenerative-obligation-conformance, pre-specification-identity-capture, temporal-deferral, financial-conversion, commons-without-governance.',
+            },
+          },
         },
       },
     ],
@@ -327,6 +361,49 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 totalHits > 0
                   ? 'Each hit must be evaluated against the Pre-Replacement Admissibility seven cases. Citation use of source-framework terms, citation use of CROSS+WALKRI primitive names (e.g., Beneficiary Validation Mechanism), and other admissible-use cases are NOT replacement triggers. Own-voice use of these terms is. Use check_admissibility to review the seven cases.'
                   : 'No watchlist terms found in the audited text. Note that this audit only catches the watchlist terms; other Frame Language failures (Frame 2 functioning check failures, etc.) require separate audits.',
+            },
+            null,
+            2,
+          ),
+        },
+      ],
+    }
+  }
+
+  if (name === 'regen_reality_check') {
+    const input = RegenRealityCheckInputSchema.parse(args ?? {})
+    if (input.id) {
+      const check = getRegenCheck(input.id)
+      if (!check) {
+        const ids = getAllRegenCheckIds().join(', ')
+        throw new Error(
+          `Regen check "${input.id}" not found. Available: ${ids}.`,
+        )
+      }
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({ check }, null, 2),
+          },
+        ],
+      }
+    }
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(
+            {
+              total_checks: REGEN_CHECKS.length,
+              checks: REGEN_CHECKS,
+              frame2_done_well_vs_imitation: FRAME2_DONE_WELL_VS_IMITATION,
+              frame2_imitation_types: REGEN_IMITATION_TYPES,
+              routing_note: ROUTING_NOTE,
+              ros_audit_routing: ROS_AUDIT_ROUTING,
+              trigger_conditions: TRIGGER_CONDITIONS,
+              note:
+                'Run this audit as a domain-specific extension of the standard Frame Language analysis when a document makes regenerative claims. Each of the nine checks is independent and can fail while the others pass. The operative test throughout is external verification: can a party outside the organization verify the condition from the document alone?',
             },
             null,
             2,
