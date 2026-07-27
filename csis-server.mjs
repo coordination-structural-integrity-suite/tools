@@ -18285,6 +18285,7 @@ var PFDS_COROLLARIES = [
     exampleFromPfds: null
   }
 ];
+var PFDS_COROLLARY_COUNT = PFDS_COROLLARIES.length;
 function getPfdsCorollary(number3) {
   return PFDS_COROLLARIES.find((c) => c.number === number3);
 }
@@ -18420,12 +18421,15 @@ function getDescriptiveClass(id) {
 }
 
 // packages/csis-mcp-server/src/index.ts
+var PFDS_STANDARD_URL = getStandardGithubUrl(
+  STANDARDS.find((s) => s.id === "pfds")
+);
 var ListStandardsInputSchema = external_exports.object({
   family: external_exports.enum(["compressive", "generative", "all"]).optional().default("all").describe("Filter standards by family. Default: all ten.")
 });
 var GetFoundationalCommitmentsInputSchema = external_exports.object({}).strict();
 var LookupCorollaryInputSchema = external_exports.object({
-  number: external_exports.number().int().min(1).max(9).describe("Corollary number 1 through 9.")
+  number: external_exports.number().int().min(1).max(PFDS_COROLLARY_COUNT).describe("Corollary number 1 through 9.")
 });
 var LookupStructuralPatternInputSchema = external_exports.object({
   id: external_exports.string().describe(
@@ -18443,7 +18447,7 @@ var GetInheritanceGraphInputSchema = external_exports.object({
   )
 });
 var AuditAgainstCorollaryInputSchema = external_exports.object({
-  corollary_number: external_exports.number().int().min(1).max(9).describe("Corollary number 1 through 9 to apply as a structural test."),
+  corollary_number: external_exports.number().int().min(1).max(PFDS_COROLLARY_COUNT).describe("Corollary number 1 through 9 to apply as a structural test."),
   text: external_exports.string().optional().describe(
     "Optional: the specification text, claim, or document to audit. If omitted, the tool returns the corollary structural test framework without applying it."
   )
@@ -18532,7 +18536,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             number: {
               type: "integer",
               minimum: 1,
-              maximum: 9,
+              maximum: PFDS_COROLLARY_COUNT,
               description: "Corollary number 1 through 9."
             }
           },
@@ -18576,7 +18580,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             corollary_number: {
               type: "integer",
               minimum: 1,
-              maximum: 9,
+              maximum: PFDS_COROLLARY_COUNT,
               description: "Corollary number 1 through 9 to apply."
             },
             text: {
@@ -18661,7 +18665,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
               text: JSON.stringify(
                 {
                   corollary,
-                  note: "PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md"
+                  note: `PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: ${PFDS_STANDARD_URL}`
                 },
                 null,
                 2
@@ -18736,7 +18740,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             name: corollary.name
           },
           structural_test: structuralTest,
-          source_reference: "PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md"
+          source_reference: `PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: ${PFDS_STANDARD_URL}`
         };
         if (input.text) {
           const promptTemplate = `Apply PFDS Corollary ${corollary.number} (${corollary.name}) as a structural test on the following text.

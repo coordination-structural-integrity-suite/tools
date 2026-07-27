@@ -16,6 +16,7 @@ import {
 } from '../packages/csis-mcp-server/src/standards.js'
 import {
   PFDS_COROLLARIES,
+  PFDS_COROLLARY_COUNT,
   getPfdsCorollary,
 } from '../packages/csis-mcp-server/src/corollaries.js'
 import {
@@ -102,6 +103,13 @@ describe('PFDS corollaries', () => {
     }
     expect(getPfdsCorollary(0)).toBeUndefined()
     expect(getPfdsCorollary(PFDS_COROLLARIES.length + 1)).toBeUndefined()
+  })
+
+  // The two tests above compare the table to itself, which is why a tenth
+  // corollary sat in the table for a release while the argument bounds still
+  // said nine. This one compares it to the bound callers are held to.
+  it('advertises a bound that matches the table', () => {
+    expect(PFDS_COROLLARY_COUNT).toBe(PFDS_COROLLARIES.length)
   })
 })
 

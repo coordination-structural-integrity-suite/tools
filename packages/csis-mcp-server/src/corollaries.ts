@@ -150,6 +150,13 @@ export const PFDS_COROLLARIES: readonly PfdsCorollary[] = [
   },
 ] as const
 
+/**
+ * The number of corollaries PFDS defines. Derived from the table above rather
+ * than written as a literal: the argument bounds had been left at 9 after a
+ * tenth corollary was added, so the tenth was encoded but unreachable.
+ */
+export const PFDS_COROLLARY_COUNT = PFDS_COROLLARIES.length
+
 /** Return a corollary by its number (1 through 10). */
 export function getPfdsCorollary(number: number): PfdsCorollary | undefined {
   return PFDS_COROLLARIES.find((c) => c.number === number)

@@ -43,7 +43,19 @@ import {
   type StandardFamily,
 } from './standards.js'
 import { FOUNDATIONAL_COMMITMENTS } from './foundational-commitments.js'
-import { PFDS_COROLLARIES, getPfdsCorollary } from './corollaries.js'
+import {
+  PFDS_COROLLARIES,
+  PFDS_COROLLARY_COUNT,
+  getPfdsCorollary,
+} from './corollaries.js'
+
+// Derived from the standards table rather than typed as a literal. Two
+// hardcoded copies of this URL had drifted two minor releases behind the
+// published file, so both links returned 404 while the table beside them was
+// correct. A version bump now moves these with it.
+const PFDS_STANDARD_URL = getStandardGithubUrl(
+  STANDARDS.find((s) => s.id === 'pfds')!,
+)
 import { STRUCTURAL_PATTERNS, getStructuralPattern } from './structural-patterns.js'
 import { DESCRIPTIVE_CLASSES, getDescriptiveClass } from './descriptive-classes.js'
 
@@ -66,7 +78,7 @@ const LookupCorollaryInputSchema = z.object({
     .number()
     .int()
     .min(1)
-    .max(9)
+    .max(PFDS_COROLLARY_COUNT)
     .describe('Corollary number 1 through 9.'),
 })
 
@@ -100,7 +112,7 @@ const AuditAgainstCorollaryInputSchema = z.object({
     .number()
     .int()
     .min(1)
-    .max(9)
+    .max(PFDS_COROLLARY_COUNT)
     .describe('Corollary number 1 through 9 to apply as a structural test.'),
   text: z
     .string()
@@ -206,7 +218,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             number: {
               type: 'integer',
               minimum: 1,
-              maximum: 9,
+              maximum: PFDS_COROLLARY_COUNT,
               description: 'Corollary number 1 through 9.',
             },
           },
@@ -255,7 +267,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             corollary_number: {
               type: 'integer',
               minimum: 1,
-              maximum: 9,
+              maximum: PFDS_COROLLARY_COUNT,
               description: 'Corollary number 1 through 9 to apply.',
             },
             text: {
@@ -355,7 +367,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               corollary,
               note:
-                'PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md',
+                `PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: ${PFDS_STANDARD_URL}`,
             },
             null,
             2,
@@ -438,7 +450,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       },
       structural_test: structuralTest,
       source_reference:
-        'PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md',
+        `PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: ${PFDS_STANDARD_URL}`,
     }
 
     if (input.text) {

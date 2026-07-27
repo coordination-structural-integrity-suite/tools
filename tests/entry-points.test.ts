@@ -10,6 +10,7 @@
 
 import { describe, it, expect } from 'vitest'
 import { withServer } from './helpers/mcp-client.js'
+import { PFDS_COROLLARY_COUNT } from '../packages/csis-mcp-server/src/corollaries.js'
 
 const ENTRIES = [
   { label: 'csis bundle', path: 'csis-server.mjs', expectName: 'csis' },
@@ -58,4 +59,18 @@ describe('entry points', () => {
       })
     })
   }
+})
+
+describe('corollary range over the wire', () => {
+  it('accepts the highest corollary the table defines, not a stale bound', async () => {
+    await withServer('csis-server.mjs', async (client) => {
+      const res = await client.callTool('lookup_corollary', {
+        number: PFDS_COROLLARY_COUNT,
+      })
+      expect(
+        res.isError,
+        `corollary ${PFDS_COROLLARY_COUNT} was rejected by the running server`,
+      ).toBeFalsy()
+    })
+  })
 })
