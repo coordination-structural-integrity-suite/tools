@@ -1,11 +1,11 @@
 {
-  "name": "@csis/mcp-server",
+  "name": "@proof-of-coord/structural-integrity",
   "version": "0.3.0",
   "description": "MCP server exposing the Coordination Structural Integrity Suite as AI tools",
   "license": "Apache-2.0",
   "type": "module",
   "bin": {
-    "csis": "dist/index.js"
+    "coordination-structural-integrity-suite": "dist/index.js"
   },
   "main": "dist/index.js",
   "files": [

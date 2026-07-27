@@ -30,9 +30,16 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 import { z } from 'zod'
+import {
+  toolError,
+  stampProvenance,
+  withOutputSchemas,
+  type Provenance,
+} from './tool-errors.js'
 
 import {
   WATCHLIST,
+  REGISTRY_VERSION,
   getWatchlistEntry,
   getAllWatchlistTerms,
   scanTextForWatchlist,
@@ -108,10 +115,46 @@ const RegenRealityCheckInputSchema = z.object({
 // Server setup
 // ---------------------------------------------------------------------------
 
+/** Response keys per tool, derived by calling each one and recording what came back. */
+const OUTPUT_SCHEMAS: Record<string, readonly string[]> = {
+  check_watchlist: ['term', 'on_watchlist', 'entry', 'admissibility_note'],
+  check_admissibility: ['total', 'cases', 'note'],
+  frame2_functioning_check: ['total', 'modes', 'note'],
+  lookup_three_frames: [
+    'frames',
+    'trigunatita',
+    'innate_totality',
+    'precision_and_non_harming',
+    'nested_failure_structure',
+    'bridge_vocabulary_note',
+  ],
+  audit_text: ['total_watchlist_hits', 'terms_found', 'hits', 'note'],
+  regen_reality_check: [
+    'total_checks',
+    'checks',
+    'frame2_done_well_vs_imitation',
+    'frame2_imitation_types',
+    'routing_note',
+    'ros_audit_routing',
+    'trigger_conditions',
+    'note',
+  ],
+}
+
+const SERVER_VERSION = '0.1.0'
+
+const PROVENANCE: Provenance = {
+  server: 'frame-language',
+  serverVersion: SERVER_VERSION,
+  encodes: {
+    'frame-language-term-registry': REGISTRY_VERSION,
+  },
+}
+
 const server = new Server(
   {
     name: 'frame-language',
-    version: '0.1.0',
+    version: SERVER_VERSION,
   },
   {
     capabilities: {
@@ -122,7 +165,7 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
-    tools: [
+    tools: withOutputSchemas([
       {
         name: 'check_watchlist',
         description:
@@ -207,12 +250,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           },
         },
       },
-    ],
+    ], OUTPUT_SCHEMAS),
   }
 })
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params
+
+  try {
+    const __result = await (async () => {
 
   if (name === 'check_watchlist') {
     const input = CheckWatchlistInputSchema.parse(args ?? {})
@@ -413,7 +459,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
   }
 
-  throw new Error(`Unknown tool: ${name}`)
+    throw new Error(`Unknown tool: ${name}`)
+    })()
+    return stampProvenance(__result, PROVENANCE)
+  } catch (err) {
+    return toolError(err, name)
+  }
 })
 
 // ---------------------------------------------------------------------------
@@ -423,7 +474,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport()
   await server.connect(transport)
-  console.error('Frame Language MCP server v0.1.0 running on stdio')
+  console.error(`Frame Language MCP server v${SERVER_VERSION} running on stdio`)
 }
 
 main().catch((err) => {

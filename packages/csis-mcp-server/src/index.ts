@@ -29,6 +29,12 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 import { z } from 'zod'
+import {
+  toolError,
+  stampProvenance,
+  withOutputSchemas,
+  type Provenance,
+} from './tool-errors.js'
 
 import {
   STANDARDS,
@@ -108,10 +114,53 @@ const AuditAgainstCorollaryInputSchema = z.object({
 // Server setup
 // ---------------------------------------------------------------------------
 
+/** Response keys per tool, derived by calling each one and recording what came back. */
+const OUTPUT_SCHEMAS: Record<string, readonly string[]> = {
+  list_standards: ['total', 'family_filter', 'standards', 'note'],
+  get_foundational_commitments: [
+    'unifiedPrinciple',
+    'unityExplanation',
+    'precisionWithoutNonHarming',
+    'nonHarmingWithoutPrecision',
+    'outcome',
+    'inheritanceHierarchy',
+  ],
+  lookup_corollary: ['corollary', 'note'],
+  lookup_structural_pattern: ['pattern', 'note'],
+  lookup_descriptive_class: ['descriptive_class', 'all_six_classes', 'corollary_8_reference'],
+  audit_against_corollary: [
+    'corollary',
+    'structural_test',
+    'source_reference',
+    'audit_input_text_provided',
+    'note',
+  ],
+  get_inheritance_graph_with_specialty: [
+    'root',
+    'precision_instruments',
+    'coordination_floors',
+    'meta_standard',
+    'frame_language',
+    'suite',
+    'applied_specialties',
+    'inheritance_order_rule',
+  ],
+}
+
+const SERVER_VERSION = '0.3.0'
+
+const PROVENANCE: Provenance = {
+  server: 'csis',
+  serverVersion: SERVER_VERSION,
+  encodes: {
+    'csis-suite': STANDARDS.map((s) => `${s.id}@${s.version}`).join(', '),
+  },
+}
+
 const server = new Server(
   {
     name: 'csis',
-    version: '0.3.0',
+    version: SERVER_VERSION,
   },
   {
     capabilities: {
@@ -122,7 +171,7 @@ const server = new Server(
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
-    tools: [
+    tools: withOutputSchemas([
       {
         name: 'list_standards',
         description:
@@ -233,12 +282,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           },
         },
       },
-    ],
+    ], OUTPUT_SCHEMAS),
   }
 })
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params
+
+  try {
+    const __result = await (async () => {
 
   if (name === 'list_standards') {
     const input = ListStandardsInputSchema.parse(args ?? {})
@@ -482,7 +534,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
   }
 
-  throw new Error(`Unknown tool: ${name}`)
+    throw new Error(`Unknown tool: ${name}`)
+    })()
+    return stampProvenance(__result, PROVENANCE)
+  } catch (err) {
+    return toolError(err, name)
+  }
 })
 
 // ---------------------------------------------------------------------------
@@ -492,7 +549,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport()
   await server.connect(transport)
-  console.error('CSIS MCP server v0.3.0 running on stdio')
+  console.error(`CSIS MCP server v${SERVER_VERSION} running on stdio`)
 }
 
 main().catch((err) => {

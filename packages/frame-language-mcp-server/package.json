@@ -1,11 +1,11 @@
 {
-  "name": "@frame-language/mcp-server",
+  "name": "@proof-of-coord/frame-language",
   "version": "0.1.0",
-  "description": "MCP server exposing Frame Language precision discipline as AI tools",
+  "description": "MCP server exposing the Dimensional Frame Language precision discipline as AI tools",
   "license": "Apache-2.0",
   "type": "module",
   "bin": {
-    "frame-language": "dist/index.js"
+    "dimensional-frame-language": "dist/index.js"
   },
   "main": "dist/index.js",
   "files": [

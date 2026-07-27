@@ -6,7 +6,11 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  try {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  } catch (e) {
+    throw mod = 0, e;
+  }
 };
 var __export = (target, all) => {
   for (var name in all)
@@ -3099,9 +3103,9 @@ var require_data = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/lib/utils.js
+// node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/lib/utils.js
 var require_utils = __commonJS({
-  "node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/lib/utils.js"(exports, module) {
+  "node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/lib/utils.js"(exports, module) {
     "use strict";
     var isUUID = RegExp.prototype.test.bind(/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/iu);
     var isIPv4 = RegExp.prototype.test.bind(/^(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)$/u);
@@ -3412,9 +3416,9 @@ var require_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/lib/schemes.js
+// node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/lib/schemes.js
 var require_schemes = __commonJS({
-  "node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/lib/schemes.js"(exports, module) {
+  "node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/lib/schemes.js"(exports, module) {
     "use strict";
     var { isUUID } = require_utils();
     var URN_REG = /([\da-z][\d\-a-z]{0,31}):((?:[\w!$'()*+,\-.:;=@]|%[\da-f]{2})+)/iu;
@@ -3622,9 +3626,9 @@ var require_schemes = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/index.js
+// node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/index.js
 var require_fast_uri = __commonJS({
-  "node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/index.js"(exports, module) {
+  "node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/index.js"(exports, module) {
     "use strict";
     var { normalizeIPv6, removeDotSegments, recomposeAuthority, normalizePercentEncoding, normalizePathEncoding, escapePreservingEscapes, reescapeHostDelimiters, isIPv4, nonSimpleDomain } = require_utils();
     var { SCHEMES, getSchemeHandler } = require_schemes();
@@ -3765,6 +3769,7 @@ var require_fast_uri = __commonJS({
       return uriTokens.join("");
     }
     var URI_PARSE = /^(?:([^#/:?]+):)?(?:\/\/((?:([^#/?@]*)@)?(\[[^#/?\]]+\]|[^#/:?]*)(?::(\d*))?))?([^#?]*)(?:\?([^#]*))?(?:#((?:.|[\n\r])*))?/u;
+    var AUTHORITY_PREFIX = /^(?:[^#/:?]+:)?\/\/([^/?#]*)/;
     function getParseError(parsed, matches) {
       if (matches[2] !== void 0 && parsed.path && parsed.path[0] !== "/") {
         return 'URI path must start with "/" when authority is present.';
@@ -3793,6 +3798,11 @@ var require_fast_uri = __commonJS({
         } else {
           uri = "//" + uri;
         }
+      }
+      const authorityMatch = uri.match(AUTHORITY_PREFIX);
+      if (authorityMatch !== null && authorityMatch[1].indexOf("\\") !== -1) {
+        parsed.error = "URI authority must not contain a literal backslash.";
+        malformedAuthorityOrPort = true;
       }
       const matches = uri.match(URI_PARSE);
       if (matches) {
@@ -3837,7 +3847,7 @@ var require_fast_uri = __commonJS({
         if (!options.unicodeSupport && (!schemeHandler || !schemeHandler.unicodeSupport)) {
           if (parsed.host && (options.domainHost || schemeHandler && schemeHandler.domainHost) && isIP === false && nonSimpleDomain(parsed.host)) {
             try {
-              parsed.host = URL.domainToASCII(parsed.host.toLowerCase());
+              parsed.host = new URL("http://" + parsed.host).hostname;
             } catch (e) {
               parsed.error = parsed.error || "Host's domain name can not be converted to ASCII: " + e;
             }
@@ -18008,6 +18018,77 @@ var StdioServerTransport = class {
   }
 };
 
+// packages/csis-mcp-server/src/tool-errors.ts
+function describeIssue(issue2) {
+  const path = issue2.path.length > 0 ? issue2.path.join(".") : "(root)";
+  return `${path}: ${issue2.message}`;
+}
+function toolError(err, toolName) {
+  if (err instanceof ZodError) {
+    const lines = err.issues.map(describeIssue);
+    const text = [
+      `Invalid arguments for ${toolName}.`,
+      ...lines.map((l) => `  ${l}`),
+      "",
+      "Correct the arguments and call the tool again."
+    ].join("\n");
+    return { content: [{ type: "text", text }], isError: true };
+  }
+  const message = err instanceof Error ? err.message : String(err);
+  return {
+    content: [{ type: "text", text: `${toolName} failed: ${message}` }],
+    isError: true
+  };
+}
+function stampProvenance(result, provenance) {
+  const r = result;
+  if (r?.isError === true) return result;
+  const first = r?.content?.[0];
+  if (!first || first.type !== "text" || typeof first.text !== "string") return result;
+  let payload;
+  try {
+    payload = JSON.parse(first.text);
+  } catch {
+    return result;
+  }
+  if (payload === null || typeof payload !== "object" || Array.isArray(payload)) {
+    return result;
+  }
+  if ("_provenance" in payload) return result;
+  const stamped = { ...payload, _provenance: provenance };
+  first.text = JSON.stringify(stamped, null, 2);
+  r["structuredContent"] = stamped;
+  return result;
+}
+function outputSchemaFor(keys) {
+  const properties = {};
+  for (const k of keys) {
+    properties[k] = {};
+  }
+  properties["_provenance"] = {
+    type: "object",
+    description: "What this response was produced against: the server, its version, and the standard or registry versions encoded.",
+    properties: {
+      server: { type: "string" },
+      serverVersion: { type: "string" },
+      encodes: { type: "object", additionalProperties: { type: "string" } }
+    },
+    required: ["server", "serverVersion", "encodes"]
+  };
+  return {
+    type: "object",
+    properties,
+    required: [...keys, "_provenance"],
+    additionalProperties: true
+  };
+}
+function withOutputSchemas(tools, schemas) {
+  return tools.map((t) => {
+    const keys = schemas[t.name];
+    return keys ? { ...t, outputSchema: outputSchemaFor(keys) } : { ...t };
+  });
+}
+
 // packages/csis-mcp-server/src/standards.ts
 var STANDARDS = [
   // Tensegrity Compressive Standards (7)
@@ -18015,56 +18096,56 @@ var STANDARDS = [
     name: "Precision-First Design Standard",
     id: "pfds",
     family: "compressive",
-    version: "2.2.0",
-    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_2_0.md",
+    version: "2.4.3",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_4_3.md",
     description: "The suite meta-standard. Specifies what precision requires across every standard. Precision-First Design is the discipline of keeping instruments precise enough that violations are detectable and compliance meaningful, before deployment, not after a failure has made those questions urgent. Defines two foundational principles: the precision-first invariant (precision deficit and precision imposition as two failure directions of one commitment) and Method-Structure Congruence (the epistemic method used must match the structural character of what is being known; congruence deficits are self-concealing because the absent content leaves no gap marker). Nine corollaries, the precision review checklist, and obligation loop tier requirements."
   },
   {
     name: "Adverse-Signal Engagement Principle Core Standard",
     id: "asep",
     family: "compressive",
-    version: "0.7.11",
-    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-adverse-signal-engagement-0_7_11.md",
+    version: "0.7.13",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-adverse-signal-engagement-0_7_13.md",
     description: "Specifies how coordination systems engage with signals that contradict their current model. Defines what counts as an adverse signal, the three-phase processing loop, and the requirement that adverse signals not be processed as noise or threat but as structural information."
   },
   {
     name: "Coordination Scaling Standard",
     id: "css",
     family: "compressive",
-    version: "0.1.0",
-    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-coordination-scaling-0_1_0.md",
+    version: "0.1.5",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-coordination-scaling-0_1_5.md",
     description: "Specifies how rigor scales with coordination context. Provides the calibration framework that determines what evidence pressure is appropriate for what scale of public impact claim."
   },
   {
     name: "Information Asymmetry Classification Standard",
     id: "iacs",
     family: "compressive",
-    version: "0.1.25",
-    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-information-asymmetry-0_1_25.md",
+    version: "0.1.26",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-information-asymmetry-0_1_26.md",
     description: "Classifies the six information asymmetry classes (positional, temporal, interpretive, relational, complexity, omission) and specifies what each requires structurally."
   },
   {
     name: "Regenerative Obligation Standard",
     id: "ros",
     family: "compressive",
-    version: "0.1.7",
-    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-regenerative-obligation-0_1_7.md",
+    version: "0.1.8",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-regenerative-obligation-0_1_8.md",
     description: "Specifies that extraction from contributors must be matched by regenerative return that is non-fungible, proximate, and embedded in the relationship that generated it. Obligation flows in lineage and ecological directions."
   },
   {
     name: "Structural Consent Legibility Standard",
     id: "scls",
     family: "compressive",
-    version: "0.3.24",
-    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-structural-consent-0_3_24.md",
+    version: "0.3.25",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-structural-consent-0_3_25.md",
     description: "Specifies the conditions under which consent in a coordination system is structurally legible: consent is specified to particular acts and parties, standing is distributed to all parties who bear costs, and the consent act itself is verifiable rather than assumed."
   },
   {
     name: "Structural Power Obligation Standard",
     id: "spos",
     family: "compressive",
-    version: "0.1.24",
-    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-structural-power-obligation-0_1_24.md",
+    version: "0.1.26",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-structural-power-obligation-0_1_26.md",
     description: "Specifies that power in a coordination system must be matched by obligation directions running in multiple directions toward all cost-bearing parties. Power concentration is precisely defined as power without obligation."
   },
   // Tensegrity Generative Standards (3)
@@ -18072,24 +18153,24 @@ var STANDARDS = [
     name: "Conflict Transformation Standard",
     id: "cts",
     family: "generative",
-    version: "0.2.9",
-    githubPath: "tensegrity-suite/generative/standards/standards-3_0-conflict-transformation-0_2_9.md",
+    version: "0.2.10",
+    githubPath: "tensegrity-suite/generative/standards/standards-3_0-conflict-transformation-0_2_10.md",
     description: "Specifies that conflicts in a coordination system must be engageable at less than their full intensity before they reach termination thresholds. Requires graduated engagement architecture and the structural capacity to hold conflict as information rather than process it as a binary."
   },
   {
     name: "Four Batteries Capacity Standard",
     id: "fbcs",
     family: "generative",
-    version: "0.3.6",
-    githubPath: "tensegrity-suite/generative/standards/standards-3_0-four-batteries-capacity-0_3_6.md",
+    version: "0.3.7",
+    githubPath: "tensegrity-suite/generative/standards/standards-3_0-four-batteries-capacity-0_3_7.md",
     description: "Specifies the four capacity dimensions that sustain coordination work: Mission battery, Contribution battery, Relational battery, and a fourth. Requires that depletion in any dimension be reportable as a structural condition rather than left as a private experience."
   },
   {
     name: "Sensemaking Standard",
     id: "sms",
     family: "generative",
-    version: "1.1.22",
-    githubPath: "tensegrity-suite/generative/standards/standards-3_0-sensemaking-1_1_22.md",
+    version: "1.1.23",
+    githubPath: "tensegrity-suite/generative/standards/standards-3_0-sensemaking-1_1_23.md",
     description: "Specifies the structural conditions for sensemaking in a coordination system: disruption-occasioned, action-entangled, sufficiency-oriented, and particular-to-general. Requires that disruption events open as questions the system needs to answer rather than be processed as resolved."
   }
 ];
@@ -18367,10 +18448,49 @@ var AuditAgainstCorollaryInputSchema = external_exports.object({
     "Optional: the specification text, claim, or document to audit. If omitted, the tool returns the corollary structural test framework without applying it."
   )
 });
+var OUTPUT_SCHEMAS = {
+  list_standards: ["total", "family_filter", "standards", "note"],
+  get_foundational_commitments: [
+    "unifiedPrinciple",
+    "unityExplanation",
+    "precisionWithoutNonHarming",
+    "nonHarmingWithoutPrecision",
+    "outcome",
+    "inheritanceHierarchy"
+  ],
+  lookup_corollary: ["corollary", "note"],
+  lookup_structural_pattern: ["pattern", "note"],
+  lookup_descriptive_class: ["descriptive_class", "all_six_classes", "corollary_8_reference"],
+  audit_against_corollary: [
+    "corollary",
+    "structural_test",
+    "source_reference",
+    "audit_input_text_provided",
+    "note"
+  ],
+  get_inheritance_graph_with_specialty: [
+    "root",
+    "precision_instruments",
+    "coordination_floors",
+    "meta_standard",
+    "frame_language",
+    "suite",
+    "applied_specialties",
+    "inheritance_order_rule"
+  ]
+};
+var SERVER_VERSION = "0.3.0";
+var PROVENANCE = {
+  server: "csis",
+  serverVersion: SERVER_VERSION,
+  encodes: {
+    "csis-suite": STANDARDS.map((s) => `${s.id}@${s.version}`).join(", ")
+  }
+};
 var server = new Server(
   {
     name: "csis",
-    version: "0.3.0"
+    version: SERVER_VERSION
   },
   {
     capabilities: {
@@ -18380,7 +18500,7 @@ var server = new Server(
 );
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
-    tools: [
+    tools: withOutputSchemas([
       {
         name: "list_standards",
         description: "List the ten standards of the Coordination Structural Integrity Suite (CSIS). Returns canonical names, short ids, family (compressive or generative), current version, GitHub paths, GitHub URLs, and brief descriptions sourced from the suite README. Use this to discover what standards exist, then fetch full standard text from the GitHub URL when substantive work requires the source.",
@@ -18480,144 +18600,146 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           }
         }
       }
-    ]
+    ], OUTPUT_SCHEMAS)
   };
 });
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
-  if (name === "list_standards") {
-    const input = ListStandardsInputSchema.parse(args ?? {});
-    const filtered = input.family === "all" ? STANDARDS : getStandardsByFamily(input.family);
-    const standardsWithUrls = filtered.map((s) => ({
-      name: s.name,
-      id: s.id,
-      family: s.family,
-      version: s.version,
-      githubPath: s.githubPath,
-      githubUrl: getStandardGithubUrl(s),
-      description: s.description
-    }));
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
+  try {
+    const __result = await (async () => {
+      if (name === "list_standards") {
+        const input = ListStandardsInputSchema.parse(args ?? {});
+        const filtered = input.family === "all" ? STANDARDS : getStandardsByFamily(input.family);
+        const standardsWithUrls = filtered.map((s) => ({
+          name: s.name,
+          id: s.id,
+          family: s.family,
+          version: s.version,
+          githubPath: s.githubPath,
+          githubUrl: getStandardGithubUrl(s),
+          description: s.description
+        }));
+        return {
+          content: [
             {
-              total: standardsWithUrls.length,
-              family_filter: input.family,
-              standards: standardsWithUrls,
-              note: "Metadata pointers. The substrate discipline requires that full standards be read directly when substantive PFDS, ASEP, or other corollary work is performed; fetch source content from githubUrl in those cases."
-            },
-            null,
-            2
-          )
-        }
-      ]
-    };
-  }
-  if (name === "get_foundational_commitments") {
-    GetFoundationalCommitmentsInputSchema.parse(args ?? {});
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(FOUNDATIONAL_COMMITMENTS, null, 2)
-        }
-      ]
-    };
-  }
-  if (name === "lookup_corollary") {
-    const input = LookupCorollaryInputSchema.parse(args ?? {});
-    const corollary = getPfdsCorollary(input.number);
-    if (!corollary) {
-      throw new Error(`Corollary ${input.number} not found. Available: 1 through 9.`);
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
+              type: "text",
+              text: JSON.stringify(
+                {
+                  total: standardsWithUrls.length,
+                  family_filter: input.family,
+                  standards: standardsWithUrls,
+                  note: "Metadata pointers. The substrate discipline requires that full standards be read directly when substantive PFDS, ASEP, or other corollary work is performed; fetch source content from githubUrl in those cases."
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
+      }
+      if (name === "get_foundational_commitments") {
+        GetFoundationalCommitmentsInputSchema.parse(args ?? {});
+        return {
+          content: [
             {
-              corollary,
-              note: "PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md"
-            },
-            null,
-            2
-          )
+              type: "text",
+              text: JSON.stringify(FOUNDATIONAL_COMMITMENTS, null, 2)
+            }
+          ]
+        };
+      }
+      if (name === "lookup_corollary") {
+        const input = LookupCorollaryInputSchema.parse(args ?? {});
+        const corollary = getPfdsCorollary(input.number);
+        if (!corollary) {
+          throw new Error(`Corollary ${input.number} not found. Available: 1 through 9.`);
         }
-      ]
-    };
-  }
-  if (name === "lookup_structural_pattern") {
-    const input = LookupStructuralPatternInputSchema.parse(args ?? {});
-    const pattern = getStructuralPattern(input.id);
-    if (!pattern) {
-      const availableIds = STRUCTURAL_PATTERNS.map((p) => p.id).join(", ");
-      throw new Error(`Structural pattern "${input.id}" not found. Available: ${availableIds}.`);
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
+        return {
+          content: [
             {
-              pattern,
-              note: "Full pattern details with worked examples are in the Suite Structural Patterns Primer: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/overview/suite-structural-patterns-primer-0_1_2.md"
-            },
-            null,
-            2
-          )
+              type: "text",
+              text: JSON.stringify(
+                {
+                  corollary,
+                  note: "PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md"
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
+      }
+      if (name === "lookup_structural_pattern") {
+        const input = LookupStructuralPatternInputSchema.parse(args ?? {});
+        const pattern = getStructuralPattern(input.id);
+        if (!pattern) {
+          const availableIds = STRUCTURAL_PATTERNS.map((p) => p.id).join(", ");
+          throw new Error(`Structural pattern "${input.id}" not found. Available: ${availableIds}.`);
         }
-      ]
-    };
-  }
-  if (name === "lookup_descriptive_class") {
-    const input = LookupDescriptiveClassInputSchema.parse(args ?? {});
-    const dclass = getDescriptiveClass(input.id);
-    if (!dclass) {
-      const availableIds = DESCRIPTIVE_CLASSES.map((c) => c.id).join(", ");
-      throw new Error(`Descriptive class "${input.id}" not found. Available: ${availableIds}.`);
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
+        return {
+          content: [
             {
-              descriptive_class: dclass,
-              all_six_classes: DESCRIPTIVE_CLASSES.map((c) => c.id),
-              corollary_8_reference: "PFDS Corollary 8 (Descriptive completeness): a specification declares which classes it draws from (operative) and at least one class where its vocabulary ends (boundary). Use these six classes to apply the typological declaration."
-            },
-            null,
-            2
-          )
+              type: "text",
+              text: JSON.stringify(
+                {
+                  pattern,
+                  note: "Full pattern details with worked examples are in the Suite Structural Patterns Primer: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/overview/suite-structural-patterns-primer-0_1_2.md"
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
+      }
+      if (name === "lookup_descriptive_class") {
+        const input = LookupDescriptiveClassInputSchema.parse(args ?? {});
+        const dclass = getDescriptiveClass(input.id);
+        if (!dclass) {
+          const availableIds = DESCRIPTIVE_CLASSES.map((c) => c.id).join(", ");
+          throw new Error(`Descriptive class "${input.id}" not found. Available: ${availableIds}.`);
         }
-      ]
-    };
-  }
-  if (name === "audit_against_corollary") {
-    const input = AuditAgainstCorollaryInputSchema.parse(args ?? {});
-    const corollary = getPfdsCorollary(input.corollary_number);
-    if (!corollary) {
-      throw new Error(`Corollary ${input.corollary_number} not found. Available: 1 through 9.`);
-    }
-    const structuralTest = {
-      apply_in_two_directions: "A precision-first audit checks both directions. (1) Under-specification: does the text fail to prevent the under-specification failure mode named below? (2) Over-specification: does the text exhibit the over-specification failure mode named below? A specification can fail in either direction independently.",
-      under_specification_check: corollary.underSpecificationFailure,
-      over_specification_check: corollary.overSpecificationFailure,
-      requirement_to_satisfy: corollary.requirement,
-      worked_example_from_pfds: corollary.exampleFromPfds
-    };
-    const payload = {
-      corollary: {
-        number: corollary.number,
-        name: corollary.name
-      },
-      structural_test: structuralTest,
-      source_reference: "PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md"
-    };
-    if (input.text) {
-      const promptTemplate = `Apply PFDS Corollary ${corollary.number} (${corollary.name}) as a structural test on the following text.
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  descriptive_class: dclass,
+                  all_six_classes: DESCRIPTIVE_CLASSES.map((c) => c.id),
+                  corollary_8_reference: "PFDS Corollary 8 (Descriptive completeness): a specification declares which classes it draws from (operative) and at least one class where its vocabulary ends (boundary). Use these six classes to apply the typological declaration."
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
+      }
+      if (name === "audit_against_corollary") {
+        const input = AuditAgainstCorollaryInputSchema.parse(args ?? {});
+        const corollary = getPfdsCorollary(input.corollary_number);
+        if (!corollary) {
+          throw new Error(`Corollary ${input.corollary_number} not found. Available: 1 through 9.`);
+        }
+        const structuralTest = {
+          apply_in_two_directions: "A precision-first audit checks both directions. (1) Under-specification: does the text fail to prevent the under-specification failure mode named below? (2) Over-specification: does the text exhibit the over-specification failure mode named below? A specification can fail in either direction independently.",
+          under_specification_check: corollary.underSpecificationFailure,
+          over_specification_check: corollary.overSpecificationFailure,
+          requirement_to_satisfy: corollary.requirement,
+          worked_example_from_pfds: corollary.exampleFromPfds
+        };
+        const payload = {
+          corollary: {
+            number: corollary.number,
+            name: corollary.name
+          },
+          structural_test: structuralTest,
+          source_reference: "PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_3_0.md"
+        };
+        if (input.text) {
+          const promptTemplate = `Apply PFDS Corollary ${corollary.number} (${corollary.name}) as a structural test on the following text.
 
 REQUIREMENT (what the corollary mandates):
 ${corollary.requirement}
@@ -18644,69 +18766,74 @@ Return a structured audit:
 }
 
 Apply the corollary as a precision-first invariant: both failure directions must be checked independently. The substrate discipline requires that the verdict be defensible by reference to specific passages, not impressionistic.`;
-      payload["audit_input_text_provided"] = true;
-      payload["prompt_template"] = promptTemplate;
-      payload["note"] = "Send the prompt_template to a language model to perform the corollary audit. The tool itself surfaces the structural test; the LLM applies it.";
-    } else {
-      payload["audit_input_text_provided"] = false;
-      payload["note"] = "No text provided. Returned the structural test framework. Call again with the text argument to receive a prompt template for applying the audit.";
-    }
-    return {
-      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }]
-    };
-  }
-  if (name === "get_inheritance_graph_with_specialty") {
-    const input = GetInheritanceGraphInputSchema.parse(args ?? {});
-    const baseHierarchy = FOUNDATIONAL_COMMITMENTS.inheritanceHierarchy;
-    const graph = {
-      root: baseHierarchy.root,
-      precision_instruments: baseHierarchy.precisionInstruments,
-      coordination_floors: baseHierarchy.coordinationFloors,
-      meta_standard: baseHierarchy.craft,
-      frame_language: baseHierarchy.frameLanguage,
-      suite: baseHierarchy.csis,
-      applied_specialties: [
-        {
-          name: "Proof of Coordination (PoC)",
-          description: baseHierarchy.poc,
-          established: true,
-          focal: true
-        },
-        {
-          name: "CROSS+WALKRI",
-          description: baseHierarchy.crossWalkri,
-          established: true,
-          domain: "grants",
-          focal: true
+          payload["audit_input_text_provided"] = true;
+          payload["prompt_template"] = promptTemplate;
+          payload["note"] = "Send the prompt_template to a language model to perform the corollary audit. The tool itself surfaces the structural test; the LLM applies it.";
+        } else {
+          payload["audit_input_text_provided"] = false;
+          payload["note"] = "No text provided. Returned the structural test framework. Call again with the text argument to receive a prompt template for applying the audit.";
         }
-      ],
-      inheritance_order_rule: baseHierarchy.inheritanceOrderRule
-    };
-    if (input.specialty) {
-      graph.applied_specialties.push({
-        name: input.specialty,
-        description: `${input.specialty} placed as a prospective FOCAL domain: if its defining activity is multiple parties brought into coordination, it rests on the coordination floors and is held to the precision instruments (CRAFT and WALKRI), inheriting from the root commitment, as a sibling of PoC and CROSS+WALKRI. If the named work is instead a precision instrument or a meta-standard (for example CRAFT), it belongs in the precision-instrument family as a sibling of the coordination floors, not as a FOCAL domain; CRAFT is already built at specification v0.4.0.`,
-        established: false,
-        prospective: true,
-        focal: true,
-        note: "Placement is prospective. Apply the FOCAL test first: can an independent observer name the parties whose activity must be brought into coordination as the defining feature. A new FOCAL domain would require its own primitives, schemas, and compatibility statements, all inheriting the coordination floors and held to the precision instruments. See the Cross-Domain Applicability Analysis (held in reserve at CROSS+WALKRI corpus)."
-      });
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(graph, null, 2)
+        return {
+          content: [{ type: "text", text: JSON.stringify(payload, null, 2) }]
+        };
+      }
+      if (name === "get_inheritance_graph_with_specialty") {
+        const input = GetInheritanceGraphInputSchema.parse(args ?? {});
+        const baseHierarchy = FOUNDATIONAL_COMMITMENTS.inheritanceHierarchy;
+        const graph = {
+          root: baseHierarchy.root,
+          precision_instruments: baseHierarchy.precisionInstruments,
+          coordination_floors: baseHierarchy.coordinationFloors,
+          meta_standard: baseHierarchy.craft,
+          frame_language: baseHierarchy.frameLanguage,
+          suite: baseHierarchy.csis,
+          applied_specialties: [
+            {
+              name: "Proof of Coordination (PoC)",
+              description: baseHierarchy.poc,
+              established: true,
+              focal: true
+            },
+            {
+              name: "CROSS+WALKRI",
+              description: baseHierarchy.crossWalkri,
+              established: true,
+              domain: "grants",
+              focal: true
+            }
+          ],
+          inheritance_order_rule: baseHierarchy.inheritanceOrderRule
+        };
+        if (input.specialty) {
+          graph.applied_specialties.push({
+            name: input.specialty,
+            description: `${input.specialty} placed as a prospective FOCAL domain: if its defining activity is multiple parties brought into coordination, it rests on the coordination floors and is held to the precision instruments (CRAFT and WALKRI), inheriting from the root commitment, as a sibling of PoC and CROSS+WALKRI. If the named work is instead a precision instrument or a meta-standard (for example CRAFT), it belongs in the precision-instrument family as a sibling of the coordination floors, not as a FOCAL domain; CRAFT is already built at specification v0.4.0.`,
+            established: false,
+            prospective: true,
+            focal: true,
+            note: "Placement is prospective. Apply the FOCAL test first: can an independent observer name the parties whose activity must be brought into coordination as the defining feature. A new FOCAL domain would require its own primitives, schemas, and compatibility statements, all inheriting the coordination floors and held to the precision instruments. See the Cross-Domain Applicability Analysis (held in reserve at CROSS+WALKRI corpus)."
+          });
         }
-      ]
-    };
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(graph, null, 2)
+            }
+          ]
+        };
+      }
+      throw new Error(`Unknown tool: ${name}`);
+    })();
+    return stampProvenance(__result, PROVENANCE);
+  } catch (err) {
+    return toolError(err, name);
   }
-  throw new Error(`Unknown tool: ${name}`);
 });
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("CSIS MCP server v0.3.0 running on stdio");
+  console.error(`CSIS MCP server v${SERVER_VERSION} running on stdio`);
 }
 main().catch((err) => {
   console.error("Fatal error:", err);

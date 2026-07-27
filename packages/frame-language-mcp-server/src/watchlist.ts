@@ -16,7 +16,10 @@
  * This file is ABOUT Frame 1 terms, so it names them, which is admissible.
  */
 
-import registry from './term-registry.json'
+// The import attribute is required: without it the compiled dist entry point
+// throws ERR_IMPORT_ATTRIBUTE_MISSING on Node 22 and later, which is what
+// `bin` and `main` resolve to for anyone installing this package.
+import registry from './term-registry.json' with { type: 'json' }
 
 /** One phrasing pair: a Frame 1 phrasing and its Frame 2 replacement. */
 export interface PhrasingPair {

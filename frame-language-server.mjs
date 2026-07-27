@@ -6,7 +6,11 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  try {
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  } catch (e) {
+    throw mod = 0, e;
+  }
 };
 var __export = (target, all) => {
   for (var name in all)
@@ -3099,9 +3103,9 @@ var require_data = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/lib/utils.js
+// node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/lib/utils.js
 var require_utils = __commonJS({
-  "node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/lib/utils.js"(exports, module) {
+  "node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/lib/utils.js"(exports, module) {
     "use strict";
     var isUUID = RegExp.prototype.test.bind(/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/iu);
     var isIPv4 = RegExp.prototype.test.bind(/^(?:(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)$/u);
@@ -3412,9 +3416,9 @@ var require_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/lib/schemes.js
+// node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/lib/schemes.js
 var require_schemes = __commonJS({
-  "node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/lib/schemes.js"(exports, module) {
+  "node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/lib/schemes.js"(exports, module) {
     "use strict";
     var { isUUID } = require_utils();
     var URN_REG = /([\da-z][\d\-a-z]{0,31}):((?:[\w!$'()*+,\-.:;=@]|%[\da-f]{2})+)/iu;
@@ -3622,9 +3626,9 @@ var require_schemes = __commonJS({
   }
 });
 
-// node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/index.js
+// node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/index.js
 var require_fast_uri = __commonJS({
-  "node_modules/.pnpm/fast-uri@3.1.2/node_modules/fast-uri/index.js"(exports, module) {
+  "node_modules/.pnpm/fast-uri@3.1.4/node_modules/fast-uri/index.js"(exports, module) {
     "use strict";
     var { normalizeIPv6, removeDotSegments, recomposeAuthority, normalizePercentEncoding, normalizePathEncoding, escapePreservingEscapes, reescapeHostDelimiters, isIPv4, nonSimpleDomain } = require_utils();
     var { SCHEMES, getSchemeHandler } = require_schemes();
@@ -3765,6 +3769,7 @@ var require_fast_uri = __commonJS({
       return uriTokens.join("");
     }
     var URI_PARSE = /^(?:([^#/:?]+):)?(?:\/\/((?:([^#/?@]*)@)?(\[[^#/?\]]+\]|[^#/:?]*)(?::(\d*))?))?([^#?]*)(?:\?([^#]*))?(?:#((?:.|[\n\r])*))?/u;
+    var AUTHORITY_PREFIX = /^(?:[^#/:?]+:)?\/\/([^/?#]*)/;
     function getParseError(parsed, matches) {
       if (matches[2] !== void 0 && parsed.path && parsed.path[0] !== "/") {
         return 'URI path must start with "/" when authority is present.';
@@ -3793,6 +3798,11 @@ var require_fast_uri = __commonJS({
         } else {
           uri = "//" + uri;
         }
+      }
+      const authorityMatch = uri.match(AUTHORITY_PREFIX);
+      if (authorityMatch !== null && authorityMatch[1].indexOf("\\") !== -1) {
+        parsed.error = "URI authority must not contain a literal backslash.";
+        malformedAuthorityOrPort = true;
       }
       const matches = uri.match(URI_PARSE);
       if (matches) {
@@ -3837,7 +3847,7 @@ var require_fast_uri = __commonJS({
         if (!options.unicodeSupport && (!schemeHandler || !schemeHandler.unicodeSupport)) {
           if (parsed.host && (options.domainHost || schemeHandler && schemeHandler.domainHost) && isIP === false && nonSimpleDomain(parsed.host)) {
             try {
-              parsed.host = URL.domainToASCII(parsed.host.toLowerCase());
+              parsed.host = new URL("http://" + parsed.host).hostname;
             } catch (e) {
               parsed.error = parsed.error || "Host's domain name can not be converted to ASCII: " + e;
             }
@@ -18008,6 +18018,77 @@ var StdioServerTransport = class {
   }
 };
 
+// packages/frame-language-mcp-server/src/tool-errors.ts
+function describeIssue(issue2) {
+  const path = issue2.path.length > 0 ? issue2.path.join(".") : "(root)";
+  return `${path}: ${issue2.message}`;
+}
+function toolError(err, toolName) {
+  if (err instanceof ZodError) {
+    const lines = err.issues.map(describeIssue);
+    const text = [
+      `Invalid arguments for ${toolName}.`,
+      ...lines.map((l) => `  ${l}`),
+      "",
+      "Correct the arguments and call the tool again."
+    ].join("\n");
+    return { content: [{ type: "text", text }], isError: true };
+  }
+  const message = err instanceof Error ? err.message : String(err);
+  return {
+    content: [{ type: "text", text: `${toolName} failed: ${message}` }],
+    isError: true
+  };
+}
+function stampProvenance(result, provenance) {
+  const r = result;
+  if (r?.isError === true) return result;
+  const first = r?.content?.[0];
+  if (!first || first.type !== "text" || typeof first.text !== "string") return result;
+  let payload;
+  try {
+    payload = JSON.parse(first.text);
+  } catch {
+    return result;
+  }
+  if (payload === null || typeof payload !== "object" || Array.isArray(payload)) {
+    return result;
+  }
+  if ("_provenance" in payload) return result;
+  const stamped = { ...payload, _provenance: provenance };
+  first.text = JSON.stringify(stamped, null, 2);
+  r["structuredContent"] = stamped;
+  return result;
+}
+function outputSchemaFor(keys) {
+  const properties = {};
+  for (const k of keys) {
+    properties[k] = {};
+  }
+  properties["_provenance"] = {
+    type: "object",
+    description: "What this response was produced against: the server, its version, and the standard or registry versions encoded.",
+    properties: {
+      server: { type: "string" },
+      serverVersion: { type: "string" },
+      encodes: { type: "object", additionalProperties: { type: "string" } }
+    },
+    required: ["server", "serverVersion", "encodes"]
+  };
+  return {
+    type: "object",
+    properties,
+    required: [...keys, "_provenance"],
+    additionalProperties: true
+  };
+}
+function withOutputSchemas(tools, schemas) {
+  return tools.map((t) => {
+    const keys = schemas[t.name];
+    return keys ? { ...t, outputSchema: outputSchemaFor(keys) } : { ...t };
+  });
+}
+
 // packages/frame-language-mcp-server/src/term-registry.json
 var term_registry_default = {
   version: "0.1.0",
@@ -19104,10 +19185,42 @@ var RegenRealityCheckInputSchema = external_exports.object({
     "Optional: a specific regen check to return by id. If omitted, returns all nine checks plus the Frame 2 imitation types and routing context."
   )
 });
+var OUTPUT_SCHEMAS = {
+  check_watchlist: ["term", "on_watchlist", "entry", "admissibility_note"],
+  check_admissibility: ["total", "cases", "note"],
+  frame2_functioning_check: ["total", "modes", "note"],
+  lookup_three_frames: [
+    "frames",
+    "trigunatita",
+    "innate_totality",
+    "precision_and_non_harming",
+    "nested_failure_structure",
+    "bridge_vocabulary_note"
+  ],
+  audit_text: ["total_watchlist_hits", "terms_found", "hits", "note"],
+  regen_reality_check: [
+    "total_checks",
+    "checks",
+    "frame2_done_well_vs_imitation",
+    "frame2_imitation_types",
+    "routing_note",
+    "ros_audit_routing",
+    "trigger_conditions",
+    "note"
+  ]
+};
+var SERVER_VERSION = "0.1.0";
+var PROVENANCE = {
+  server: "frame-language",
+  serverVersion: SERVER_VERSION,
+  encodes: {
+    "frame-language-term-registry": REGISTRY_VERSION
+  }
+};
 var server = new Server(
   {
     name: "frame-language",
-    version: "0.1.0"
+    version: SERVER_VERSION
   },
   {
     capabilities: {
@@ -19117,7 +19230,7 @@ var server = new Server(
 );
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
-    tools: [
+    tools: withOutputSchemas([
       {
         name: "check_watchlist",
         description: "Check a term against the Frame Language watchlist of Frame 1 vocabulary. Returns whether the term is on the watchlist, why it imports Frame 1 framing, the canonical replacement pattern, primitive anchors where applicable, and common phrasings with their Frame 2 equivalents.",
@@ -19193,203 +19306,210 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           }
         }
       }
-    ]
+    ], OUTPUT_SCHEMAS)
   };
 });
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
-  if (name === "check_watchlist") {
-    const input = CheckWatchlistInputSchema.parse(args ?? {});
-    const entry = getWatchlistEntry(input.term);
-    if (!entry) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
+  try {
+    const __result = await (async () => {
+      if (name === "check_watchlist") {
+        const input = CheckWatchlistInputSchema.parse(args ?? {});
+        const entry = getWatchlistEntry(input.term);
+        if (!entry) {
+          return {
+            content: [
               {
-                term: input.term,
-                on_watchlist: false,
-                note: `Term "${input.term}" is not on the Frame 1 watchlist. The watchlist contains ${WATCHLIST.length} terms.`,
-                all_watchlist_terms: getAllWatchlistTerms()
-              },
-              null,
-              2
-            )
-          }
-        ]
-      };
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
-            {
-              term: input.term.toLowerCase(),
-              on_watchlist: true,
-              entry,
-              admissibility_note: "Watchlist hit indicates Frame 1 vocabulary that requires replacement in own-voice writing UNLESS one of the seven Pre-Replacement Admissibility cases applies. Use check_admissibility to review the cases."
-            },
-            null,
-            2
-          )
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    term: input.term,
+                    on_watchlist: false,
+                    note: `Term "${input.term}" is not on the Frame 1 watchlist. The watchlist contains ${WATCHLIST.length} terms.`,
+                    all_watchlist_terms: getAllWatchlistTerms()
+                  },
+                  null,
+                  2
+                )
+              }
+            ]
+          };
         }
-      ]
-    };
-  }
-  if (name === "check_admissibility") {
-    const input = CheckAdmissibilityInputSchema.parse(args ?? {});
-    if (input.case_id) {
-      const adminCase = getAdmissibilityCase(input.case_id);
-      if (!adminCase) {
-        const ids = getAllAdmissibilityCaseIds().join(", ");
-        throw new Error(
-          `Admissibility case "${input.case_id}" not found. Available: ${ids}.`
-        );
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  term: input.term.toLowerCase(),
+                  on_watchlist: true,
+                  entry,
+                  admissibility_note: "Watchlist hit indicates Frame 1 vocabulary that requires replacement in own-voice writing UNLESS one of the seven Pre-Replacement Admissibility cases applies. Use check_admissibility to review the cases."
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
       }
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify({ case: adminCase }, null, 2)
+      if (name === "check_admissibility") {
+        const input = CheckAdmissibilityInputSchema.parse(args ?? {});
+        if (input.case_id) {
+          const adminCase = getAdmissibilityCase(input.case_id);
+          if (!adminCase) {
+            const ids = getAllAdmissibilityCaseIds().join(", ");
+            throw new Error(
+              `Admissibility case "${input.case_id}" not found. Available: ${ids}.`
+            );
           }
-        ]
-      };
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
-            {
-              total: ADMISSIBILITY_CASES.length,
-              cases: ADMISSIBILITY_CASES,
-              note: "A Frame 1 term is admissible without replacement if it matches one of these seven cases. In all other cases, replacement is required per the Frame Language Replacement Procedure Categories primitive."
-            },
-            null,
-            2
-          )
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({ case: adminCase }, null, 2)
+              }
+            ]
+          };
         }
-      ]
-    };
-  }
-  if (name === "frame2_functioning_check") {
-    const input = Frame2FunctioningCheckInputSchema.parse(args ?? {});
-    if (input.mode_id) {
-      const mode = getFunctioningCheckMode(input.mode_id);
-      if (!mode) {
-        const ids = getAllFunctioningCheckModeIds().join(", ");
-        throw new Error(
-          `Functioning check mode "${input.mode_id}" not found. Available: ${ids}.`
-        );
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  total: ADMISSIBILITY_CASES.length,
+                  cases: ADMISSIBILITY_CASES,
+                  note: "A Frame 1 term is admissible without replacement if it matches one of these seven cases. In all other cases, replacement is required per the Frame Language Replacement Procedure Categories primitive."
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
       }
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify({ mode }, null, 2)
+      if (name === "frame2_functioning_check") {
+        const input = Frame2FunctioningCheckInputSchema.parse(args ?? {});
+        if (input.mode_id) {
+          const mode = getFunctioningCheckMode(input.mode_id);
+          if (!mode) {
+            const ids = getAllFunctioningCheckModeIds().join(", ");
+            throw new Error(
+              `Functioning check mode "${input.mode_id}" not found. Available: ${ids}.`
+            );
           }
-        ]
-      };
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({ mode }, null, 2)
+              }
+            ]
+          };
+        }
+        return {
+          content: [
             {
-              total: FUNCTIONING_CHECK_MODES.length,
-              modes: FUNCTIONING_CHECK_MODES,
-              note: "The eight modes are the ways a Frame 2 claim can fail to function as Frame 2 even when the vocabulary is correct. Apply to any specification that uses Frame 2 vocabulary to check whether the structural form is operating."
-            },
-            null,
-            2
-          )
-        }
-      ]
-    };
-  }
-  if (name === "lookup_three_frames") {
-    LookupThreeFramesInputSchema.parse(args ?? {});
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(THREE_FRAMES, null, 2)
-        }
-      ]
-    };
-  }
-  if (name === "audit_text") {
-    const input = AuditTextInputSchema.parse(args ?? {});
-    const hits = scanTextForWatchlist(input.text);
-    const totalHits = hits.reduce((sum, h) => sum + h.occurrences, 0);
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
-            {
-              total_watchlist_hits: totalHits,
-              terms_found: hits.length,
-              hits,
-              note: totalHits > 0 ? "Each hit must be evaluated against the Pre-Replacement Admissibility seven cases. Citation use of source-framework terms, citation use of CROSS+WALKRI primitive names (e.g., Beneficiary Validation Mechanism), and other admissible-use cases are NOT replacement triggers. Own-voice use of these terms is. Use check_admissibility to review the seven cases." : "No watchlist terms found in the audited text. Note that this audit only catches the watchlist terms; other Frame Language failures (Frame 2 functioning check failures, etc.) require separate audits."
-            },
-            null,
-            2
-          )
-        }
-      ]
-    };
-  }
-  if (name === "regen_reality_check") {
-    const input = RegenRealityCheckInputSchema.parse(args ?? {});
-    if (input.id) {
-      const check2 = getRegenCheck(input.id);
-      if (!check2) {
-        const ids = getAllRegenCheckIds().join(", ");
-        throw new Error(
-          `Regen check "${input.id}" not found. Available: ${ids}.`
-        );
+              type: "text",
+              text: JSON.stringify(
+                {
+                  total: FUNCTIONING_CHECK_MODES.length,
+                  modes: FUNCTIONING_CHECK_MODES,
+                  note: "The eight modes are the ways a Frame 2 claim can fail to function as Frame 2 even when the vocabulary is correct. Apply to any specification that uses Frame 2 vocabulary to check whether the structural form is operating."
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
       }
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify({ check: check2 }, null, 2)
-          }
-        ]
-      };
-    }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
+      if (name === "lookup_three_frames") {
+        LookupThreeFramesInputSchema.parse(args ?? {});
+        return {
+          content: [
             {
-              total_checks: REGEN_CHECKS.length,
-              checks: REGEN_CHECKS,
-              frame2_done_well_vs_imitation: FRAME2_DONE_WELL_VS_IMITATION,
-              frame2_imitation_types: REGEN_IMITATION_TYPES,
-              routing_note: ROUTING_NOTE,
-              ros_audit_routing: ROS_AUDIT_ROUTING,
-              trigger_conditions: TRIGGER_CONDITIONS,
-              note: "Run this audit as a domain-specific extension of the standard Frame Language analysis when a document makes regenerative claims. Each of the nine checks is independent and can fail while the others pass. The operative test throughout is external verification: can a party outside the organization verify the condition from the document alone?"
-            },
-            null,
-            2
-          )
+              type: "text",
+              text: JSON.stringify(THREE_FRAMES, null, 2)
+            }
+          ]
+        };
+      }
+      if (name === "audit_text") {
+        const input = AuditTextInputSchema.parse(args ?? {});
+        const hits = scanTextForWatchlist(input.text);
+        const totalHits = hits.reduce((sum, h) => sum + h.occurrences, 0);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  total_watchlist_hits: totalHits,
+                  terms_found: hits.length,
+                  hits,
+                  note: totalHits > 0 ? "Each hit must be evaluated against the Pre-Replacement Admissibility seven cases. Citation use of source-framework terms, citation use of CROSS+WALKRI primitive names (e.g., Beneficiary Validation Mechanism), and other admissible-use cases are NOT replacement triggers. Own-voice use of these terms is. Use check_admissibility to review the seven cases." : "No watchlist terms found in the audited text. Note that this audit only catches the watchlist terms; other Frame Language failures (Frame 2 functioning check failures, etc.) require separate audits."
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
+      }
+      if (name === "regen_reality_check") {
+        const input = RegenRealityCheckInputSchema.parse(args ?? {});
+        if (input.id) {
+          const check2 = getRegenCheck(input.id);
+          if (!check2) {
+            const ids = getAllRegenCheckIds().join(", ");
+            throw new Error(
+              `Regen check "${input.id}" not found. Available: ${ids}.`
+            );
+          }
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({ check: check2 }, null, 2)
+              }
+            ]
+          };
         }
-      ]
-    };
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  total_checks: REGEN_CHECKS.length,
+                  checks: REGEN_CHECKS,
+                  frame2_done_well_vs_imitation: FRAME2_DONE_WELL_VS_IMITATION,
+                  frame2_imitation_types: REGEN_IMITATION_TYPES,
+                  routing_note: ROUTING_NOTE,
+                  ros_audit_routing: ROS_AUDIT_ROUTING,
+                  trigger_conditions: TRIGGER_CONDITIONS,
+                  note: "Run this audit as a domain-specific extension of the standard Frame Language analysis when a document makes regenerative claims. Each of the nine checks is independent and can fail while the others pass. The operative test throughout is external verification: can a party outside the organization verify the condition from the document alone?"
+                },
+                null,
+                2
+              )
+            }
+          ]
+        };
+      }
+      throw new Error(`Unknown tool: ${name}`);
+    })();
+    return stampProvenance(__result, PROVENANCE);
+  } catch (err) {
+    return toolError(err, name);
   }
-  throw new Error(`Unknown tool: ${name}`);
 });
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Frame Language MCP server v0.1.0 running on stdio");
+  console.error(`Frame Language MCP server v${SERVER_VERSION} running on stdio`);
 }
 main().catch((err) => {
   console.error("Fatal error:", err);

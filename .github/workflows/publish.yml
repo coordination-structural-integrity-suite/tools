@@ -1,0 +1,74 @@
+name: Publish
+
+# Publishing is gated. A tag alone does not publish: the verify job must pass
+# first, on every supported Node version. The alternative, publishing whatever
+# sits on a tag, is how a package entry point that crashed on Node 22 stayed
+# shippable while typecheck and build both reported green.
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm test
+      - name: Bundles match source
+        if: matrix.node == 20
+        run: |
+          pnpm bundle
+          if ! git diff --exit-code -- csis-server.mjs frame-language-server.mjs; then
+            echo "The committed bundles do not match the current source."
+            echo "Run 'pnpm bundle' and commit the result before tagging."
+            exit 1
+          fi
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # A dry run first, so a manifest problem fails before anything is
+      # published rather than after one of the two packages has gone out.
+      - name: Dry run both packages
+        run: |
+          npx jsr publish --dry-run
+        working-directory: packages/csis-mcp-server
+      - name: Dry run frame language
+        run: npx jsr publish --dry-run
+        working-directory: packages/frame-language-mcp-server
+
+      - name: Publish coordination structural integrity suite
+        run: npx jsr publish
+        working-directory: packages/csis-mcp-server
+      - name: Publish dimensional frame language
+        run: npx jsr publish
+        working-directory: packages/frame-language-mcp-server

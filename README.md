@@ -4,9 +4,9 @@ MCP server tooling for the Coordination Structural Integrity Suite (CSIS) and th
 
 This repo contains two MCP servers, each surfacing a different layer of the substrate stack:
 
-1. **CSIS MCP server** (`packages/csis-mcp-server/`) provides structural access to the ten CSIS standards, the nine PFDS corollaries, the ten named structural patterns, the six descriptive classes, the foundational commitments (precision and non-harming as one principle via transclusion), and the substrate inheritance hierarchy. Per the substrate discipline, the server provides pointers and structural metadata, not full standard text. Substantive corollary work continues to require reading the full PFDS or other source standard directly.
+1. **CSIS MCP server** (`packages/csis-mcp-server/`) provides structural access to the ten CSIS standards, the ten PFDS corollaries, the ten named structural patterns, the six descriptive classes, the foundational commitments (precision and non-harming as one principle via transclusion), and the substrate inheritance hierarchy. Per the substrate discipline, the server provides pointers and structural metadata, not full standard text. Substantive corollary work continues to require reading the full PFDS or other source standard directly.
 
-2. **Frame Language MCP server** (`packages/frame-language-mcp-server/`) provides operational access to the Frame Language precision discipline derived from CSIS. Five tools cover the watchlist of Frame 1 vocabulary, the seven Pre-Replacement Admissibility cases, the eight Frame 2 functioning-check failure modes (with falsifiability-context variants), the three Frames with the guna typology mapping, and a text auditor for own-voice writing.
+2. **Frame Language MCP server** (`packages/frame-language-mcp-server/`) provides operational access to the Frame Language precision discipline derived from CSIS. Six tools cover the watchlist of Frame 1 vocabulary, the seven Pre-Replacement Admissibility cases, the eight Frame 2 functioning-check failure modes (with falsifiability-context variants), the three Frames with the guna typology mapping, a text auditor for own-voice writing, and the regenerative reality check.
 
 Both servers are licensed Apache 2.0, matching the CSIS suite repo's convention for code artifacts. The CSIS standards and the Frame Language Foundational Vocabulary Specification themselves are CC BY 4.0 specifications and live in the suite repo.
 
@@ -20,9 +20,20 @@ CSIS is the substrate; Frame Language is derived from CSIS and operates as a pre
 
 ## MCP server installation
 
-### Zero-install (recommended)
+### From the registry
 
-Clone this repo, then point your MCP client at the bundled `.mjs` outputs.
+Both servers publish to [jsr.io](https://jsr.io) under `@proof-of-coord`:
+
+```bash
+npx jsr add @proof-of-coord/structural-integrity
+npx jsr add @proof-of-coord/frame-language
+```
+
+`structural-integrity` is the Coordination Structural Integrity Suite server. `frame-language` is the Dimensional Frame Language server. The install names are compressed because the registry caps both halves of a package name at twenty characters; the full names are what the servers report and what the documentation uses throughout.
+
+### Zero-install
+
+Clone this repo, then point your MCP client at the bundled `.mjs` outputs. This path is always current with the source: continuous integration rebuilds the bundles on every push and fails if they differ from what is committed.
 
 ```bash
 git clone https://github.com/coordination-structural-integrity-suite/tools.git
@@ -66,7 +77,7 @@ Restart the client for the new servers to be picked up.
 
 **get_foundational_commitments**: Return the unified precision-and-non-harming principle held together via transclusion (one move, not two principles held externally) and the substrate inheritance hierarchy (CSIS at the base; Frame Language derived; PoC and CROSS+WALKRI as siblings inheriting from CSIS).
 
-**lookup_corollary**: Return one of the nine corollaries of the Precision-First Design Standard. Each corollary specifies its precision-first invariant in two directions: under-specification failure mode and over-specification failure mode. Includes worked examples from PFDS Section 4 where applicable.
+**lookup_corollary**: Return one of the ten corollaries of the Precision-First Design Standard. Each corollary specifies its precision-first invariant in two directions: under-specification failure mode and over-specification failure mode. Includes worked examples from PFDS Section 4 where applicable.
 
 **lookup_structural_pattern**: Return one of the ten named structural patterns from the Suite Structural Patterns Primer. A structural pattern is a recurring arrangement across multiple standards that produces a recognizable failure signature.
 
@@ -80,7 +91,7 @@ Restart the client for the new servers to be picked up.
 
 ## Frame Language MCP server tools (v0.1.0)
 
-**check_watchlist**: Check a term against the Frame 1 watchlist. Returns whether the term is on the watchlist, why it imports Frame 1 framing, the canonical replacement pattern, primitive anchors, and common phrasings with their Frame 2 equivalents. Watchlist terms include accountability, governance, transparency, stakeholder, oversight, compliance, enforcement, legitimacy, empowerment, fiduciary, credibility, and mandatory.
+**check_watchlist**: Check a term against the Frame 1 watchlist. Returns whether the term is on the watchlist, why it imports Frame 1 framing, the canonical replacement pattern, primitive anchors, and common phrasings with their Frame 2 equivalents. The watchlist holds thirty-three terms, drawn from a single canonical term registry rather than a hand-maintained list, so the server and the registry cannot drift apart. Known limit: matching is on the exact term, so inflected forms are not caught. "empowering" does not trigger the "empowerment" entry.
 
 **check_admissibility**: Return the seven Pre-Replacement Admissibility cases. A Frame 1 term is admissible without replacement if it matches one of these seven cases: citation use, detection use, contextual description, developmental bridge, naming the stage, communication medium, documentary record.
 
@@ -89,6 +100,8 @@ Restart the client for the new servers to be picked up.
 **lookup_three_frames**: Return the three Frames of Frame Language with the guna typology mapping. Frame 1 (tamas), Frame 2 (rajas), Frame 3 (sattva, pointing toward trigunatita). Includes the Innate Totality framing and the precision-and-non-harming unity statement.
 
 **audit_text**: Scan a block of text for Frame 1 watchlist hits. Returns terms found, occurrence counts, and watchlist entries. The tool flags terms; the user determines whether each usage is admissible per the seven cases.
+
+**regen_reality_check**: Return the nine regenerative reality checks with the Frame 2 imitation types and routing context. Applies where a document makes regenerative claims. The operative test throughout is external verification: can a party outside the organization verify the condition from the document alone.
 
 ---
 
@@ -113,3 +126,17 @@ Each package builds independently. The root `bundle` script produces two zero-in
 Both server packages and the code in this repository are licensed under the Apache License 2.0. See `LICENSE` for the full text. This matches the CSIS suite convention for code artifacts (the suite repo applies Apache 2.0 to code and CC BY 4.0 to specifications).
 
 The substrate vocabulary surfaced by these servers (the CSIS standards and the Frame Language Foundational Vocabulary Specification) is published under CC BY 4.0 at github.com/coordination-structural-integrity-suite/suite. The MCP server code in this repo (Apache 2.0) is operational infrastructure that reads from those specifications; the specifications themselves remain CC BY 4.0.
+
+## Verification
+
+Every push runs typecheck, build and the test suite across Node 20, 22 and 24, and rebuilds the bundles to confirm they match source. Publishing is gated on the same checks: a tag alone does not publish.
+
+```bash
+pnpm test          # 50 tests
+pnpm typecheck
+pnpm bundle        # regenerate the zero-install entry points
+```
+
+The suite covers four things. Every entry point a consumer can start, including the compiled package entries that `bin` and `main` resolve to, since a broken one there is invisible to typecheck and build. Data integrity across both servers' records: no duplicate identifiers, every lookup resolving, and counts matching what this README claims. Argument validation, checking that a malformed call returns a readable tool error rather than a protocol failure. And the output contract, checking that every key a tool declares in its `outputSchema` actually appears in what it returns.
+
+Every successful response carries a `_provenance` block naming the server, its version, and the standard or registry versions the response was produced against, so a result stays attributable after a standard moves.
