@@ -15,7 +15,10 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        node: [20, 22, 24]
+        # 20 is absent because the package manager itself requires Node
+        # 22.13 or later, not because the packages do. Testing on a
+        # toolchain nobody runs would be testing something else.
+        node: [22, 24]
     steps:
       - uses: actions/checkout@v4
       # No version pin: the action reads packageManager from package.json,
@@ -28,11 +31,14 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
+      # Build first: the server package typechecks against the core
+      # package's emitted declarations, so a fresh checkout has nothing
+      # to resolve against until they exist.
       - run: pnpm build
+      - run: pnpm typecheck
       - run: pnpm test
       - name: Bundles match source
-        if: matrix.node == 20
+        if: matrix.node == 22
         run: |
           pnpm bundle
           if ! git diff --exit-code -- csis-server.mjs frame-language-server.mjs; then

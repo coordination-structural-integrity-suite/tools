@@ -11,10 +11,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 20 is the floor the packages target. 22 is where import attributes
-        # became mandatory for JSON modules, which is the version that caught a
-        # broken package entry point that every other check reported as green.
-        node: [20, 22, 24]
+        # 20 is absent because the package manager itself requires Node
+        # 22.13 or later, not because the packages do. Testing on a
+        # toolchain nobody runs would be testing something else.
+        node: [22, 24]
 
     steps:
       - uses: actions/checkout@v4
@@ -33,11 +33,13 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
-        run: pnpm typecheck
-
+      # Build first: typechecking resolves against emitted declarations,
+      # which a fresh checkout does not have.
       - name: Build
         run: pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
 
       - name: Test
         run: pnpm test
@@ -49,7 +51,7 @@ jobs:
       # comparison meaningful; without it a transitive dependency bump alone
       # produces a diff.
       - name: Bundles match source
-        if: matrix.node == 20
+        if: matrix.node == 22
         run: |
           pnpm bundle
           if ! git diff --exit-code -- csis-server.mjs frame-language-server.mjs; then
