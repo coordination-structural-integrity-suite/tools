@@ -18,9 +18,11 @@ jobs:
         node: [20, 22, 24]
     steps:
       - uses: actions/checkout@v4
+      # No version pin: the action reads packageManager from package.json,
+      # so continuous integration cannot drift from the local toolchain. A
+      # hardcoded 9 could not read overrides from pnpm-workspace.yaml, which
+      # is a pnpm 10 feature, and every install failed on a config mismatch.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
@@ -47,9 +49,11 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      # No version pin: the action reads packageManager from package.json,
+      # so continuous integration cannot drift from the local toolchain. A
+      # hardcoded 9 could not read overrides from pnpm-workspace.yaml, which
+      # is a pnpm 10 feature, and every install failed on a config mismatch.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 20
