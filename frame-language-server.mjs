@@ -19211,7 +19211,7 @@ var OUTPUT_SCHEMAS = {
     "note"
   ]
 };
-var SERVER_VERSION = "0.1.0";
+var SERVER_VERSION = "0.1.1";
 var PROVENANCE = {
   server: "frame-language",
   serverVersion: SERVER_VERSION,

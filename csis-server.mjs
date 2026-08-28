@@ -18503,7 +18503,7 @@ var OUTPUT_SCHEMAS = {
     "inheritance_order_rule"
   ]
 };
-var SERVER_VERSION = "0.3.0";
+var SERVER_VERSION = "0.3.1";
 var PROVENANCE = {
   server: "csis",
   serverVersion: SERVER_VERSION,

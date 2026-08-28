@@ -160,7 +160,7 @@ const OUTPUT_SCHEMAS: Record<string, readonly string[]> = {
   ],
 }
 
-export const SERVER_VERSION = '0.3.0'
+export const SERVER_VERSION = '0.3.1'
 export const SERVER_NAME = 'csis'
 
 const PROVENANCE: Provenance = {

@@ -1,6 +1,6 @@
 {
   "name": "@proof-of-coord/structural-integrity",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "MCP server exposing the Coordination Structural Integrity Suite as AI tools",
   "license": "Apache-2.0",
   "type": "module",

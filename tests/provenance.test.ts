@@ -67,7 +67,7 @@ describe('CSIS provenance', () => {
       const p = provenanceOf(res.json)
       // The identity string and the stamp read one constant; if they diverge,
       // the version has been edited in one place again.
-      expect(p.serverVersion).toBe('0.3.0')
+      expect(p.serverVersion).toBe('0.3.1')
     })
   })
 })

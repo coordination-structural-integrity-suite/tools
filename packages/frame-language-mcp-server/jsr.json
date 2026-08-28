@@ -1,6 +1,7 @@
 {
   "name": "@proof-of-coord/frame-language",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "description": "MCP server exposing Frame Language precision discipline as AI tools: watchlist checks, admissibility cases, Frame 2 functioning checks and text auditing.",
   "license": "Apache-2.0",
   "exports": {
     ".": "./src/index.ts"
