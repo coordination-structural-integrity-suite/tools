@@ -35,6 +35,7 @@ import {
   getAllWatchlistTerms,
   scanTextForWatchlist,
 } from '../packages/frame-language-mcp-server/src/watchlist.js'
+import rawTermRegistry from '../packages/frame-language-mcp-server/src/term-registry.json' with { type: 'json' }
 import {
   ADMISSIBILITY_CASES,
   getAdmissibilityCase,
@@ -138,7 +139,7 @@ describe('Frame Language term registry', () => {
   })
 
   it('loads every term from the registry rather than a stale subset', () => {
-    expect(WATCHLIST.length).toBeGreaterThanOrEqual(33)
+    expect(WATCHLIST.length).toBe(rawTermRegistry.terms.length)
   })
 
   it('has no duplicate terms and resolves each one case-insensitively', () => {

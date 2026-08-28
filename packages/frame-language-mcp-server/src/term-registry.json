@@ -450,24 +450,6 @@
       ]
     },
     {
-      "term": "integrity",
-      "frame": 1,
-      "imports": "An organizational deference claim: asserts that an organization keeps its commitments, without making those commitments independently verifiable.",
-      "frame_2_replacement": [
-        "stated commitments made independently verifiable by named structural conditions"
-      ],
-      "strengthened_form": "[Stated commitments] made independently verifiable by [named structural conditions]",
-      "procedure": "deference-claim",
-      "forecloses": null,
-      "slippage_note": null,
-      "primitive_anchors": [],
-      "common_phrasings": [],
-      "admissibility_note": null,
-      "sources": [
-        "grammar"
-      ]
-    },
-    {
       "term": "legitimacy",
       "frame": 1,
       "imports": "One of the strongest Frame 1 deference claims: asserts an institution warrants acceptance (rightful authority) without naming the source of standing or the conditions.",
