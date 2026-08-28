@@ -410,11 +410,11 @@ var require_codegen = __commonJS({
         const rhs = this.rhs === void 0 ? "" : ` = ${this.rhs}`;
         return `${varKind} ${this.name}${rhs};` + _n;
       }
-      optimizeNames(names, constants) {
+      optimizeNames(names, constants2) {
         if (!names[this.name.str])
           return;
         if (this.rhs)
-          this.rhs = optimizeExpr(this.rhs, names, constants);
+          this.rhs = optimizeExpr(this.rhs, names, constants2);
         return this;
       }
       get names() {
@@ -431,10 +431,10 @@ var require_codegen = __commonJS({
       render({ _n }) {
         return `${this.lhs} = ${this.rhs};` + _n;
       }
-      optimizeNames(names, constants) {
+      optimizeNames(names, constants2) {
         if (this.lhs instanceof code_1.Name && !names[this.lhs.str] && !this.sideEffects)
           return;
-        this.rhs = optimizeExpr(this.rhs, names, constants);
+        this.rhs = optimizeExpr(this.rhs, names, constants2);
         return this;
       }
       get names() {
@@ -495,8 +495,8 @@ var require_codegen = __commonJS({
       optimizeNodes() {
         return `${this.code}` ? this : void 0;
       }
-      optimizeNames(names, constants) {
-        this.code = optimizeExpr(this.code, names, constants);
+      optimizeNames(names, constants2) {
+        this.code = optimizeExpr(this.code, names, constants2);
         return this;
       }
       get names() {
@@ -525,12 +525,12 @@ var require_codegen = __commonJS({
         }
         return nodes.length > 0 ? this : void 0;
       }
-      optimizeNames(names, constants) {
+      optimizeNames(names, constants2) {
         const { nodes } = this;
         let i = nodes.length;
         while (i--) {
           const n = nodes[i];
-          if (n.optimizeNames(names, constants))
+          if (n.optimizeNames(names, constants2))
             continue;
           subtractNames(names, n.names);
           nodes.splice(i, 1);
@@ -583,12 +583,12 @@ var require_codegen = __commonJS({
           return void 0;
         return this;
       }
-      optimizeNames(names, constants) {
+      optimizeNames(names, constants2) {
         var _a;
-        this.else = (_a = this.else) === null || _a === void 0 ? void 0 : _a.optimizeNames(names, constants);
-        if (!(super.optimizeNames(names, constants) || this.else))
+        this.else = (_a = this.else) === null || _a === void 0 ? void 0 : _a.optimizeNames(names, constants2);
+        if (!(super.optimizeNames(names, constants2) || this.else))
           return;
-        this.condition = optimizeExpr(this.condition, names, constants);
+        this.condition = optimizeExpr(this.condition, names, constants2);
         return this;
       }
       get names() {
@@ -611,10 +611,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.iteration})` + super.render(opts);
       }
-      optimizeNames(names, constants) {
-        if (!super.optimizeNames(names, constants))
+      optimizeNames(names, constants2) {
+        if (!super.optimizeNames(names, constants2))
           return;
-        this.iteration = optimizeExpr(this.iteration, names, constants);
+        this.iteration = optimizeExpr(this.iteration, names, constants2);
         return this;
       }
       get names() {
@@ -650,10 +650,10 @@ var require_codegen = __commonJS({
       render(opts) {
         return `for(${this.varKind} ${this.name} ${this.loop} ${this.iterable})` + super.render(opts);
       }
-      optimizeNames(names, constants) {
-        if (!super.optimizeNames(names, constants))
+      optimizeNames(names, constants2) {
+        if (!super.optimizeNames(names, constants2))
           return;
-        this.iterable = optimizeExpr(this.iterable, names, constants);
+        this.iterable = optimizeExpr(this.iterable, names, constants2);
         return this;
       }
       get names() {
@@ -695,11 +695,11 @@ var require_codegen = __commonJS({
         (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNodes();
         return this;
       }
-      optimizeNames(names, constants) {
+      optimizeNames(names, constants2) {
         var _a, _b;
-        super.optimizeNames(names, constants);
-        (_a = this.catch) === null || _a === void 0 ? void 0 : _a.optimizeNames(names, constants);
-        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names, constants);
+        super.optimizeNames(names, constants2);
+        (_a = this.catch) === null || _a === void 0 ? void 0 : _a.optimizeNames(names, constants2);
+        (_b = this.finally) === null || _b === void 0 ? void 0 : _b.optimizeNames(names, constants2);
         return this;
       }
       get names() {
@@ -1000,7 +1000,7 @@ var require_codegen = __commonJS({
     function addExprNames(names, from) {
       return from instanceof code_1._CodeOrName ? addNames(names, from.names) : names;
     }
-    function optimizeExpr(expr, names, constants) {
+    function optimizeExpr(expr, names, constants2) {
       if (expr instanceof code_1.Name)
         return replaceName(expr);
       if (!canOptimize(expr))
@@ -1015,14 +1015,14 @@ var require_codegen = __commonJS({
         return items;
       }, []));
       function replaceName(n) {
-        const c = constants[n.str];
+        const c = constants2[n.str];
         if (c === void 0 || names[n.str] !== 1)
           return n;
         delete names[n.str];
         return c;
       }
       function canOptimize(e) {
-        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names[c.str] === 1 && constants[c.str] !== void 0);
+        return e instanceof code_1._Code && e._items.some((c) => c instanceof code_1.Name && names[c.str] === 1 && constants2[c.str] !== void 0);
       }
     }
     function subtractNames(names, from) {
@@ -4264,8 +4264,8 @@ var require_core = __commonJS({
             return this;
           }
           case "object": {
-            const cacheKey = schemaKeyRef;
-            this._cache.delete(cacheKey);
+            const cacheKey2 = schemaKeyRef;
+            this._cache.delete(cacheKey2);
             let id = schemaKeyRef[this.opts.schemaId];
             if (id) {
               id = (0, resolve_1.normalizeId)(id);
@@ -6915,8 +6915,1045 @@ var require_dist = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.29.0_zod@3.25.76/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
-import process2 from "node:process";
+// packages/csis-mcp-server/src/http.ts
+import { createServer as createHttpServer } from "node:http";
+
+// node_modules/.pnpm/@hono+node-server@2.0.11_hono@4.13.3/node_modules/@hono/node-server/dist/constants-BLSFu_RU.mjs
+var X_ALREADY_SENT = "x-hono-already-sent";
+
+// node_modules/.pnpm/@hono+node-server@2.0.11_hono@4.13.3/node_modules/@hono/node-server/dist/index.mjs
+import { Http2ServerRequest, constants } from "node:http2";
+import { Readable } from "node:stream";
+
+// node_modules/.pnpm/hono@4.13.3/node_modules/hono/dist/helper/websocket/index.js
+var defineWebSocketHelper = (handler) => {
+  return ((...args) => {
+    if (typeof args[0] === "function") {
+      const [createEvents, options] = args;
+      return async function upgradeWebSocket2(c, next) {
+        const events = await createEvents(c);
+        const result = await handler(c, events, options);
+        if (result) {
+          return result;
+        }
+        await next();
+      };
+    } else {
+      const [c, events, options] = args;
+      return (async () => {
+        const upgraded = await handler(c, events, options);
+        if (!upgraded) {
+          throw new Error("Failed to upgrade WebSocket");
+        }
+        return upgraded;
+      })();
+    }
+  });
+};
+
+// node_modules/.pnpm/@hono+node-server@2.0.11_hono@4.13.3/node_modules/@hono/node-server/dist/index.mjs
+var RequestError = class extends Error {
+  constructor(message, options) {
+    super(message, options);
+    this.name = "RequestError";
+  }
+};
+var reValidRequestUrl = /^\/[!#$&-;=?-\[\]_a-z~]*$/;
+var reDotSegment = /\/\.\.?(?:[/?#]|$)/;
+var reValidHost = /^[a-z0-9._-]+(?::(?:[1-5]\d{3,4}|[6-9]\d{3}))?$/;
+var buildUrl = (scheme, host, incomingUrl) => {
+  const url = `${scheme}://${host}${incomingUrl}`;
+  if (!reValidHost.test(host)) {
+    const urlObj = new URL(url);
+    if (urlObj.hostname.length !== host.length && urlObj.hostname !== (host.includes(":") ? host.replace(/:\d+$/, "") : host).toLowerCase()) throw new RequestError("Invalid host header");
+    return urlObj.href;
+  } else if (incomingUrl.length === 0) return url + "/";
+  else {
+    if (incomingUrl.charCodeAt(0) !== 47) throw new RequestError("Invalid URL");
+    if (!reValidRequestUrl.test(incomingUrl) || reDotSegment.test(incomingUrl)) return new URL(url).href;
+    return url;
+  }
+};
+var toRequestError = (e) => {
+  if (e instanceof RequestError) return e;
+  return new RequestError(e.message, { cause: e });
+};
+var GlobalRequest = global.Request;
+var Request$1 = class extends GlobalRequest {
+  constructor(input, options) {
+    if (typeof input === "object" && getRequestCache in input) {
+      const hasReplacementBody = options !== void 0 && "body" in options && options.body != null;
+      if (input[bodyConsumedDirectlyKey] && !hasReplacementBody) throw new TypeError("Cannot construct a Request with a Request object that has already been used.");
+      input = input[getRequestCache]();
+    }
+    if (typeof options?.body?.getReader !== "undefined") options.duplex ??= "half";
+    super(input, options);
+  }
+};
+var newHeadersFromIncoming = (incoming) => {
+  const headerRecord = [];
+  const rawHeaders = incoming.rawHeaders;
+  for (let i = 0, len = rawHeaders.length; i < len; i += 2) {
+    const key = rawHeaders[i];
+    if (key.charCodeAt(0) !== 58) headerRecord.push([key, rawHeaders[i + 1]]);
+  }
+  return new Headers(headerRecord);
+};
+var wrapBodyStream = /* @__PURE__ */ Symbol("wrapBodyStream");
+var byteExactEncodings = /* @__PURE__ */ new Set([
+  "latin1",
+  "binary",
+  "hex",
+  "base64",
+  "base64url"
+]);
+var isByteExactEncoding = (encoding) => encoding === null || byteExactEncodings.has(encoding);
+var bodyBufferedBeforeDisconnectKey = /* @__PURE__ */ Symbol("bodyBufferedBeforeDisconnect");
+var bodyBufferedLengthBeforeDisconnectKey = /* @__PURE__ */ Symbol("bodyBufferedLengthBeforeDisconnect");
+var toBufferChunk = (chunk, encoding) => Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, encoding ?? "utf8");
+var isRecoverableDisconnectedIncoming = (incoming) => !(incoming instanceof Http2ServerRequest) && !!incoming.complete && !!incoming.readableAborted && typeof incoming.read === "function" && isByteExactEncoding(incoming.readableEncoding);
+var recordBodyBufferedBeforeDisconnect = (incoming) => {
+  if (incoming.readableDidRead || !isRecoverableDisconnectedIncoming(incoming)) return;
+  const incomingWithRecovery = incoming;
+  incomingWithRecovery[bodyBufferedLengthBeforeDisconnectKey] ??= incoming.readableLength;
+};
+var readBodyBufferedBeforeDisconnect = (incoming, chunks) => {
+  if (incoming.readableDidRead && !chunks || !isRecoverableDisconnectedIncoming(incoming)) return;
+  const incomingWithRecovery = incoming;
+  if (incomingWithRecovery[bodyBufferedBeforeDisconnectKey] !== void 0) return incomingWithRecovery[bodyBufferedBeforeDisconnectKey];
+  let result;
+  const errored = incoming.errored;
+  if (errored && errored.code !== "ECONNRESET") result = errored;
+  else if (incomingWithRecovery[bodyBufferedLengthBeforeDisconnectKey] !== void 0 && incoming.readableLength !== incomingWithRecovery[bodyBufferedLengthBeforeDisconnectKey]) result = newBodyUnusableError();
+  else {
+    const bodyChunks = chunks ?? [];
+    const chunk = incoming.read();
+    if (chunk !== null) bodyChunks.push(toBufferChunk(chunk, incoming.readableEncoding));
+    const buffer = bodyChunks.length === 1 ? bodyChunks[0] : Buffer.concat(bodyChunks);
+    result = buffer;
+    const contentLength = incoming.headers["content-length"];
+    if (typeof contentLength === "string" && /^\d+$/.test(contentLength)) {
+      const expectedLength = Number(contentLength);
+      if (Number.isSafeInteger(expectedLength) && buffer.length !== expectedLength) result = newBodyUnusableError();
+    }
+  }
+  incomingWithRecovery[bodyBufferedBeforeDisconnectKey] = result;
+  return result;
+};
+var enqueueBufferedBody = (controller, buffered) => {
+  if (buffered instanceof Error) {
+    controller.error(buffered);
+    return;
+  }
+  if (buffered.length > 0) controller.enqueue(buffered);
+  controller.close();
+};
+var newRequestFromIncoming = (method, url, headers, incoming, abortController) => {
+  const init = {
+    method,
+    headers,
+    signal: abortController.signal
+  };
+  if (method === "TRACE") {
+    init.method = "GET";
+    const req = new Request$1(url, init);
+    Object.defineProperty(req, "method", { get() {
+      return "TRACE";
+    } });
+    return req;
+  }
+  if (!(method === "GET" || method === "HEAD")) if ("rawBody" in incoming && incoming.rawBody instanceof Buffer) init.body = new ReadableStream({ start(controller) {
+    controller.enqueue(incoming.rawBody);
+    controller.close();
+  } });
+  else if (incoming[wrapBodyStream]) {
+    let reader;
+    init.body = new ReadableStream({ async pull(controller) {
+      try {
+        if (!reader) {
+          const buffered = readBodyBufferedBeforeDisconnect(incoming);
+          if (buffered !== void 0) {
+            enqueueBufferedBody(controller, buffered);
+            return;
+          }
+        }
+        reader ||= Readable.toWeb(incoming).getReader();
+        const { done, value } = await reader.read();
+        if (done) controller.close();
+        else controller.enqueue(value);
+      } catch (error2) {
+        controller.error(error2);
+      }
+    } });
+  } else {
+    const buffered = readBodyBufferedBeforeDisconnect(incoming);
+    if (buffered !== void 0) init.body = new ReadableStream({ start(controller) {
+      enqueueBufferedBody(controller, buffered);
+    } });
+    else init.body = Readable.toWeb(incoming);
+  }
+  return new Request$1(url, init);
+};
+var getRequestCache = /* @__PURE__ */ Symbol("getRequestCache");
+var requestCache = /* @__PURE__ */ Symbol("requestCache");
+var incomingKey = /* @__PURE__ */ Symbol("incomingKey");
+var urlKey = /* @__PURE__ */ Symbol("urlKey");
+var methodKey = /* @__PURE__ */ Symbol("methodKey");
+var headersKey = /* @__PURE__ */ Symbol("headersKey");
+var abortControllerKey = /* @__PURE__ */ Symbol("abortControllerKey");
+var getAbortController = /* @__PURE__ */ Symbol("getAbortController");
+var abortRequest = /* @__PURE__ */ Symbol("abortRequest");
+var bodyBufferKey = /* @__PURE__ */ Symbol("bodyBuffer");
+var bodyReadPromiseKey = /* @__PURE__ */ Symbol("bodyReadPromise");
+var bodyConsumedDirectlyKey = /* @__PURE__ */ Symbol("bodyConsumedDirectly");
+var bodyLockReaderKey = /* @__PURE__ */ Symbol("bodyLockReader");
+var abortReasonKey = /* @__PURE__ */ Symbol("abortReason");
+var newBodyUnusableError = () => {
+  return /* @__PURE__ */ new TypeError("Body is unusable");
+};
+var rejectBodyUnusable = () => {
+  return Promise.reject(newBodyUnusableError());
+};
+var textDecoder = new TextDecoder();
+var consumeBodyDirectOnce = (request) => {
+  if (request[bodyConsumedDirectlyKey]) return rejectBodyUnusable();
+  request[bodyConsumedDirectlyKey] = true;
+};
+var toArrayBuffer = (buf) => {
+  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+};
+var contentType = (request) => {
+  return (request[headersKey] ||= newHeadersFromIncoming(request[incomingKey])).get("content-type") || "";
+};
+var methodTokenRegExp = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
+var normalizeIncomingMethod = (method) => {
+  if (typeof method !== "string" || method.length === 0) return "GET";
+  switch (method) {
+    case "DELETE":
+    case "GET":
+    case "HEAD":
+    case "OPTIONS":
+    case "PATCH":
+    case "POST":
+    case "PUT":
+    case "QUERY":
+      return method;
+  }
+  const upper = method.toUpperCase();
+  switch (upper) {
+    case "DELETE":
+    case "GET":
+    case "HEAD":
+    case "OPTIONS":
+    case "POST":
+    case "PUT":
+      return upper;
+    default:
+      return method;
+  }
+};
+var validateDirectReadMethod = (method) => {
+  if (!methodTokenRegExp.test(method)) return /* @__PURE__ */ new TypeError(`'${method}' is not a valid HTTP method.`);
+  const normalized = method.toUpperCase();
+  if (normalized === "CONNECT" || normalized === "TRACK" || normalized === "TRACE" && method !== "TRACE") return /* @__PURE__ */ new TypeError(`'${method}' HTTP method is unsupported.`);
+};
+var readBodyWithFastPath = (request, method, fromBuffer) => {
+  if (request[bodyConsumedDirectlyKey]) return rejectBodyUnusable();
+  const methodName = request.method;
+  if (methodName === "GET" || methodName === "HEAD") return request[getRequestCache]()[method]();
+  const methodValidationError = validateDirectReadMethod(methodName);
+  if (methodValidationError) return Promise.reject(methodValidationError);
+  if (request[requestCache]) {
+    if (methodName !== "TRACE") return request[requestCache][method]();
+  }
+  const alreadyUsedError = consumeBodyDirectOnce(request);
+  if (alreadyUsedError) return alreadyUsedError;
+  const raw = readRawBodyIfAvailable(request);
+  if (raw) {
+    const result = Promise.resolve(fromBuffer(raw, request));
+    request[bodyBufferKey] = void 0;
+    return result;
+  }
+  return readBodyDirect(request).then((buf) => {
+    const result = fromBuffer(buf, request);
+    request[bodyBufferKey] = void 0;
+    return result;
+  });
+};
+var readRawBodyIfAvailable = (request) => {
+  const incoming = request[incomingKey];
+  if ("rawBody" in incoming && incoming.rawBody instanceof Buffer) return incoming.rawBody;
+};
+var normalizeAbortError = (request, incoming) => {
+  if (incoming.errored) return incoming.errored;
+  const reason = request[abortReasonKey];
+  if (reason !== void 0) return reason instanceof Error ? reason : new Error(String(reason));
+  return /* @__PURE__ */ new Error("Client connection prematurely closed.");
+};
+var readBodyDirect = (request) => {
+  if (request[bodyBufferKey]) return Promise.resolve(request[bodyBufferKey]);
+  if (request[bodyReadPromiseKey]) return request[bodyReadPromiseKey];
+  const incoming = request[incomingKey];
+  if (incoming.readableDidRead) return rejectBodyUnusable();
+  const buffered = readBodyBufferedBeforeDisconnect(incoming);
+  if (buffered !== void 0) {
+    if (buffered instanceof Error) return Promise.reject(buffered);
+    request[bodyBufferKey] = buffered;
+    return Promise.resolve(buffered);
+  }
+  const promise = new Promise((resolve, reject) => {
+    const chunks = [];
+    let settled = false;
+    const finish = (callback) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      callback();
+    };
+    const recoverCompleteBodyAfterDisconnect = (error2) => {
+      const streamError = incoming.errored ?? error2;
+      if (!isRecoverableDisconnectedIncoming(incoming) || streamError && streamError.code !== "ECONNRESET") return false;
+      finish(() => {
+        const recovered = readBodyBufferedBeforeDisconnect(incoming, chunks);
+        if (recovered instanceof Error) reject(recovered);
+        else if (recovered === void 0) reject(error2 ?? normalizeAbortError(request, incoming));
+        else {
+          request[bodyBufferKey] = recovered;
+          resolve(recovered);
+        }
+      });
+      return true;
+    };
+    const onData = (chunk) => {
+      chunks.push(toBufferChunk(chunk, incoming.readableEncoding));
+    };
+    const onEnd = () => {
+      finish(() => {
+        const buffer = chunks.length === 1 ? chunks[0] : Buffer.concat(chunks);
+        request[bodyBufferKey] = buffer;
+        resolve(buffer);
+      });
+    };
+    const onError = (error2) => {
+      if (recoverCompleteBodyAfterDisconnect(error2)) return;
+      finish(() => {
+        reject(error2);
+      });
+    };
+    const onClose = () => {
+      if (incoming.readableEnded) {
+        onEnd();
+        return;
+      }
+      if (recoverCompleteBodyAfterDisconnect()) return;
+      finish(() => {
+        reject(normalizeAbortError(request, incoming));
+      });
+    };
+    const cleanup = () => {
+      incoming.off("data", onData);
+      incoming.off("end", onEnd);
+      incoming.off("error", onError);
+      incoming.off("close", onClose);
+      request[bodyReadPromiseKey] = void 0;
+    };
+    incoming.on("data", onData);
+    incoming.on("end", onEnd);
+    incoming.on("error", onError);
+    incoming.on("close", onClose);
+    queueMicrotask(() => {
+      if (settled) return;
+      if (incoming.readableEnded) onEnd();
+      else if (incoming.errored) onError(incoming.errored);
+      else if (incoming.destroyed) onClose();
+    });
+  });
+  request[bodyReadPromiseKey] = promise;
+  return promise;
+};
+var requestPrototype = {
+  get method() {
+    return this[methodKey];
+  },
+  get url() {
+    return this[urlKey];
+  },
+  get headers() {
+    return this[headersKey] ||= newHeadersFromIncoming(this[incomingKey]);
+  },
+  [abortRequest](reason) {
+    if (this[abortReasonKey] === void 0) this[abortReasonKey] = reason;
+    const abortController = this[abortControllerKey];
+    if (abortController && !abortController.signal.aborted) abortController.abort(reason);
+  },
+  [getAbortController]() {
+    this[abortControllerKey] ||= new AbortController();
+    if (this[abortReasonKey] !== void 0 && !this[abortControllerKey].signal.aborted) this[abortControllerKey].abort(this[abortReasonKey]);
+    return this[abortControllerKey];
+  },
+  [getRequestCache]() {
+    const abortController = this[getAbortController]();
+    if (this[requestCache]) return this[requestCache];
+    const method = this.method;
+    if (this[bodyConsumedDirectlyKey] && !(method === "GET" || method === "HEAD")) {
+      this[bodyBufferKey] = void 0;
+      const init = {
+        method: method === "TRACE" ? "GET" : method,
+        headers: this.headers,
+        signal: abortController.signal
+      };
+      if (method !== "TRACE") {
+        init.body = new ReadableStream({ start(c) {
+          c.close();
+        } });
+        init.duplex = "half";
+      }
+      const req = new Request$1(this[urlKey], init);
+      if (method === "TRACE") Object.defineProperty(req, "method", { get() {
+        return "TRACE";
+      } });
+      return this[requestCache] = req;
+    }
+    return this[requestCache] = newRequestFromIncoming(this.method, this[urlKey], this.headers, this[incomingKey], abortController);
+  },
+  get body() {
+    if (!this[bodyConsumedDirectlyKey]) return this[getRequestCache]().body;
+    const request = this[getRequestCache]();
+    if (!this[bodyLockReaderKey] && request.body) this[bodyLockReaderKey] = request.body.getReader();
+    return request.body;
+  },
+  get bodyUsed() {
+    if (this[bodyConsumedDirectlyKey]) return true;
+    if (this[requestCache]) return this[requestCache].bodyUsed;
+    return false;
+  }
+};
+Object.defineProperty(requestPrototype, "signal", { get() {
+  return this[getAbortController]().signal;
+} });
+[
+  "cache",
+  "credentials",
+  "destination",
+  "integrity",
+  "mode",
+  "redirect",
+  "referrer",
+  "referrerPolicy",
+  "keepalive"
+].forEach((k) => {
+  Object.defineProperty(requestPrototype, k, { get() {
+    return this[getRequestCache]()[k];
+  } });
+});
+["clone", "formData"].forEach((k) => {
+  Object.defineProperty(requestPrototype, k, { value: function() {
+    if (this[bodyConsumedDirectlyKey]) {
+      if (k === "clone") throw newBodyUnusableError();
+      return rejectBodyUnusable();
+    }
+    return this[getRequestCache]()[k]();
+  } });
+});
+Object.defineProperty(requestPrototype, "text", { value: function() {
+  return readBodyWithFastPath(this, "text", (buf) => textDecoder.decode(buf));
+} });
+Object.defineProperty(requestPrototype, "arrayBuffer", { value: function() {
+  return readBodyWithFastPath(this, "arrayBuffer", (buf) => toArrayBuffer(buf));
+} });
+Object.defineProperty(requestPrototype, "blob", { value: function() {
+  return readBodyWithFastPath(this, "blob", (buf, request) => {
+    const type = contentType(request);
+    const init = type ? { headers: { "content-type": type } } : void 0;
+    return new Response(buf, init).blob();
+  });
+} });
+Object.defineProperty(requestPrototype, "json", { value: function() {
+  if (this[bodyConsumedDirectlyKey]) return rejectBodyUnusable();
+  return this.text().then(JSON.parse);
+} });
+Object.defineProperty(requestPrototype, /* @__PURE__ */ Symbol.for("nodejs.util.inspect.custom"), { value: function(depth, options, inspectFn) {
+  return `Request (lightweight) ${inspectFn({
+    method: this.method,
+    url: this.url,
+    headers: this.headers,
+    nativeRequest: this[requestCache]
+  }, {
+    ...options,
+    depth: depth == null ? null : depth - 1
+  })}`;
+} });
+Object.setPrototypeOf(requestPrototype, Request$1.prototype);
+var newRequest = (incoming, defaultHostname) => {
+  const req = Object.create(requestPrototype);
+  req[incomingKey] = incoming;
+  req[methodKey] = normalizeIncomingMethod(incoming.method);
+  const incomingUrl = incoming.url || "";
+  if (incomingUrl[0] !== "/" && (incomingUrl.startsWith("http://") || incomingUrl.startsWith("https://"))) {
+    if (incoming instanceof Http2ServerRequest) throw new RequestError("Absolute URL for :path is not allowed in HTTP/2");
+    try {
+      req[urlKey] = new URL(incomingUrl).href;
+    } catch (e) {
+      throw new RequestError("Invalid absolute URL", { cause: e });
+    }
+    return req;
+  }
+  const host = (incoming instanceof Http2ServerRequest ? incoming.authority : incoming.headers.host) || defaultHostname;
+  if (!host) throw new RequestError("Missing host header");
+  let scheme;
+  if (incoming instanceof Http2ServerRequest) {
+    scheme = incoming.scheme;
+    if (!(scheme === "http" || scheme === "https")) throw new RequestError("Unsupported scheme");
+  } else scheme = incoming.socket && incoming.socket.encrypted ? "https" : "http";
+  try {
+    req[urlKey] = buildUrl(scheme, host, incomingUrl);
+  } catch (e) {
+    if (e instanceof RequestError) throw e;
+    else throw new RequestError("Invalid URL", { cause: e });
+  }
+  return req;
+};
+var defaultContentType = "text/plain; charset=UTF-8";
+var responseCache = /* @__PURE__ */ Symbol("responseCache");
+var getResponseCache = /* @__PURE__ */ Symbol("getResponseCache");
+var cacheKey = /* @__PURE__ */ Symbol("cache");
+var GlobalResponse = global.Response;
+var Response$1 = class Response$12 {
+  #body;
+  #init;
+  [getResponseCache]() {
+    const cache = this[cacheKey];
+    const liveHeaders = cache && cache[2] instanceof Headers ? cache[2] : void 0;
+    delete this[cacheKey];
+    return this[responseCache] ||= new GlobalResponse(this.#body, liveHeaders ? {
+      status: this.#init?.status,
+      statusText: this.#init?.statusText,
+      headers: liveHeaders
+    } : this.#init);
+  }
+  constructor(body, init) {
+    let headers;
+    this.#body = body;
+    if (init instanceof Response$12) {
+      const cachedGlobalResponse = init[responseCache];
+      if (cachedGlobalResponse) {
+        this.#init = cachedGlobalResponse;
+        this[getResponseCache]();
+        return;
+      } else {
+        this.#init = init.#init;
+        headers = new Headers(init.headers);
+      }
+    } else this.#init = init;
+    if (body == null || typeof body === "string" || typeof body?.getReader !== "undefined" || body instanceof Blob || body instanceof Uint8Array) this[cacheKey] = [
+      init?.status || 200,
+      body ?? null,
+      headers || init?.headers
+    ];
+  }
+  get headers() {
+    const cache = this[cacheKey];
+    if (cache) {
+      if (!(cache[2] instanceof Headers)) cache[2] = new Headers(cache[2] || (cache[1] === null ? void 0 : { "content-type": defaultContentType }));
+      return cache[2];
+    }
+    return this[getResponseCache]().headers;
+  }
+  get status() {
+    return this[cacheKey]?.[0] ?? this[getResponseCache]().status;
+  }
+  get ok() {
+    const status = this.status;
+    return status >= 200 && status < 300;
+  }
+};
+[
+  "body",
+  "bodyUsed",
+  "redirected",
+  "statusText",
+  "trailers",
+  "type",
+  "url"
+].forEach((k) => {
+  Object.defineProperty(Response$1.prototype, k, { get() {
+    return this[getResponseCache]()[k];
+  } });
+});
+[
+  "arrayBuffer",
+  "blob",
+  "clone",
+  "formData",
+  "json",
+  "text"
+].forEach((k) => {
+  Object.defineProperty(Response$1.prototype, k, { value: function() {
+    return this[getResponseCache]()[k]();
+  } });
+});
+Object.defineProperty(Response$1.prototype, /* @__PURE__ */ Symbol.for("nodejs.util.inspect.custom"), { value: function(depth, options, inspectFn) {
+  return `Response (lightweight) ${inspectFn({
+    status: this.status,
+    headers: this.headers,
+    ok: this.ok,
+    nativeResponse: this[responseCache]
+  }, {
+    ...options,
+    depth: depth == null ? null : depth - 1
+  })}`;
+} });
+Object.setPrototypeOf(Response$1, GlobalResponse);
+Object.setPrototypeOf(Response$1.prototype, GlobalResponse.prototype);
+var validRedirectUrl = /^https?:\/\/[!#-;=?-[\]_a-z~A-Z]+$/;
+var parseRedirectUrl = (url) => {
+  if (url instanceof URL) return url.href;
+  if (validRedirectUrl.test(url)) return url;
+  return new URL(url).href;
+};
+var validRedirectStatuses = /* @__PURE__ */ new Set([
+  301,
+  302,
+  303,
+  307,
+  308
+]);
+Object.defineProperty(Response$1, "redirect", {
+  value: function redirect(url, status = 302) {
+    if (!validRedirectStatuses.has(status)) throw new RangeError("Invalid status code");
+    return new Response$1(null, {
+      status,
+      headers: { location: parseRedirectUrl(url) }
+    });
+  },
+  writable: true,
+  configurable: true
+});
+Object.defineProperty(Response$1, "json", {
+  value: function json(data, init) {
+    const body = JSON.stringify(data);
+    if (body === void 0) throw new TypeError("The data is not JSON serializable");
+    const initHeaders = init?.headers;
+    let headers;
+    if (initHeaders) {
+      headers = new Headers(initHeaders);
+      if (!headers.has("content-type")) headers.set("content-type", "application/json");
+    } else headers = { "content-type": "application/json" };
+    return new Response$1(body, {
+      status: init?.status ?? 200,
+      statusText: init?.statusText,
+      headers
+    });
+  },
+  writable: true,
+  configurable: true
+});
+async function readWithoutBlocking(readPromise) {
+  return Promise.race([readPromise, Promise.resolve().then(() => Promise.resolve(void 0))]);
+}
+function writeFromReadableStreamDefaultReader(reader, writable, currentReadPromise) {
+  const cancel = (error2) => {
+    reader.cancel(error2).catch(() => {
+    });
+  };
+  writable.on("close", cancel);
+  writable.on("error", cancel);
+  (currentReadPromise ?? reader.read()).then(flow, handleStreamError);
+  return reader.closed.finally(() => {
+    writable.off("close", cancel);
+    writable.off("error", cancel);
+  });
+  function handleStreamError(error2) {
+    if (error2) writable.destroy(error2);
+  }
+  function onDrain() {
+    reader.read().then(flow, handleStreamError);
+  }
+  function flow({ done, value }) {
+    try {
+      if (done) writable.end();
+      else if (!writable.write(value)) writable.once("drain", onDrain);
+      else return reader.read().then(flow, handleStreamError);
+    } catch (e) {
+      handleStreamError(e);
+    }
+  }
+}
+function writeFromReadableStream(stream, writable) {
+  if (stream.locked) throw new TypeError("ReadableStream is locked.");
+  else if (writable.destroyed) return;
+  return writeFromReadableStreamDefaultReader(stream.getReader(), writable);
+}
+var buildOutgoingHttpHeaders = (headers, defaultContentType2) => {
+  const res = {};
+  if (!(headers instanceof Headers)) headers = new Headers(headers ?? void 0);
+  if (headers.has("set-cookie")) {
+    const cookies = [];
+    for (const [k, v] of headers) if (k === "set-cookie") cookies.push(v);
+    else res[k] = v;
+    if (cookies.length > 0) res["set-cookie"] = cookies;
+  } else for (const [k, v] of headers) res[k] = v;
+  if (defaultContentType2) res["content-type"] ??= defaultContentType2;
+  return res;
+};
+var outgoingEnded = /* @__PURE__ */ Symbol("outgoingEnded");
+var incomingDraining = /* @__PURE__ */ Symbol("incomingDraining");
+var DRAIN_TIMEOUT_MS = 500;
+var MAX_DRAIN_BYTES = 64 * 1024 * 1024;
+var drainIncoming = (incoming) => {
+  const incomingWithDrainState = incoming;
+  if (incoming.destroyed || incomingWithDrainState[incomingDraining]) return;
+  incomingWithDrainState[incomingDraining] = true;
+  if (incoming instanceof Http2ServerRequest) {
+    try {
+      incoming.stream?.close?.(constants.NGHTTP2_NO_ERROR);
+    } catch {
+    }
+    return;
+  }
+  let bytesRead = 0;
+  const cleanup = () => {
+    clearTimeout(timer);
+    incoming.off("data", onData);
+    incoming.off("end", cleanup);
+    incoming.off("error", cleanup);
+  };
+  const forceClose = () => {
+    cleanup();
+    const socket = incoming.socket;
+    if (socket && !socket.destroyed) socket.destroySoon();
+  };
+  const timer = setTimeout(forceClose, DRAIN_TIMEOUT_MS);
+  timer.unref?.();
+  const onData = (chunk) => {
+    bytesRead += chunk.length;
+    if (bytesRead > MAX_DRAIN_BYTES) forceClose();
+  };
+  incoming.on("data", onData);
+  incoming.on("end", cleanup);
+  incoming.on("error", cleanup);
+  incoming.resume();
+};
+var makeCloseHandler = (req, incoming, outgoing, needsBodyCleanup) => () => {
+  if (incoming.errored) {
+    recordBodyBufferedBeforeDisconnect(incoming);
+    req[abortRequest](incoming.errored.toString());
+  } else if (!outgoing.writableFinished) {
+    recordBodyBufferedBeforeDisconnect(incoming);
+    req[abortRequest]("Client connection prematurely closed.");
+  }
+  if (needsBodyCleanup && !incoming.readableEnded) setTimeout(() => {
+    if (!incoming.readableEnded) setTimeout(() => {
+      drainIncoming(incoming);
+    });
+  });
+};
+var isImmediateCacheableResponse = (res) => {
+  if (!(cacheKey in res)) return false;
+  const body = res[cacheKey][1];
+  return body === null || typeof body === "string" || body instanceof Uint8Array;
+};
+var handleRequestError = () => new Response(null, { status: 400 });
+var handleFetchError = (e) => new Response(null, { status: e instanceof Error && (e.name === "TimeoutError" || e.constructor.name === "TimeoutError") ? 504 : 500 });
+var handleResponseError = (e, outgoing) => {
+  const err = e instanceof Error ? e : new Error("unknown error", { cause: e });
+  if (err.code === "ERR_STREAM_PREMATURE_CLOSE") console.info("The user aborted a request.");
+  else {
+    console.error(e);
+    if (!outgoing.headersSent) outgoing.writeHead(500, { "Content-Type": "text/plain" });
+    outgoing.end(`Error: ${err.message}`);
+    outgoing.destroy(err);
+  }
+};
+var flushHeaders = (outgoing) => {
+  if ("flushHeaders" in outgoing && outgoing.writable) outgoing.flushHeaders();
+};
+var responseViaCache = async (res, outgoing) => {
+  let [status, body, header] = res[cacheKey];
+  if (!header) {
+    if (body === null) {
+      outgoing.writeHead(status);
+      outgoing.end();
+    } else if (typeof body === "string") {
+      outgoing.writeHead(status, {
+        "Content-Type": defaultContentType,
+        "Content-Length": Buffer.byteLength(body)
+      });
+      outgoing.end(body);
+    } else if (body instanceof Uint8Array) {
+      outgoing.writeHead(status, {
+        "Content-Type": defaultContentType,
+        "Content-Length": body.byteLength
+      });
+      outgoing.end(body);
+    } else if (body instanceof Blob) {
+      outgoing.writeHead(status, {
+        "Content-Type": defaultContentType,
+        "Content-Length": body.size
+      });
+      outgoing.end(new Uint8Array(await body.arrayBuffer()));
+    } else {
+      outgoing.writeHead(status, { "Content-Type": defaultContentType });
+      flushHeaders(outgoing);
+      await writeFromReadableStream(body, outgoing)?.catch((e) => handleResponseError(e, outgoing));
+    }
+    outgoing[outgoingEnded]?.();
+    return;
+  }
+  let hasContentLength = false;
+  if (header instanceof Headers) {
+    hasContentLength = header.has("content-length");
+    header = buildOutgoingHttpHeaders(header, body === null ? void 0 : defaultContentType);
+  } else if (Array.isArray(header)) {
+    const headerObj = new Headers(header);
+    hasContentLength = headerObj.has("content-length");
+    header = buildOutgoingHttpHeaders(headerObj, body === null ? void 0 : defaultContentType);
+  } else for (const key in header) if (key.length === 14 && key.toLowerCase() === "content-length") {
+    hasContentLength = true;
+    break;
+  }
+  if (!hasContentLength) {
+    if (typeof body === "string") header["Content-Length"] = Buffer.byteLength(body);
+    else if (body instanceof Uint8Array) header["Content-Length"] = body.byteLength;
+    else if (body instanceof Blob) header["Content-Length"] = body.size;
+  }
+  outgoing.writeHead(status, header);
+  if (body == null) outgoing.end();
+  else if (typeof body === "string" || body instanceof Uint8Array) outgoing.end(body);
+  else if (body instanceof Blob) outgoing.end(new Uint8Array(await body.arrayBuffer()));
+  else {
+    flushHeaders(outgoing);
+    await writeFromReadableStream(body, outgoing)?.catch((e) => handleResponseError(e, outgoing));
+  }
+  outgoing[outgoingEnded]?.();
+};
+var isPromise = (res) => typeof res.then === "function";
+var responseViaResponseObject = async (res, outgoing, options = {}) => {
+  if (isPromise(res)) if (options.errorHandler) try {
+    res = await res;
+  } catch (err) {
+    const errRes = await options.errorHandler(err);
+    if (!errRes) return;
+    res = errRes;
+  }
+  else res = await res.catch(handleFetchError);
+  if (cacheKey in res) return responseViaCache(res, outgoing);
+  const resHeaderRecord = buildOutgoingHttpHeaders(res.headers, res.body === null ? void 0 : defaultContentType);
+  if (res.body) {
+    const reader = res.body.getReader();
+    const values = [];
+    let done = false;
+    let currentReadPromise = void 0;
+    if (resHeaderRecord["transfer-encoding"] !== "chunked") {
+      let maxReadCount = 2;
+      for (let i = 0; i < maxReadCount; i++) {
+        currentReadPromise ||= reader.read();
+        const chunk = await readWithoutBlocking(currentReadPromise).catch((e) => {
+          console.error(e);
+          done = true;
+        });
+        if (!chunk) {
+          if (i === 1) {
+            await new Promise((resolve) => setTimeout(resolve));
+            maxReadCount = 3;
+            continue;
+          }
+          break;
+        }
+        currentReadPromise = void 0;
+        if (chunk.value) values.push(chunk.value);
+        if (chunk.done) {
+          done = true;
+          break;
+        }
+      }
+      if (done && !("content-length" in resHeaderRecord)) resHeaderRecord["content-length"] = values.reduce((acc, value) => acc + value.length, 0);
+    }
+    outgoing.writeHead(res.status, resHeaderRecord);
+    values.forEach((value) => {
+      outgoing.write(value);
+    });
+    if (done) outgoing.end();
+    else {
+      if (values.length === 0) flushHeaders(outgoing);
+      await writeFromReadableStreamDefaultReader(reader, outgoing, currentReadPromise);
+    }
+  } else if (resHeaderRecord[X_ALREADY_SENT]) {
+  } else {
+    outgoing.writeHead(res.status, resHeaderRecord);
+    outgoing.end();
+  }
+  outgoing[outgoingEnded]?.();
+};
+var getRequestListener = (fetchCallback, options = {}) => {
+  const autoCleanupIncoming = options.autoCleanupIncoming ?? true;
+  if (options.overrideGlobalObjects !== false && global.Request !== Request$1) {
+    Object.defineProperty(global, "Request", { value: Request$1 });
+    Object.defineProperty(global, "Response", { value: Response$1 });
+  }
+  return async (incoming, outgoing) => {
+    let res, req;
+    let needsBodyCleanup = false;
+    let closeHandlerAttached = false;
+    const ensureCloseHandler = () => {
+      if (!req || closeHandlerAttached) return;
+      closeHandlerAttached = true;
+      outgoing.on("close", makeCloseHandler(req, incoming, outgoing, needsBodyCleanup));
+    };
+    try {
+      req = newRequest(incoming, options.hostname);
+      needsBodyCleanup = autoCleanupIncoming && !(incoming.method === "GET" || incoming.method === "HEAD");
+      if (needsBodyCleanup) {
+        incoming[wrapBodyStream] = true;
+        if (incoming instanceof Http2ServerRequest) outgoing[outgoingEnded] = () => {
+          if (!incoming.readableEnded) setTimeout(() => {
+            if (!incoming.readableEnded) setTimeout(() => {
+              incoming.destroy();
+              outgoing.destroy();
+            });
+          });
+        };
+      }
+      res = fetchCallback(req, {
+        incoming,
+        outgoing
+      });
+      if (!isPromise(res) && isImmediateCacheableResponse(res)) {
+        if (needsBodyCleanup && !incoming.readableEnded) outgoing.once("finish", () => {
+          if (!incoming.readableEnded) drainIncoming(incoming);
+        });
+        return responseViaCache(res, outgoing);
+      }
+      ensureCloseHandler();
+    } catch (e) {
+      if (!res) if (options.errorHandler) {
+        ensureCloseHandler();
+        res = await options.errorHandler(req ? e : toRequestError(e));
+        if (!res) return;
+      } else if (!req) res = handleRequestError();
+      else res = handleFetchError(e);
+      else return handleResponseError(e, outgoing);
+    }
+    try {
+      return await responseViaResponseObject(res, outgoing, options);
+    } catch (e) {
+      return handleResponseError(e, outgoing);
+    }
+  };
+};
+var CloseEvent = globalThis.CloseEvent ?? class extends Event {
+  #eventInitDict;
+  constructor(type, eventInitDict = {}) {
+    super(type, eventInitDict);
+    this.#eventInitDict = eventInitDict;
+  }
+  get wasClean() {
+    return this.#eventInitDict.wasClean ?? false;
+  }
+  get code() {
+    return this.#eventInitDict.code ?? 0;
+  }
+  get reason() {
+    return this.#eventInitDict.reason ?? "";
+  }
+};
+var ErrorEvent = globalThis.ErrorEvent ?? class extends Event {
+  #eventInitDict;
+  constructor(type, eventInitDict = {}) {
+    super(type, eventInitDict);
+    this.#eventInitDict = eventInitDict;
+  }
+  get message() {
+    return this.#eventInitDict.message ?? "";
+  }
+  get filename() {
+    return this.#eventInitDict.filename ?? "";
+  }
+  get lineno() {
+    return this.#eventInitDict.lineno ?? 0;
+  }
+  get colno() {
+    return this.#eventInitDict.colno ?? 0;
+  }
+  get error() {
+    return this.#eventInitDict.error ?? null;
+  }
+};
+var generateConnectionSymbol = () => /* @__PURE__ */ Symbol("connection");
+var CONNECTION_SYMBOL_KEY = /* @__PURE__ */ Symbol("CONNECTION_SYMBOL_KEY");
+var WAIT_FOR_WEBSOCKET_SYMBOL = /* @__PURE__ */ Symbol("WAIT_FOR_WEBSOCKET_SYMBOL");
+var upgradeWebSocket = defineWebSocketHelper(async (c, events, options) => {
+  if (c.req.header("upgrade")?.toLowerCase() !== "websocket") return;
+  const env = c.env;
+  const waitForWebSocket = env[WAIT_FOR_WEBSOCKET_SYMBOL];
+  if (!waitForWebSocket || !env.incoming) return new Response(null, { status: 500 });
+  const connectionSymbol = generateConnectionSymbol();
+  env[CONNECTION_SYMBOL_KEY] = connectionSymbol;
+  (async () => {
+    let ws;
+    try {
+      ws = await waitForWebSocket(env.incoming, connectionSymbol);
+    } catch {
+      return;
+    }
+    const messagesReceivedInStarting = [];
+    const bufferMessage = (data, isBinary) => {
+      messagesReceivedInStarting.push([data, isBinary]);
+    };
+    ws.on("message", bufferMessage);
+    const ctx = {
+      binaryType: "arraybuffer",
+      close(code, reason) {
+        ws.close(code, reason);
+      },
+      protocol: ws.protocol,
+      raw: ws,
+      get readyState() {
+        return ws.readyState;
+      },
+      send(source, opts) {
+        ws.send(source, { compress: opts?.compress });
+      },
+      url: new URL(c.req.url)
+    };
+    try {
+      events?.onOpen?.(new Event("open"), ctx);
+    } catch (e) {
+      (options?.onError ?? console.error)(e);
+    }
+    const handleMessage = (data, isBinary) => {
+      const datas = Array.isArray(data) ? data : [data];
+      for (const data2 of datas) try {
+        events?.onMessage?.(new MessageEvent("message", { data: isBinary ? data2 instanceof ArrayBuffer ? data2 : data2.buffer.slice(data2.byteOffset, data2.byteOffset + data2.byteLength) : typeof data2 === "string" ? data2 : Buffer.from(data2).toString("utf-8") }), ctx);
+      } catch (e) {
+        (options?.onError ?? console.error)(e);
+      }
+    };
+    ws.off("message", bufferMessage);
+    for (const message of messagesReceivedInStarting) handleMessage(...message);
+    ws.on("message", (data, isBinary) => {
+      handleMessage(data, isBinary);
+    });
+    ws.on("close", (code, reason) => {
+      try {
+        events?.onClose?.(new CloseEvent("close", {
+          code,
+          reason: reason.toString()
+        }), ctx);
+      } catch (e) {
+        (options?.onError ?? console.error)(e);
+      }
+    });
+    ws.on("error", (error2) => {
+      try {
+        events?.onError?.(new ErrorEvent("error", { error: error2 }), ctx);
+      } catch (e) {
+        (options?.onError ?? console.error)(e);
+      }
+    });
+  })();
+  return new Response();
+});
 
 // node_modules/.pnpm/zod@3.25.76/node_modules/zod/v4/core/core.js
 var NEVER = Object.freeze({
@@ -10649,6 +11686,7 @@ config(en_default());
 
 // node_modules/.pnpm/@modelcontextprotocol+sdk@1.29.0_zod@3.25.76/node_modules/@modelcontextprotocol/sdk/dist/esm/types.js
 var LATEST_PROTOCOL_VERSION = "2025-11-25";
+var DEFAULT_NEGOTIATED_PROTOCOL_VERSION = "2025-03-26";
 var SUPPORTED_PROTOCOL_VERSIONS = [LATEST_PROTOCOL_VERSION, "2025-06-18", "2025-03-26", "2024-11-05", "2024-10-07"];
 var RELATED_TASK_META_KEY = "io.modelcontextprotocol/related-task";
 var JSONRPC_VERSION = "2.0";
@@ -10977,6 +12015,7 @@ var InitializeRequestSchema = RequestSchema.extend({
   method: literal("initialize"),
   params: InitializeRequestParamsSchema
 });
+var isInitializeRequest = (value) => InitializeRequestSchema.safeParse(value).success;
 var ServerCapabilitiesSchema = object({
   /**
    * Experimental, non-standard capabilities that the server supports.
@@ -12166,92 +13205,707 @@ var UrlElicitationRequiredError = class extends McpError {
   }
 };
 
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.29.0_zod@3.25.76/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/stdio.js
-var ReadBuffer = class {
-  append(chunk) {
-    this._buffer = this._buffer ? Buffer.concat([this._buffer, chunk]) : chunk;
-  }
-  readMessage() {
-    if (!this._buffer) {
-      return null;
-    }
-    const index = this._buffer.indexOf("\n");
-    if (index === -1) {
-      return null;
-    }
-    const line = this._buffer.toString("utf8", 0, index).replace(/\r$/, "");
-    this._buffer = this._buffer.subarray(index + 1);
-    return deserializeMessage(line);
-  }
-  clear() {
-    this._buffer = void 0;
-  }
-};
-function deserializeMessage(line) {
-  return JSONRPCMessageSchema.parse(JSON.parse(line));
-}
-function serializeMessage(message) {
-  return JSON.stringify(message) + "\n";
-}
-
-// node_modules/.pnpm/@modelcontextprotocol+sdk@1.29.0_zod@3.25.76/node_modules/@modelcontextprotocol/sdk/dist/esm/server/stdio.js
-var StdioServerTransport = class {
-  constructor(_stdin = process2.stdin, _stdout = process2.stdout) {
-    this._stdin = _stdin;
-    this._stdout = _stdout;
-    this._readBuffer = new ReadBuffer();
+// node_modules/.pnpm/@modelcontextprotocol+sdk@1.29.0_zod@3.25.76/node_modules/@modelcontextprotocol/sdk/dist/esm/server/webStandardStreamableHttp.js
+var WebStandardStreamableHTTPServerTransport = class {
+  constructor(options = {}) {
     this._started = false;
-    this._ondata = (chunk) => {
-      this._readBuffer.append(chunk);
-      this.processReadBuffer();
-    };
-    this._onerror = (error2) => {
-      this.onerror?.(error2);
-    };
+    this._hasHandledRequest = false;
+    this._streamMapping = /* @__PURE__ */ new Map();
+    this._requestToStreamMapping = /* @__PURE__ */ new Map();
+    this._requestResponseMap = /* @__PURE__ */ new Map();
+    this._initialized = false;
+    this._enableJsonResponse = false;
+    this._standaloneSseStreamId = "_GET_stream";
+    this.sessionIdGenerator = options.sessionIdGenerator;
+    this._enableJsonResponse = options.enableJsonResponse ?? false;
+    this._eventStore = options.eventStore;
+    this._onsessioninitialized = options.onsessioninitialized;
+    this._onsessionclosed = options.onsessionclosed;
+    this._allowedHosts = options.allowedHosts;
+    this._allowedOrigins = options.allowedOrigins;
+    this._enableDnsRebindingProtection = options.enableDnsRebindingProtection ?? false;
+    this._retryInterval = options.retryInterval;
   }
   /**
-   * Starts listening for messages on stdin.
+   * Starts the transport. This is required by the Transport interface but is a no-op
+   * for the Streamable HTTP transport as connections are managed per-request.
    */
   async start() {
     if (this._started) {
-      throw new Error("StdioServerTransport already started! If using Server class, note that connect() calls start() automatically.");
+      throw new Error("Transport already started");
     }
     this._started = true;
-    this._stdin.on("data", this._ondata);
-    this._stdin.on("error", this._onerror);
   }
-  processReadBuffer() {
-    while (true) {
-      try {
-        const message = this._readBuffer.readMessage();
-        if (message === null) {
-          break;
-        }
-        this.onmessage?.(message);
-      } catch (error2) {
-        this.onerror?.(error2);
-      }
+  /**
+   * Helper to create a JSON error response
+   */
+  createJsonErrorResponse(status, code, message, options) {
+    const error2 = { code, message };
+    if (options?.data !== void 0) {
+      error2.data = options.data;
     }
-  }
-  async close() {
-    this._stdin.off("data", this._ondata);
-    this._stdin.off("error", this._onerror);
-    const remainingDataListeners = this._stdin.listenerCount("data");
-    if (remainingDataListeners === 0) {
-      this._stdin.pause();
-    }
-    this._readBuffer.clear();
-    this.onclose?.();
-  }
-  send(message) {
-    return new Promise((resolve) => {
-      const json = serializeMessage(message);
-      if (this._stdout.write(json)) {
-        resolve();
-      } else {
-        this._stdout.once("drain", resolve);
+    return new Response(JSON.stringify({
+      jsonrpc: "2.0",
+      error: error2,
+      id: null
+    }), {
+      status,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers
       }
     });
+  }
+  /**
+   * Validates request headers for DNS rebinding protection.
+   * @returns Error response if validation fails, undefined if validation passes.
+   */
+  validateRequestHeaders(req) {
+    if (!this._enableDnsRebindingProtection) {
+      return void 0;
+    }
+    if (this._allowedHosts && this._allowedHosts.length > 0) {
+      const hostHeader = req.headers.get("host");
+      if (!hostHeader || !this._allowedHosts.includes(hostHeader)) {
+        const error2 = `Invalid Host header: ${hostHeader}`;
+        this.onerror?.(new Error(error2));
+        return this.createJsonErrorResponse(403, -32e3, error2);
+      }
+    }
+    if (this._allowedOrigins && this._allowedOrigins.length > 0) {
+      const originHeader = req.headers.get("origin");
+      if (originHeader && !this._allowedOrigins.includes(originHeader)) {
+        const error2 = `Invalid Origin header: ${originHeader}`;
+        this.onerror?.(new Error(error2));
+        return this.createJsonErrorResponse(403, -32e3, error2);
+      }
+    }
+    return void 0;
+  }
+  /**
+   * Handles an incoming HTTP request, whether GET, POST, or DELETE
+   * Returns a Response object (Web Standard)
+   */
+  async handleRequest(req, options) {
+    if (!this.sessionIdGenerator && this._hasHandledRequest) {
+      throw new Error("Stateless transport cannot be reused across requests. Create a new transport per request.");
+    }
+    this._hasHandledRequest = true;
+    const validationError = this.validateRequestHeaders(req);
+    if (validationError) {
+      return validationError;
+    }
+    switch (req.method) {
+      case "POST":
+        return this.handlePostRequest(req, options);
+      case "GET":
+        return this.handleGetRequest(req);
+      case "DELETE":
+        return this.handleDeleteRequest(req);
+      default:
+        return this.handleUnsupportedRequest();
+    }
+  }
+  /**
+   * Writes a priming event to establish resumption capability.
+   * Only sends if eventStore is configured (opt-in for resumability) and
+   * the client's protocol version supports empty SSE data (>= 2025-11-25).
+   */
+  async writePrimingEvent(controller, encoder, streamId, protocolVersion) {
+    if (!this._eventStore) {
+      return;
+    }
+    if (protocolVersion < "2025-11-25") {
+      return;
+    }
+    const primingEventId = await this._eventStore.storeEvent(streamId, {});
+    let primingEvent = `id: ${primingEventId}
+data: 
+
+`;
+    if (this._retryInterval !== void 0) {
+      primingEvent = `id: ${primingEventId}
+retry: ${this._retryInterval}
+data: 
+
+`;
+    }
+    controller.enqueue(encoder.encode(primingEvent));
+  }
+  /**
+   * Handles GET requests for SSE stream
+   */
+  async handleGetRequest(req) {
+    const acceptHeader = req.headers.get("accept");
+    if (!acceptHeader?.includes("text/event-stream")) {
+      this.onerror?.(new Error("Not Acceptable: Client must accept text/event-stream"));
+      return this.createJsonErrorResponse(406, -32e3, "Not Acceptable: Client must accept text/event-stream");
+    }
+    const sessionError = this.validateSession(req);
+    if (sessionError) {
+      return sessionError;
+    }
+    const protocolError = this.validateProtocolVersion(req);
+    if (protocolError) {
+      return protocolError;
+    }
+    if (this._eventStore) {
+      const lastEventId = req.headers.get("last-event-id");
+      if (lastEventId) {
+        return this.replayEvents(lastEventId);
+      }
+    }
+    if (this._streamMapping.get(this._standaloneSseStreamId) !== void 0) {
+      this.onerror?.(new Error("Conflict: Only one SSE stream is allowed per session"));
+      return this.createJsonErrorResponse(409, -32e3, "Conflict: Only one SSE stream is allowed per session");
+    }
+    const encoder = new TextEncoder();
+    let streamController;
+    const readable = new ReadableStream({
+      start: (controller) => {
+        streamController = controller;
+      },
+      cancel: () => {
+        this._streamMapping.delete(this._standaloneSseStreamId);
+      }
+    });
+    const headers = {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive"
+    };
+    if (this.sessionId !== void 0) {
+      headers["mcp-session-id"] = this.sessionId;
+    }
+    this._streamMapping.set(this._standaloneSseStreamId, {
+      controller: streamController,
+      encoder,
+      cleanup: () => {
+        this._streamMapping.delete(this._standaloneSseStreamId);
+        try {
+          streamController.close();
+        } catch {
+        }
+      }
+    });
+    return new Response(readable, { headers });
+  }
+  /**
+   * Replays events that would have been sent after the specified event ID
+   * Only used when resumability is enabled
+   */
+  async replayEvents(lastEventId) {
+    if (!this._eventStore) {
+      this.onerror?.(new Error("Event store not configured"));
+      return this.createJsonErrorResponse(400, -32e3, "Event store not configured");
+    }
+    try {
+      let streamId;
+      if (this._eventStore.getStreamIdForEventId) {
+        streamId = await this._eventStore.getStreamIdForEventId(lastEventId);
+        if (!streamId) {
+          this.onerror?.(new Error("Invalid event ID format"));
+          return this.createJsonErrorResponse(400, -32e3, "Invalid event ID format");
+        }
+        if (this._streamMapping.get(streamId) !== void 0) {
+          this.onerror?.(new Error("Conflict: Stream already has an active connection"));
+          return this.createJsonErrorResponse(409, -32e3, "Conflict: Stream already has an active connection");
+        }
+      }
+      const headers = {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache, no-transform",
+        Connection: "keep-alive"
+      };
+      if (this.sessionId !== void 0) {
+        headers["mcp-session-id"] = this.sessionId;
+      }
+      const encoder = new TextEncoder();
+      let streamController;
+      const readable = new ReadableStream({
+        start: (controller) => {
+          streamController = controller;
+        },
+        cancel: () => {
+        }
+      });
+      const replayedStreamId = await this._eventStore.replayEventsAfter(lastEventId, {
+        send: async (eventId, message) => {
+          const success = this.writeSSEEvent(streamController, encoder, message, eventId);
+          if (!success) {
+            this.onerror?.(new Error("Failed replay events"));
+            try {
+              streamController.close();
+            } catch {
+            }
+          }
+        }
+      });
+      this._streamMapping.set(replayedStreamId, {
+        controller: streamController,
+        encoder,
+        cleanup: () => {
+          this._streamMapping.delete(replayedStreamId);
+          try {
+            streamController.close();
+          } catch {
+          }
+        }
+      });
+      return new Response(readable, { headers });
+    } catch (error2) {
+      this.onerror?.(error2);
+      return this.createJsonErrorResponse(500, -32e3, "Error replaying events");
+    }
+  }
+  /**
+   * Writes an event to an SSE stream via controller with proper formatting
+   */
+  writeSSEEvent(controller, encoder, message, eventId) {
+    try {
+      let eventData = `event: message
+`;
+      if (eventId) {
+        eventData += `id: ${eventId}
+`;
+      }
+      eventData += `data: ${JSON.stringify(message)}
+
+`;
+      controller.enqueue(encoder.encode(eventData));
+      return true;
+    } catch (error2) {
+      this.onerror?.(error2);
+      return false;
+    }
+  }
+  /**
+   * Handles unsupported requests (PUT, PATCH, etc.)
+   */
+  handleUnsupportedRequest() {
+    this.onerror?.(new Error("Method not allowed."));
+    return new Response(JSON.stringify({
+      jsonrpc: "2.0",
+      error: {
+        code: -32e3,
+        message: "Method not allowed."
+      },
+      id: null
+    }), {
+      status: 405,
+      headers: {
+        Allow: "GET, POST, DELETE",
+        "Content-Type": "application/json"
+      }
+    });
+  }
+  /**
+   * Handles POST requests containing JSON-RPC messages
+   */
+  async handlePostRequest(req, options) {
+    try {
+      const acceptHeader = req.headers.get("accept");
+      if (!acceptHeader?.includes("application/json") || !acceptHeader.includes("text/event-stream")) {
+        this.onerror?.(new Error("Not Acceptable: Client must accept both application/json and text/event-stream"));
+        return this.createJsonErrorResponse(406, -32e3, "Not Acceptable: Client must accept both application/json and text/event-stream");
+      }
+      const ct = req.headers.get("content-type");
+      if (!ct || !ct.includes("application/json")) {
+        this.onerror?.(new Error("Unsupported Media Type: Content-Type must be application/json"));
+        return this.createJsonErrorResponse(415, -32e3, "Unsupported Media Type: Content-Type must be application/json");
+      }
+      const requestInfo = {
+        headers: Object.fromEntries(req.headers.entries()),
+        url: new URL(req.url)
+      };
+      let rawMessage;
+      if (options?.parsedBody !== void 0) {
+        rawMessage = options.parsedBody;
+      } else {
+        try {
+          rawMessage = await req.json();
+        } catch {
+          this.onerror?.(new Error("Parse error: Invalid JSON"));
+          return this.createJsonErrorResponse(400, -32700, "Parse error: Invalid JSON");
+        }
+      }
+      let messages;
+      try {
+        if (Array.isArray(rawMessage)) {
+          messages = rawMessage.map((msg) => JSONRPCMessageSchema.parse(msg));
+        } else {
+          messages = [JSONRPCMessageSchema.parse(rawMessage)];
+        }
+      } catch {
+        this.onerror?.(new Error("Parse error: Invalid JSON-RPC message"));
+        return this.createJsonErrorResponse(400, -32700, "Parse error: Invalid JSON-RPC message");
+      }
+      const isInitializationRequest = messages.some(isInitializeRequest);
+      if (isInitializationRequest) {
+        if (this._initialized && this.sessionId !== void 0) {
+          this.onerror?.(new Error("Invalid Request: Server already initialized"));
+          return this.createJsonErrorResponse(400, -32600, "Invalid Request: Server already initialized");
+        }
+        if (messages.length > 1) {
+          this.onerror?.(new Error("Invalid Request: Only one initialization request is allowed"));
+          return this.createJsonErrorResponse(400, -32600, "Invalid Request: Only one initialization request is allowed");
+        }
+        this.sessionId = this.sessionIdGenerator?.();
+        this._initialized = true;
+        if (this.sessionId && this._onsessioninitialized) {
+          await Promise.resolve(this._onsessioninitialized(this.sessionId));
+        }
+      }
+      if (!isInitializationRequest) {
+        const sessionError = this.validateSession(req);
+        if (sessionError) {
+          return sessionError;
+        }
+        const protocolError = this.validateProtocolVersion(req);
+        if (protocolError) {
+          return protocolError;
+        }
+      }
+      const hasRequests = messages.some(isJSONRPCRequest);
+      if (!hasRequests) {
+        for (const message of messages) {
+          this.onmessage?.(message, { authInfo: options?.authInfo, requestInfo });
+        }
+        return new Response(null, { status: 202 });
+      }
+      const streamId = crypto.randomUUID();
+      const initRequest = messages.find((m) => isInitializeRequest(m));
+      const clientProtocolVersion = initRequest ? initRequest.params.protocolVersion : req.headers.get("mcp-protocol-version") ?? DEFAULT_NEGOTIATED_PROTOCOL_VERSION;
+      if (this._enableJsonResponse) {
+        return new Promise((resolve) => {
+          this._streamMapping.set(streamId, {
+            resolveJson: resolve,
+            cleanup: () => {
+              this._streamMapping.delete(streamId);
+            }
+          });
+          for (const message of messages) {
+            if (isJSONRPCRequest(message)) {
+              this._requestToStreamMapping.set(message.id, streamId);
+            }
+          }
+          for (const message of messages) {
+            this.onmessage?.(message, { authInfo: options?.authInfo, requestInfo });
+          }
+        });
+      }
+      const encoder = new TextEncoder();
+      let streamController;
+      const readable = new ReadableStream({
+        start: (controller) => {
+          streamController = controller;
+        },
+        cancel: () => {
+          this._streamMapping.delete(streamId);
+        }
+      });
+      const headers = {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive"
+      };
+      if (this.sessionId !== void 0) {
+        headers["mcp-session-id"] = this.sessionId;
+      }
+      for (const message of messages) {
+        if (isJSONRPCRequest(message)) {
+          this._streamMapping.set(streamId, {
+            controller: streamController,
+            encoder,
+            cleanup: () => {
+              this._streamMapping.delete(streamId);
+              try {
+                streamController.close();
+              } catch {
+              }
+            }
+          });
+          this._requestToStreamMapping.set(message.id, streamId);
+        }
+      }
+      await this.writePrimingEvent(streamController, encoder, streamId, clientProtocolVersion);
+      for (const message of messages) {
+        let closeSSEStream;
+        let closeStandaloneSSEStream;
+        if (isJSONRPCRequest(message) && this._eventStore && clientProtocolVersion >= "2025-11-25") {
+          closeSSEStream = () => {
+            this.closeSSEStream(message.id);
+          };
+          closeStandaloneSSEStream = () => {
+            this.closeStandaloneSSEStream();
+          };
+        }
+        this.onmessage?.(message, { authInfo: options?.authInfo, requestInfo, closeSSEStream, closeStandaloneSSEStream });
+      }
+      return new Response(readable, { status: 200, headers });
+    } catch (error2) {
+      this.onerror?.(error2);
+      return this.createJsonErrorResponse(400, -32700, "Parse error", { data: String(error2) });
+    }
+  }
+  /**
+   * Handles DELETE requests to terminate sessions
+   */
+  async handleDeleteRequest(req) {
+    const sessionError = this.validateSession(req);
+    if (sessionError) {
+      return sessionError;
+    }
+    const protocolError = this.validateProtocolVersion(req);
+    if (protocolError) {
+      return protocolError;
+    }
+    await Promise.resolve(this._onsessionclosed?.(this.sessionId));
+    await this.close();
+    return new Response(null, { status: 200 });
+  }
+  /**
+   * Validates session ID for non-initialization requests.
+   * Returns Response error if invalid, undefined otherwise
+   */
+  validateSession(req) {
+    if (this.sessionIdGenerator === void 0) {
+      return void 0;
+    }
+    if (!this._initialized) {
+      this.onerror?.(new Error("Bad Request: Server not initialized"));
+      return this.createJsonErrorResponse(400, -32e3, "Bad Request: Server not initialized");
+    }
+    const sessionId = req.headers.get("mcp-session-id");
+    if (!sessionId) {
+      this.onerror?.(new Error("Bad Request: Mcp-Session-Id header is required"));
+      return this.createJsonErrorResponse(400, -32e3, "Bad Request: Mcp-Session-Id header is required");
+    }
+    if (sessionId !== this.sessionId) {
+      this.onerror?.(new Error("Session not found"));
+      return this.createJsonErrorResponse(404, -32001, "Session not found");
+    }
+    return void 0;
+  }
+  /**
+   * Validates the MCP-Protocol-Version header on incoming requests.
+   *
+   * For initialization: Version negotiation handles unknown versions gracefully
+   * (server responds with its supported version).
+   *
+   * For subsequent requests with MCP-Protocol-Version header:
+   * - Accept if in supported list
+   * - 400 if unsupported
+   *
+   * For HTTP requests without the MCP-Protocol-Version header:
+   * - Accept and default to the version negotiated at initialization
+   */
+  validateProtocolVersion(req) {
+    const protocolVersion = req.headers.get("mcp-protocol-version");
+    if (protocolVersion !== null && !SUPPORTED_PROTOCOL_VERSIONS.includes(protocolVersion)) {
+      this.onerror?.(new Error(`Bad Request: Unsupported protocol version: ${protocolVersion} (supported versions: ${SUPPORTED_PROTOCOL_VERSIONS.join(", ")})`));
+      return this.createJsonErrorResponse(400, -32e3, `Bad Request: Unsupported protocol version: ${protocolVersion} (supported versions: ${SUPPORTED_PROTOCOL_VERSIONS.join(", ")})`);
+    }
+    return void 0;
+  }
+  async close() {
+    this._streamMapping.forEach(({ cleanup }) => {
+      cleanup();
+    });
+    this._streamMapping.clear();
+    this._requestResponseMap.clear();
+    this.onclose?.();
+  }
+  /**
+   * Close an SSE stream for a specific request, triggering client reconnection.
+   * Use this to implement polling behavior during long-running operations -
+   * client will reconnect after the retry interval specified in the priming event.
+   */
+  closeSSEStream(requestId) {
+    const streamId = this._requestToStreamMapping.get(requestId);
+    if (!streamId)
+      return;
+    const stream = this._streamMapping.get(streamId);
+    if (stream) {
+      stream.cleanup();
+    }
+  }
+  /**
+   * Close the standalone GET SSE stream, triggering client reconnection.
+   * Use this to implement polling behavior for server-initiated notifications.
+   */
+  closeStandaloneSSEStream() {
+    const stream = this._streamMapping.get(this._standaloneSseStreamId);
+    if (stream) {
+      stream.cleanup();
+    }
+  }
+  async send(message, options) {
+    let requestId = options?.relatedRequestId;
+    if (isJSONRPCResultResponse(message) || isJSONRPCErrorResponse(message)) {
+      requestId = message.id;
+    }
+    if (requestId === void 0) {
+      if (isJSONRPCResultResponse(message) || isJSONRPCErrorResponse(message)) {
+        throw new Error("Cannot send a response on a standalone SSE stream unless resuming a previous client request");
+      }
+      let eventId;
+      if (this._eventStore) {
+        eventId = await this._eventStore.storeEvent(this._standaloneSseStreamId, message);
+      }
+      const standaloneSse = this._streamMapping.get(this._standaloneSseStreamId);
+      if (standaloneSse === void 0) {
+        return;
+      }
+      if (standaloneSse.controller && standaloneSse.encoder) {
+        this.writeSSEEvent(standaloneSse.controller, standaloneSse.encoder, message, eventId);
+      }
+      return;
+    }
+    const streamId = this._requestToStreamMapping.get(requestId);
+    if (!streamId) {
+      throw new Error(`No connection established for request ID: ${String(requestId)}`);
+    }
+    const stream = this._streamMapping.get(streamId);
+    if (!this._enableJsonResponse && stream?.controller && stream?.encoder) {
+      let eventId;
+      if (this._eventStore) {
+        eventId = await this._eventStore.storeEvent(streamId, message);
+      }
+      this.writeSSEEvent(stream.controller, stream.encoder, message, eventId);
+    }
+    if (isJSONRPCResultResponse(message) || isJSONRPCErrorResponse(message)) {
+      this._requestResponseMap.set(requestId, message);
+      const relatedIds = Array.from(this._requestToStreamMapping.entries()).filter(([_, sid]) => sid === streamId).map(([id]) => id);
+      const allResponsesReady = relatedIds.every((id) => this._requestResponseMap.has(id));
+      if (allResponsesReady) {
+        if (!stream) {
+          throw new Error(`No connection established for request ID: ${String(requestId)}`);
+        }
+        if (this._enableJsonResponse && stream.resolveJson) {
+          const headers = {
+            "Content-Type": "application/json"
+          };
+          if (this.sessionId !== void 0) {
+            headers["mcp-session-id"] = this.sessionId;
+          }
+          const responses = relatedIds.map((id) => this._requestResponseMap.get(id));
+          if (responses.length === 1) {
+            stream.resolveJson(new Response(JSON.stringify(responses[0]), { status: 200, headers }));
+          } else {
+            stream.resolveJson(new Response(JSON.stringify(responses), { status: 200, headers }));
+          }
+        } else {
+          stream.cleanup();
+        }
+        for (const id of relatedIds) {
+          this._requestResponseMap.delete(id);
+          this._requestToStreamMapping.delete(id);
+        }
+      }
+    }
+  }
+};
+
+// node_modules/.pnpm/@modelcontextprotocol+sdk@1.29.0_zod@3.25.76/node_modules/@modelcontextprotocol/sdk/dist/esm/server/streamableHttp.js
+var StreamableHTTPServerTransport = class {
+  constructor(options = {}) {
+    this._requestContext = /* @__PURE__ */ new WeakMap();
+    this._webStandardTransport = new WebStandardStreamableHTTPServerTransport(options);
+    this._requestListener = getRequestListener(async (webRequest) => {
+      const context = this._requestContext.get(webRequest);
+      return this._webStandardTransport.handleRequest(webRequest, {
+        authInfo: context?.authInfo,
+        parsedBody: context?.parsedBody
+      });
+    }, { overrideGlobalObjects: false });
+  }
+  /**
+   * Gets the session ID for this transport instance.
+   */
+  get sessionId() {
+    return this._webStandardTransport.sessionId;
+  }
+  /**
+   * Sets callback for when the transport is closed.
+   */
+  set onclose(handler) {
+    this._webStandardTransport.onclose = handler;
+  }
+  get onclose() {
+    return this._webStandardTransport.onclose;
+  }
+  /**
+   * Sets callback for transport errors.
+   */
+  set onerror(handler) {
+    this._webStandardTransport.onerror = handler;
+  }
+  get onerror() {
+    return this._webStandardTransport.onerror;
+  }
+  /**
+   * Sets callback for incoming messages.
+   */
+  set onmessage(handler) {
+    this._webStandardTransport.onmessage = handler;
+  }
+  get onmessage() {
+    return this._webStandardTransport.onmessage;
+  }
+  /**
+   * Starts the transport. This is required by the Transport interface but is a no-op
+   * for the Streamable HTTP transport as connections are managed per-request.
+   */
+  async start() {
+    return this._webStandardTransport.start();
+  }
+  /**
+   * Closes the transport and all active connections.
+   */
+  async close() {
+    return this._webStandardTransport.close();
+  }
+  /**
+   * Sends a JSON-RPC message through the transport.
+   */
+  async send(message, options) {
+    return this._webStandardTransport.send(message, options);
+  }
+  /**
+   * Handles an incoming HTTP request, whether GET or POST.
+   *
+   * This method converts Node.js HTTP objects to Web Standard Request/Response
+   * and delegates to the underlying WebStandardStreamableHTTPServerTransport.
+   *
+   * @param req - Node.js IncomingMessage, optionally with auth property from middleware
+   * @param res - Node.js ServerResponse
+   * @param parsedBody - Optional pre-parsed body from body-parser middleware
+   */
+  async handleRequest(req, res, parsedBody) {
+    const authInfo = req.auth;
+    const handler = getRequestListener(async (webRequest) => {
+      return this._webStandardTransport.handleRequest(webRequest, {
+        authInfo,
+        parsedBody
+      });
+    }, { overrideGlobalObjects: false });
+    await handler(req, res);
+  }
+  /**
+   * Close an SSE stream for a specific request, triggering client reconnection.
+   * Use this to implement polling behavior during long-running operations -
+   * client will reconnect after the retry interval specified in the priming event.
+   */
+  closeSSEStream(requestId) {
+    this._webStandardTransport.closeSSEStream(requestId);
+  }
+  /**
+   * Close the standalone GET SSE stream, triggering client reconnection.
+   * Use this to implement polling behavior for server-initiated notifications.
+   */
+  closeStandaloneSSEStream() {
+    this._webStandardTransport.closeStandaloneSSEStream();
   }
 };
 
@@ -12521,8 +14175,8 @@ var ZodIssueCode = util.arrayToEnum([
   "not_finite"
 ]);
 var quotelessJson = (obj) => {
-  const json = JSON.stringify(obj, null, 2);
-  return json.replace(/"([^"]+)":/g, "$1:");
+  const json2 = JSON.stringify(obj, null, 2);
+  return json2.replace(/"([^"]+)":/g, "$1:");
 };
 var ZodError2 = class _ZodError extends Error {
   get errors() {
@@ -18038,7 +19692,7 @@ var Server = class extends Protocol {
   }
 };
 
-// packages/frame-language-mcp-server/src/tool-errors.ts
+// packages/csis-mcp-server/src/tool-errors.ts
 function describeIssue(issue2) {
   const path = issue2.path.length > 0 ? issue2.path.join(".") : "(root)";
   return `${path}: ${issue2.message}`;
@@ -18109,1120 +19763,413 @@ function withOutputSchemas(tools, schemas) {
   });
 }
 
-// packages/frame-language-mcp-server/src/term-registry.json
-var term_registry_default = {
-  version: "0.1.0",
-  date: "2026-06-12",
-  description: "Canonical machine-readable Frame 1 vocabulary registry. Merged from three drifted encodings: the Frame Language Grammar Appendix A and Part II tables (human-readable authority), the Frame Language MCP server watchlist (why_frame_1, replacement_pattern, primitive_anchors, common_phrasings), and the analyzer term-registry (imports, replace_with, forecloses, slippage_note). This registry is ABOUT Frame 1 terms, so it names them throughout, which is admissible. The skill, the MCP server, and the analyzer will all derive from this registry in Phase 4.",
-  terms: [
-    {
-      term: "accountability",
-      frame: 1,
-      imports: "Abstracts the obligation direction, the verification procedure, and the response to non-conformance into a single noun that hides each; structurally imports that obligation flows upward toward whoever holds formal authority (terminal-upward reporting).",
-      frame_2_replacement: [
-        "Obligation",
-        "Multiplex Obligation Directions",
-        "obligation direction"
-      ],
-      strengthened_form: "Obligation to [named parties] with [named verification] and [named response to non-conformance]; Multiplex Obligation Directions (define on first use)",
-      procedure: "plain-english",
-      forecloses: "Requirements that obligation run toward cost-bearing parties rather than upward toward formal authority.",
-      slippage_note: "Reform language ('multi-directional accountability', 'community accountability') does not change the structural direction. The terminal-upward mechanism remains regardless of modifier.",
-      primitive_anchors: [
-        "Obligation Fulfillment Record (CROSS+WALKRI Layer 3)",
-        "Gate Type and Gate Character (Layer 3)",
-        "CROSS Part XI funder obligations"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "held accountable",
-          frame_2: "bound to obligation to [named parties] with named redress procedure under Part XI"
-        },
-        {
-          frame_1: "accountability mechanism",
-          frame_2: "obligation with redress under Part XI"
-        },
-        {
-          frame_1: "accountability runs from X to Y",
-          frame_2: "obligation directions run from X to Y with [verification procedure] and [response to non-conformance]"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp",
-        "analyzer"
-      ]
-    },
-    {
-      term: "authority",
-      frame: 1,
-      imports: "A role, body, or person holds licensed power derived from position or title; enforcement capacity imported as legitimate standing, without origination grounding.",
-      frame_2_replacement: [
-        "Positional gravity",
-        "Gravitas"
-      ],
-      strengthened_form: "Define on first use: weight arising from origination, not appointment",
-      procedure: "technical-corpus",
-      forecloses: "Weight arising from structural grounding, origination capacity, or demonstrated domain expertise rather than positional license.",
-      slippage_note: "Positional authority (enforcement capacity imported as legitimate standing without origination grounding) is a harm precursor: authority misuse leads to power concentration leads to extraction. The same structural condition that specifies what is forbidden (authority without origination grounding) simultaneously specifies what is required (positional gravity, weight arising from genuine inquiry, lived experience in the conditions specified, or demonstrated coordination capacity). When a document uses authority vocabulary with origination grounding conditions partially named, apply the Class C (tradition-grounded) structural test before flagging as bare Frame 1. Traditions in political philosophy (Raz's service conception, Habermas's communicative rationality, Arendt's power/authority/violence distinction) have established partial normative and procedural grounding toward the same structural condition; PoC adds the structural design conditions level.",
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "analyzer"
-      ]
-    },
-    {
-      term: "beneficiary",
-      frame: 1,
-      imports: "Positions the less-powerful party as the passive recipient of another party's delivery, embedding a power relation in the syntactic structure rather than naming the party's own cost-bearing relation to the system.",
-      frame_2_replacement: [
-        "Named parties with specified cost-bearing relation"
-      ],
-      strengthened_form: "[Named parties] whose cost-bearing relation to the system is [specified]",
-      procedure: "relational-inversion",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: "Admissible in the destination slot of stewardship specifications ('stewardship of [x] for [named beneficiaries]') where the term names the parties the stewardship obligation runs toward, not where it positions them as passive recipients of delivery.",
-      sources: [
-        "grammar"
-      ]
-    },
-    {
-      term: "capacity building",
-      frame: 1,
-      imports: "Positions the funder as the subject who builds the grantee's capacity, placing in object position the development that should be the grantee's own.",
-      frame_2_replacement: [
-        "Structural development of [function]"
-      ],
-      strengthened_form: "Structural development of [named function] within [named party] under [named completion criteria]",
-      procedure: "relational-inversion",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar"
-      ]
-    },
-    {
-      term: "compliance",
-      frame: 1,
-      imports: "Frames the relationship as one-way: the applicant complies with externally imposed standards and submits to external authority rather than aligning with structural conditions. Hides the bidirectional precision obligation.",
-      frame_2_replacement: [
-        "Conformance"
-      ],
-      strengthened_form: "Conformance with [named conditions] verified by [named procedure]",
-      procedure: "plain-english",
-      forecloses: "Alignment architectures that do not depend on coercive authority.",
-      slippage_note: null,
-      primitive_anchors: [
-        "Criterion Specification Elements / Compliance Threshold (CROSS+WALKRI Layer 5; citation use admissible for the field name)",
-        "Bidirectional Precision (CROSS+WALKRI Layer 1)"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "in compliance with",
-          frame_2: "conforming to"
-        },
-        {
-          frame_1: "compliance threshold",
-          frame_2: "compliance threshold (WALKRI canonical field name; citation use admissible)"
-        }
-      ],
-      admissibility_note: "'Compliance threshold' is admissible as the WALKRI canonical field name (citation use). Use 'conformance' in own voice.",
-      sources: [
-        "grammar",
-        "mcp",
-        "analyzer"
-      ]
-    },
-    {
-      term: "credibility",
-      frame: 1,
-      imports: "A deference claim: asserts that a claim warrants acceptance (trustworthiness) without naming the source of standing or the conditions, common in disclosure-and-rating-framework contexts.",
-      frame_2_replacement: [
-        "Standing Evidence per named source"
-      ],
-      strengthened_form: "[Claim] grounded in [named evidence type] verifiable by [named party]",
-      procedure: "deference-claim",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [
-        "Standing Evidence (CROSS+WALKRI Layer 4 Evidence Type)",
-        "Independent Verifiability (Layer 1)",
-        "Attestation Corpus (Layer 4)"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "highly credible",
-          frame_2: "standing per [named attesting body] in [named scope] currently as of [named date], publicly verifiable at [named record]"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp"
-      ]
-    },
-    {
-      term: "decentralization",
-      frame: 1,
-      imports: "In the process sense, names movement away from centralization without naming the destination parties, domain, or criteria for the transition of decision-standing.",
-      frame_2_replacement: [
-        "Transition of decision-standing"
-      ],
-      strengthened_form: "Transition of decision-standing to [named parties] in [named domain] under [named criteria]",
-      procedure: "split-by-use",
-      forecloses: null,
-      slippage_note: "Splits by use: in the structural sense ('the governance structure is Multiplex') the technical corpus replacement applies; in the claim-about-state sense ('we are transitioning to decentralized governance') the plain-English procedure applies, adding destination parties, domain, and criteria.",
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar"
-      ]
-    },
-    {
-      term: "decentralized governance",
-      frame: 1,
-      imports: "Treats governance as the right frame, just distributed more widely; distributes Frame 1 control without changing the frame.",
-      frame_2_replacement: [
-        "Multiplex coordination architecture",
-        "distributed coordination architecture"
-      ],
-      strengthened_form: "Define on first use",
-      procedure: "technical-corpus",
-      forecloses: "Coordination architectures where the frame itself changes, not just the distribution of control.",
-      slippage_note: "Most common slippage: feels like Frame 2 because it opposes centralization, but 'governance' remains Frame 1 regardless of distribution.",
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "analyzer"
-      ]
-    },
-    {
-      term: "decision authority",
-      frame: 1,
-      imports: "Imports that some role or party holds authority over decisions.",
-      frame_2_replacement: [
-        "decision standing"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: "Coordination architectures where no single party holds decision authority and outcomes emerge from distributed coordination standing.",
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "analyzer"
-      ]
-    },
-    {
-      term: "delegate",
-      frame: 1,
-      imports: "Imports that voting power is an asset that can be transferred rather than standing exercised directly.",
-      frame_2_replacement: [
-        "representative"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: "Standing architectures where participation cannot be transferred as an asset.",
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "analyzer"
-      ]
-    },
-    {
-      term: "due diligence",
-      frame: 1,
-      imports: "Names a verification activity through institutional borrowed-prior weight without naming the claims checked, the evidence standard, or the response to discrepancy.",
-      frame_2_replacement: [
-        "Verification"
-      ],
-      strengthened_form: "Verification of [named claims] against [named evidence standard] with [named response to discrepancy]",
-      procedure: "plain-english",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar"
-      ]
-    },
-    {
-      term: "empowerment",
-      frame: 1,
-      imports: "A Frame 1 deference claim about transferred capacity; positions an actor as empowering a community, with a standing that should be the community's instead derived from another party's action.",
-      frame_2_replacement: [
-        "Named structural conditions",
-        "Demonstrated function to deliver [named obligation]"
-      ],
-      strengthened_form: "[Named party] holds [named standing] in [named domain] through [named structural conditions]",
-      procedure: "relational-inversion",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [
-        "Beneficiary Validation Mechanism (Layer 3)",
-        "Affected Population Verification Gate (Layer 4)"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "community empowerment",
-          frame_2: "demonstrated community function under named structural conditions (validation at entry; verification at completion)"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp"
-      ]
-    },
-    {
-      term: "enforcement",
-      frame: 1,
-      imports: "Frame 1 force vocabulary: violations are answered with coercive power. Hides the named detection procedure and the named response to non-conformance.",
-      frame_2_replacement: [
-        "Detection with named response"
-      ],
-      strengthened_form: "Named detection procedure AND named response (both required; either absent weakens the form)",
-      procedure: "plain-english",
-      forecloses: "Response architectures that do not require coercive capacity.",
-      slippage_note: null,
-      primitive_anchors: [
-        "CROSS Part XI redress provisions"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "enforcement mechanism",
-          frame_2: "named response procedure for non-conformance under Part XI"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp",
-        "analyzer"
-      ]
-    },
-    {
-      term: "fiduciary duty",
-      frame: 1,
-      imports: "A Frame 1 deference claim about a special duty; obligation is binding but narrow, running only to formally named parties (terminal-upward). Alias: the MCP carries this term as 'fiduciary'.",
-      frame_2_replacement: [
-        "Multiplex stewardship obligation",
-        "stewardship obligation"
-      ],
-      strengthened_form: "Define on first use",
-      procedure: "technical-corpus",
-      forecloses: "Obligation architectures that run toward cost-bearing parties not named as formal stakeholders.",
-      slippage_note: null,
-      primitive_anchors: [
-        "Position-derived obligation vs Consequence-arising obligation distinction"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "fiduciary responsibility",
-          frame_2: "obligation to [named party] under [named statute or instrument]; structural type: position-derived (Frame 1) or consequence-arising (Frame 2)"
-        }
-      ],
-      admissibility_note: "Admissible in regulatory citation use: 'fiduciary duty under [named statute]'. In own voice: 'obligation to [named party] under [named instrument]'.",
-      sources: [
-        "grammar",
-        "mcp",
-        "analyzer"
-      ]
-    },
-    {
-      term: "governance",
-      frame: 1,
-      imports: "Abstracts authority, control, decision rights, removal mechanisms, and disclosure into a single noun; imports that a structure exists to exercise authority over participants.",
-      frame_2_replacement: [
-        "Coordination instrument",
-        "Declared decision-standing rules, named maintainers, and named removal mechanism",
-        "structural conditions"
-      ],
-      strengthened_form: "Coordination instrument for [named decision domain] with [named standing of participating parties]",
-      procedure: "plain-english",
-      forecloses: "Coordination architectures where no authority structure exists: only named obligation directions and condition specifications.",
-      slippage_note: null,
-      primitive_anchors: [
-        "Disbursement Authority (CROSS+WALKRI Layer 2)",
-        "Continuity Capacity (CROSS+WALKRI Layer 2; renamed from Governance Resilience at v0.1.7)",
-        "Determination Body Separation (CROSS+WALKRI Layer 4)"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "governance document",
-          frame_2: "rules-of-evolution document or principles document"
-        },
-        {
-          frame_1: "governance process",
-          frame_2: "declared decision-standing rules and named maintainers"
-        },
-        {
-          frame_1: "governed by X",
-          frame_2: "under X, or subject to X's declared decision-standing rules"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp",
-        "analyzer"
-      ]
-    },
-    {
-      term: "governed_by",
-      frame: 1,
-      imports: "Imports that entities exist in a governance relationship where some have authority over others; built into the semantic kernel.",
-      frame_2_replacement: [
-        "coordinates_with",
-        "specifies_conditions_for"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: "Ontological architectures where entities are not inherently subject to authority from other entities. When in the semantic kernel, this converts every entity it types before any other vocabulary is applied.",
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "analyzer"
-      ]
-    },
-    {
-      term: "governs",
-      frame: 1,
-      imports: "Imports that authority is exercised over participants by a role or structure.",
-      frame_2_replacement: [
-        "coordinates",
-        "specifies structural conditions for"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: "Relations between structural elements that are not authority-bearing.",
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "analyzer"
-      ]
-    },
-    {
-      term: "impact",
-      frame: 1,
-      imports: "Philanthropic vocabulary naming outputs: effects assessed from outside the system by formal stakeholders, importing the assessor-as-outsider position.",
-      frame_2_replacement: [
-        "Named effect on named parties",
-        "cost-bearing relations",
-        "structural effects on coordination actors"
-      ],
-      strengthened_form: "[Named effect] on [named cost-bearing parties] as measured by [named indicator]",
-      procedure: "plain-english",
-      forecloses: "Assessments made from within the coordination architecture by cost-bearing parties.",
-      slippage_note: "Feels neutral but imports the assessor-as-outsider position of philanthropic Frame 1.",
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "analyzer"
-      ]
-    },
-    {
-      term: "incentive",
-      frame: 1,
-      imports: "Imports extrinsic reward design, conflating it with structural participation arising from a cost-bearing relation.",
-      frame_2_replacement: [
-        "Contribution condition"
-      ],
-      strengthened_form: "Contribution condition arising from [cost-bearing relation / named structural basis]; distinguish structural participation from extrinsic reward design",
-      procedure: "plain-english",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar"
-      ]
-    },
-    {
-      term: "legitimacy",
-      frame: 1,
-      imports: "One of the strongest Frame 1 deference claims: asserts an institution warrants acceptance (rightful authority) without naming the source of standing or the conditions.",
-      frame_2_replacement: [
-        "Named source of standing plus declared conditions of deference"
-      ],
-      strengthened_form: "[Claim or institution] meets [named conditions] whose basis is [origination / demonstrated capacity / cost-bearing relation]",
-      procedure: "deference-claim",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [
-        "Determination Body Separation (CROSS+WALKRI Layer 4)",
-        "Authority Source lens (Lenses Framework Lens 2)"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "legitimate authority",
-          frame_2: "authority sourced in [named source] with [named removal mechanism]"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp"
-      ]
-    },
-    {
-      term: "management",
-      frame: 1,
-      imports: "Imports that a role holder optimizes assets for financial stakeholders.",
-      frame_2_replacement: [
-        "Stewardship"
-      ],
-      strengthened_form: "Stewardship of [what is held] under [named responsibility criteria] for [named beneficiaries]",
-      procedure: "plain-english",
-      forecloses: "Custodial relations that run toward the mission, the commons, or future parties rather than current financial stakeholders.",
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "analyzer"
-      ]
-    },
-    {
-      term: "mandatory",
-      frame: 1,
-      imports: "Force substitution term: asserts a requirement through Frame 1 force vocabulary rather than naming the structural reason or the source of the obligation.",
-      frame_2_replacement: [
-        "Required plus the structural reason",
-        "named obligation under [named source]"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [
-        "Gate Type Entry Specification gate (Layer 3)"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "mandatory requirement",
-          frame_2: "named obligation under [named source]"
-        },
-        {
-          frame_1: "mandatory disclosure",
-          frame_2: "required disclosure under [named rule]"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "mcp"
-      ]
-    },
-    {
-      term: "oversight",
-      frame: 1,
-      imports: "Hides who watches, what they watch, what authority they have to act, and what mechanism enforces their findings.",
-      frame_2_replacement: [
-        "Monitoring",
-        "Body composition / scope of authority / intervention powers / response mechanism"
-      ],
-      strengthened_form: "Monitoring by [named monitoring party] with [named authority to act on findings]",
-      procedure: "plain-english",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [
-        "Determination Body Separation (CROSS+WALKRI Layer 4)",
-        "Portfolio-level Continuation Benchmark (Layer 7)",
-        "Inter-cycle Reflection Stage (Layer 4)"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "independent oversight",
-          frame_2: "named independent panel with published charter; appointment and removal mechanisms named; binding determinations subject to published redress procedure"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp"
-      ]
-    },
-    {
-      term: "participation",
-      frame: 1,
-      imports: "Splits by use. As a named role it abstracts decision-standing, the domain, and the mechanism for affecting outcomes; as an inclusion claim it asserts that presence constitutes more than presence without naming the structural conditions.",
-      frame_2_replacement: [
-        "Decision-standing"
-      ],
-      strengthened_form: "[Party] holds [named decision-standing] in [named domain] with [named mechanism for affecting outcomes]; as inclusion claim: [Named structural conditions] under which participation constitutes more than presence",
-      procedure: "split-by-use",
-      forecloses: null,
-      slippage_note: "When naming a structural condition ('this party holds decision-standing in this domain') the plain-English procedure applies. When making a claim about state ('all stakeholders participated') the deference-claim procedure applies: name the structural conditions making participation more than presence.",
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar"
-      ]
-    },
-    {
-      term: "position",
-      frame: 1,
-      imports: "Mandate-derived assignment without constitutive acceptance of consequences; authority defined by appointment, title, or formal assignment rather than by acceptance of the causal chain between the holder's actions and those who bear the effects.",
-      frame_2_replacement: [
-        "role"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: "Consequence-arising obligations (obligations constituted by what the holder's actions actually produce for those who bear their effects); the dissolution obligation (structurally incompatible with position-derived obligation, since you cannot genuinely accept when to give up a position when the obligation itself derives from the position); genuine stewardship in any of the seven Multiplex Obligation Directions.",
-      slippage_note: "Governance documents use 'position' and 'role' interchangeably. The structural distinction: a role is constituted by acceptance of four dimensions, (1) consequences: what your actions produce for others; (2) responsibilities: taking those consequences up as things to act on; (3) obligations: what you owe to specific named parties who bear the consequences; (4) temporality: the full arc including the dissolution obligation. A position is defined by mandate: what the appointment specifies, revisable by whoever controls the definition, with the holder structurally insulated from the consequences their decisions produce. Frame 2 detection test: does the document specify what consequences the holder has accepted, toward which named cost-bearing parties, and what the succession/dissolution arc looks like? If not, 'role' in the document is functioning as 'position'.",
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "analyzer"
-      ]
-    },
-    {
-      term: "power structure",
-      frame: 1,
-      imports: "Imports that power is organized hierarchically; formal authority, operational control, and resource control name levels of hierarchy.",
-      frame_2_replacement: [
-        "obligation and control map"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: "Coordination architectures where there is no formal authority: only named obligation directions and resource stewardship commitments.",
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "analyzer"
-      ]
-    },
-    {
-      term: "representation",
-      frame: 1,
-      imports: "Splits by use. As a structural role it abstracts the derivation basis, scope, and recall mechanism of standing; as an inclusion claim it asserts that a community is represented without naming the structural conditions grounding the decision-standing.",
-      frame_2_replacement: [
-        "Named standing"
-      ],
-      strengthened_form: "[Party] holds standing in [named domain] on basis of [derivation] with [named scope and recall mechanism]; as inclusion claim: [Named structural conditions] under which [party]'s decision-standing is grounded in cost-bearing relation or demonstrated knowledge",
-      procedure: "split-by-use",
-      forecloses: null,
-      slippage_note: "When naming a structural condition ('this role carries the interests of this party') the plain-English procedure applies: add derivation basis, scope, recall mechanism. When making a claim about state ('the community is represented') the deference-claim procedure applies: name the structural conditions grounding the decision-standing.",
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar"
-      ]
-    },
-    {
-      term: "rules",
-      frame: 1,
-      imports: "Imports that coordination works by issuing behavioral directives to actors.",
-      frame_2_replacement: [
-        "structural conditions"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: "Coordination architectures that specify auditable system states rather than behavioral directives.",
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "analyzer"
-      ]
-    },
-    {
-      term: "stakeholder",
-      frame: 1,
-      imports: "Collapses cost-bearing parties, beneficiaries, named-population members, funders, reviewers, and observers into a single noun that hides each; structurally names only parties with formal legal or financial standing, excluding cost-bearing parties without formal standing.",
-      frame_2_replacement: [
-        "Coordination actor",
-        "Cost-bearing party"
-      ],
-      strengthened_form: "Use cost-bearing party when the structural point is the absence of formal standing; use coordination actor when naming any structurally relevant party",
-      procedure: "technical-corpus",
-      forecloses: "Recognition of parties who bear costs from decisions but lack formal standing.",
-      slippage_note: "Often used to mean 'everyone affected' but structurally names only formally standing parties.",
-      primitive_anchors: [
-        "Cost-Bearing Party (CROSS Part II)",
-        "Affected Population Verification Gate (CROSS+WALKRI Layer 4)"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "stakeholder engagement",
-          frame_2: "[named role] engagement, or Affected Population Verification Gate participation, or cost-bearing party consultation"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp",
-        "analyzer"
-      ]
-    },
-    {
-      term: "transparency",
-      frame: 1,
-      imports: "The most common deference claim in grant-program vocabulary: information is disclosed upward to formal authorities and investors (financial/legal disclosure). The Frame 2 form names what is legible, to whom, and through what mechanism.",
-      frame_2_replacement: [
-        "Legibility",
-        "multi-directional visibility"
-      ],
-      strengthened_form: "Legibility of [what is made visible] to [named participants] through [named mechanism]",
-      procedure: "plain-english",
-      forecloses: "Visibility architectures designed for participant use rather than upward disclosure.",
-      slippage_note: "Feels like Frame 2 because it opposes opacity, but the structural direction remains upward and outward to formal stakeholders.",
-      primitive_anchors: [
-        "Attestation Corpus (CROSS+WALKRI Layer 4)",
-        "Gate Record Legibility (CROSS Part IV)",
-        "WALKRI evidence access path requirement"
-      ],
-      common_phrasings: [
-        {
-          frame_1: "transparency commitment",
-          frame_2: "named publication commitment or Attestation Corpus contribution commitment"
-        },
-        {
-          frame_1: "transparent process",
-          frame_2: "process legible to [named recipients] through [named publication mechanism]"
-        }
-      ],
-      admissibility_note: null,
-      sources: [
-        "grammar",
-        "mcp",
-        "analyzer"
-      ]
-    },
-    {
-      term: "trust",
-      frame: 1,
-      imports: "An institutional deference claim: asserts that a party warrants deference without specifying the structural basis.",
-      frame_2_replacement: [
-        "the conditions a party meets, verified by a named procedure"
-      ],
-      strengthened_form: "[Party] meets [named conditions] verified by [named procedure]",
-      procedure: "deference-claim",
-      forecloses: null,
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "grammar"
-      ]
-    },
-    {
-      term: "voting power",
-      frame: 1,
-      imports: "Imports that influence scales as a property right with token accumulation.",
-      frame_2_replacement: [
-        "coordination standing"
-      ],
-      strengthened_form: null,
-      procedure: null,
-      forecloses: "Minimum distribution requirements (floors) and maximum concentration limits (ceilings): both are incoherent if influence is a property right.",
-      slippage_note: null,
-      primitive_anchors: [],
-      common_phrasings: [],
-      admissibility_note: null,
-      sources: [
-        "analyzer"
-      ]
-    }
-  ]
+// packages/csis-mcp-server/src/standards.ts
+var STANDARDS = [
+  // Tensegrity Compressive Standards (7)
+  {
+    name: "Precision-First Design Standard",
+    id: "pfds",
+    family: "compressive",
+    version: "2.4.3",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_4_3.md",
+    description: "The suite meta-standard. Specifies what precision requires across every standard. Precision-First Design is the discipline of keeping instruments precise enough that violations are detectable and compliance meaningful, before deployment, not after a failure has made those questions urgent. Defines two foundational principles: the precision-first invariant (precision deficit and precision imposition as two failure directions of one commitment) and Method-Structure Congruence (the epistemic method used must match the structural character of what is being known; congruence deficits are self-concealing because the absent content leaves no gap marker). Nine corollaries, the precision review checklist, and obligation loop tier requirements."
+  },
+  {
+    name: "Adverse-Signal Engagement Principle Core Standard",
+    id: "asep",
+    family: "compressive",
+    version: "0.7.13",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-adverse-signal-engagement-0_7_13.md",
+    description: "Specifies how coordination systems engage with signals that contradict their current model. Defines what counts as an adverse signal, the three-phase processing loop, and the requirement that adverse signals not be processed as noise or threat but as structural information."
+  },
+  {
+    name: "Coordination Scaling Standard",
+    id: "css",
+    family: "compressive",
+    version: "0.1.5",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-coordination-scaling-0_1_5.md",
+    description: "Specifies how rigor scales with coordination context. Provides the calibration framework that determines what evidence pressure is appropriate for what scale of public impact claim."
+  },
+  {
+    name: "Information Asymmetry Classification Standard",
+    id: "iacs",
+    family: "compressive",
+    version: "0.1.26",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-information-asymmetry-0_1_26.md",
+    description: "Classifies the six information asymmetry classes (positional, temporal, interpretive, relational, complexity, omission) and specifies what each requires structurally."
+  },
+  {
+    name: "Regenerative Obligation Standard",
+    id: "ros",
+    family: "compressive",
+    version: "0.1.8",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-regenerative-obligation-0_1_8.md",
+    description: "Specifies that extraction from contributors must be matched by regenerative return that is non-fungible, proximate, and embedded in the relationship that generated it. Obligation flows in lineage and ecological directions."
+  },
+  {
+    name: "Structural Consent Legibility Standard",
+    id: "scls",
+    family: "compressive",
+    version: "0.3.25",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-structural-consent-0_3_25.md",
+    description: "Specifies the conditions under which consent in a coordination system is structurally legible: consent is specified to particular acts and parties, standing is distributed to all parties who bear costs, and the consent act itself is verifiable rather than assumed."
+  },
+  {
+    name: "Structural Power Obligation Standard",
+    id: "spos",
+    family: "compressive",
+    version: "0.1.26",
+    githubPath: "tensegrity-suite/compressive/standards/standards-3_0-structural-power-obligation-0_1_26.md",
+    description: "Specifies that power in a coordination system must be matched by obligation directions running in multiple directions toward all cost-bearing parties. Power concentration is precisely defined as power without obligation."
+  },
+  // Tensegrity Generative Standards (3)
+  {
+    name: "Conflict Transformation Standard",
+    id: "cts",
+    family: "generative",
+    version: "0.2.10",
+    githubPath: "tensegrity-suite/generative/standards/standards-3_0-conflict-transformation-0_2_10.md",
+    description: "Specifies that conflicts in a coordination system must be engageable at less than their full intensity before they reach termination thresholds. Requires graduated engagement architecture and the structural capacity to hold conflict as information rather than process it as a binary."
+  },
+  {
+    name: "Four Batteries Capacity Standard",
+    id: "fbcs",
+    family: "generative",
+    version: "0.3.7",
+    githubPath: "tensegrity-suite/generative/standards/standards-3_0-four-batteries-capacity-0_3_7.md",
+    description: "Specifies the four capacity dimensions that sustain coordination work: Mission battery, Contribution battery, Relational battery, and a fourth. Requires that depletion in any dimension be reportable as a structural condition rather than left as a private experience."
+  },
+  {
+    name: "Sensemaking Standard",
+    id: "sms",
+    family: "generative",
+    version: "1.1.23",
+    githubPath: "tensegrity-suite/generative/standards/standards-3_0-sensemaking-1_1_23.md",
+    description: "Specifies the structural conditions for sensemaking in a coordination system: disruption-occasioned, action-entangled, sufficiency-oriented, and particular-to-general. Requires that disruption events open as questions the system needs to answer rather than be processed as resolved."
+  }
+];
+function getStandardsByFamily(family) {
+  return STANDARDS.filter((s) => s.family === family);
+}
+function getStandardGithubUrl(standard) {
+  return `https://github.com/coordination-structural-integrity-suite/suite/blob/main/${standard.githubPath}`;
+}
+
+// packages/csis-mcp-server/src/foundational-commitments.ts
+var FOUNDATIONAL_COMMITMENTS = {
+  unifiedPrinciple: "The Coordination Structural Integrity Suite rests on one foundational principle held internally as two constitutive aspects: precision and non-harming. Per the Precision-First Design Standard, precision is what non-harming requires at the specification layer. They are not two commitments held together externally; they are one commitment that PFDS specifies via transclusion (the broader frame at which both are already fully operative, each making the other more possible rather than less).",
+  unityExplanation: "Precision and non-harming are the same move described from two positions. Precision is seeing the Innate Totality of what is being engaged with, rather than a preferred seasonal expression. Non-harming is treating the Innate Totality as what it actually is, refusing to exclude any part of it from consideration. The same capacity (contact with the Innate Totality rather than a preferred expression) generates both. The floor and ceiling of the suite arise from one commitment, not two.",
+  precisionWithoutNonHarming: "Precision without non-harming becomes a control instrument: legibility in service of power rather than protection. Specifications become surveillance; categorization becomes discipline. The form is present; the orientation is inverted.",
+  nonHarmingWithoutPrecision: "Non-harming without precision becomes an attack surface: the good faith and informal trust that sufficiently adversarial actors exploit most reliably, operating in the spaces where formal instruments have no purchase. The intent is present; the structural form is absent.",
+  outcome: "Held together (which PFDS defines as one principle via transclusion), they produce the structural conditions under which genuine presence is possible. For people who have been harmed by informality used against them, explicit structure is not a bureaucratic imposition. It is what trust requires before it can be extended again. The precision is the compassion.",
+  inheritanceHierarchy: {
+    root: "The root of the standards body is the one commitment specified by the Precision-First Design Standard (PFDS): precision and non-harming held as a single move via transclusion. Every standard gets its content by specializing this commitment to a layer or a domain, so the root is genetic rather than positional: trace any standard back through what it specializes and the path ends here. PFDS is itself the specification-layer standing-down of contact with the Innate Totality (Frame 3); the body grounds in that contact, not in any one of its own documents. That contact has two articulations and only one is a standard: PFDS is the structural articulation, and Dimensional Frame Language is the ontological articulation, the access-level reading of how a describer stands to what is described, neither deriving from the other. Frame Language is therefore the root's twin rather than a standard or an instrument beneath it. Inheritance order is structural and independent of the order in which standards were written.",
+    csis: "CSIS (Coordination Structural Integrity Suite) is the suite of ten standards in which this body does its normative work: seven Tensegrity Compressive plus three Tensegrity Generative. Within it, PFDS is the root and keystone, and the other nine standards are the coordination floors (see coordinationFloors). CSIS is the active normative foundation in the sense that derived work answers to its root commitment and its coordination floors, context-dependently: during specification design or revision they actively constrain what can be proposed (a requirement that contradicts a compressive standard requires resolution at that standard before it can be finalized); during routine operation they recede to background. Specifications CC BY 4.0; co-released with CROSS (CC0). Repository: github.com/coordination-structural-integrity-suite/suite.",
+    twoFamilies: "Two cross-domain families stand directly under the root, both inheriting from it and neither inheriting from the other. (1) The precision instruments (CRAFT and WALKRI): PFDS precision worked out into general-purpose tools, holding even for non-coordination, data-heavy work. (2) The coordination floors (the nine CSIS standards other than PFDS): PFDS non-harming worked out into the conditions of human multi-party activity. A lens that mostly holds is that the instruments are the precision face of the one commitment and the floors its non-harming face; it bends, so hold it loosely, because the Sensemaking and Adverse-Signal Engagement standards are coordination floors with strong precision character. The two families are siblings, not a clean partition.",
+    precisionInstruments: "CRAFT and WALKRI, both inheriting from the root and not from the coordination floors. CRAFT is the one meta-standard of the body, the only instrument whose object is a standard as such; it is held to consistency with the coordination floors in deployment, which is a constitutive relation and not an inheritance one. WALKRI specializes precision to per-axis measurement; its relation to CRAFT is conformance, it satisfies CRAFT's instrument-facing conditions rather than inheriting from CRAFT, which is a constitutive relation and not an inheritance one. Both apply across domains, including domains that are not coordination at all. Frame Language is not in this family; it is the root's twin articulation (see frameLanguage), and the vocabulary discipline it supplies runs across both instruments and floors as a cross-cutting practice.",
+    coordinationFloors: "The nine CSIS standards other than PFDS: consent legibility, power obligation, information-asymmetry classification, regenerative obligation, coordination scaling, adverse-signal engagement, and the three generative standards (sensemaking, four-batteries capacity, conflict transformation). They are PFDS non-harming specialized to the conditions of human multi-party activity, and they are inherited by FOCAL domains. A FOCAL domain (Form Of Coordination Activity Locus) is one whose defining activity is multiple parties brought into coordination; the operational test is whether an independent observer can name those parties as the defining feature of the domain. Non-FOCAL work (pure specification or measurement, one party, no consent or exposure of a second party) inherits only the precision instruments.",
+    frameLanguage: "Frame Language (Dimensional Frame Language) is the root's twin articulation, not one of the precision instruments. PFDS articulates contact with the Innate Totality (Frame 3) structurally, as a specification; Frame Language articulates the same contact ontologically, as the access-level reading of how a describer stands to what is described. Neither derives from the other, so the development fact that this work surfaced through coordination practice is not an inheritance fact. What Frame Language supplies the body runs as a cross-cutting practice: the vocabulary discipline that enacts PFDS Corollary 1 (operational definition) at the term layer, the Frame 1 to Frame 2 conversion that replaces vocabulary failing the independent-observer test with vocabulary that passes it, and the decomposition method the per-axis standard uses. Three frames: Frame 1 access (seasonal expressions); Frame 2 access (conditions and configurations); Frame 3 access (the Innate Totality itself). The gunas are the procedural map of these access levels (tamas, rajas, sattva, trigunatita).",
+    craft: "CRAFT is the one meta-standard of the body, a precision instrument and a sibling of the coordination floors under the root. It inherits the root commitment (precision and non-harming); it does not inherit from the coordination floors. It is separately held to consistency with the coordination floors when it is deployed, which is a constitutive and process relation rather than an inheritance one. CRAFT is built (specification v0.4.0). A FOCAL domain application of CRAFT, for example the grants specialty, inherits the coordination floors and is held to the precision instruments including CRAFT.",
+    poc: "Proof of Coordination (PoC) is a FOCAL domain (general coordination): it rests on the coordination floors and is held to the precision instruments. PoC inherits the floors; chronologically, work on PoC surfaced the need for the CSIS standards, but structurally the root and the floors are upstream of PoC. Inheritance order is independent of chronological development order.",
+    crossWalkri: "CROSS+WALKRI is the grants FOCAL domain: it rests on the coordination floors and is held to the precision instruments (CROSS is CRAFT applied to grants; WALKRI supplies per-axis quality). It is a sibling of PoC as a domain, not a child of PoC. Future FOCAL domains (AI evaluation, ESG, scientific research integrity, policy evaluation) likewise rest on the floors and are held to the instruments. Standards-development meta-work is not a FOCAL domain: that is CRAFT, a precision instrument already built, a sibling of the coordination floors rather than a domain under them.",
+    inheritanceOrderRule: 'Inheritance order is structural; chronological order is temporal. They are independent. Even if X was developed before Y in time, Y can be structurally upstream of X. Conflating chronological order with inheritance order is itself a precision failure (the assertion "Y comes from X" is ambiguous between "Y was developed after X" and "Y depends on X structurally"; the precision form names which is meant).'
+  }
 };
 
-// packages/frame-language-mcp-server/src/watchlist.ts
-var typedRegistry = term_registry_default;
-var REGISTRY_VERSION = typedRegistry.version;
-function toWatchlistEntry(t) {
-  return {
-    term: t.term,
-    why_frame_1: t.imports,
-    frame_2_replacement: t.frame_2_replacement,
-    strengthened_form: t.strengthened_form,
-    procedure: t.procedure,
-    forecloses: t.forecloses,
-    slippage_note: t.slippage_note,
-    primitive_anchors: t.primitive_anchors,
-    common_phrasings: t.common_phrasings,
-    admissibility_note: t.admissibility_note,
-    replacement_pattern: t.frame_2_replacement.join("; ")
-  };
-}
-var WATCHLIST = typedRegistry.terms.map(
-  toWatchlistEntry
-);
-function getWatchlistEntry(term) {
-  const lower = term.toLowerCase();
-  return WATCHLIST.find((e) => e.term.toLowerCase() === lower);
-}
-function getAllWatchlistTerms() {
-  return WATCHLIST.map((e) => e.term);
-}
-function scanTextForWatchlist(text) {
-  const results = [];
-  for (const entry of WATCHLIST) {
-    const escaped = entry.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(`\\b${escaped}\\b`, "gi");
-    const matches = text.match(regex);
-    if (matches && matches.length > 0) {
-      results.push({
-        term: entry.term,
-        occurrences: matches.length,
-        entry
-      });
-    }
-  }
-  return results;
-}
-
-// packages/frame-language-mcp-server/src/admissibility.ts
-var ADMISSIBILITY_CASES = [
+// packages/csis-mcp-server/src/corollaries.ts
+var PFDS_COROLLARIES = [
   {
-    id: "citation-use",
-    name: "Citation use",
-    description: "The term is the official name of a specific external entity, framework, or canonical artifact. Using the term to refer to that named thing is citation use, not own-voice adoption.",
-    example: '"The Open Government Partnership Independent Reporting Mechanism" uses "Reporting Mechanism" as part of the canonical framework name; citation use is admissible.'
-  },
-  {
-    id: "detection-use",
-    name: "Detection use",
-    description: "The term names the Frame 1 mechanism being identified through analysis. Using the term to point at what the mechanism is doing structurally is detection use, not endorsement.",
-    example: '"This document exhibits accountability theater" uses "accountability" to detect a Frame 1 pattern (theater); detection use is admissible.'
-  },
-  {
-    id: "contextual-description",
-    name: "Contextual description",
-    description: "The term accurately describes a Frame 1 system being referenced. Used to describe the system as it operates, not to import its frame into own voice.",
-    example: '"The legacy oversight body operated under Tier 1 impressionistic governance" uses "governance" to describe the legacy system structurally; contextual description is admissible.'
-  },
-  {
-    id: "developmental-bridge",
-    name: "Developmental bridge",
-    description: "The term meets the reader at their developmental position before Frame 2 is established. Used to invite readers into the precision vocabulary from the vocabulary they already know.",
-    example: "The Reader's Bridge document uses Frame 1 terms as the entry vocabulary then translates to Frame 2; developmental bridge use is admissible."
-  },
-  {
-    id: "naming-the-stage",
-    name: "Naming the stage",
-    description: "The term accurately names a developmental stage. Used to describe what stage something is at, not to endorse the stage as completion.",
-    example: '"Tier 1 Impressionistic" (in the Lenses Framework Calibration Tier) names a stage; naming-the-stage use is admissible.'
-  },
-  {
-    id: "communication-medium",
-    name: "Communication medium",
-    description: "The term is necessary for structural purposes with a Frame 1 audience. Used because the audience cannot yet receive the Frame 2 form; the structural compromise is named.",
-    example: `A grant application narrative that uses "stakeholder" because the funder's template requires that field; communication-medium use is admissible with explicit acknowledgment.`
-  },
-  {
-    id: "documentary-record",
-    name: "Documentary record",
-    description: "The term appears in a quotation or cited source. Used in quotation marks or block quotes; the source's use of the term is preserved as documentary record.",
-    example: `"The Foundation's 2024 report claims 'stakeholder engagement' as a primary mechanism" preserves the source's usage; documentary record use is admissible.`
-  }
-];
-function getAdmissibilityCase(id) {
-  return ADMISSIBILITY_CASES.find((c) => c.id === id);
-}
-function getAllAdmissibilityCaseIds() {
-  return ADMISSIBILITY_CASES.map((c) => c.id);
-}
-
-// packages/frame-language-mcp-server/src/functioning-check.ts
-var FUNCTIONING_CHECK_MODES = [
-  {
-    id: "transcendence-claim",
-    name: "Transcendence Claim",
-    description: "The language claims to escape the conditions it operates within. The form is Frame 2 but the substance asserts the speaker has gone beyond the structural constraints that apply.",
-    example: '"Our model is too holistic for traditional metrics" - asserts transcendence of measurement; the structural constraints still apply.',
-    falsifiability_variant: 'The claim asserts it has escaped the falsifiability constraints it operates within ("our outcomes are too systemic to be measured against pre-committed indicators"). Remediation: name the systemic outcome at the ecosystem-shift mechanism type; commit to impact evidence scope; accept contribution stance with named causal pathway.'
-  },
-  {
-    id: "declaration-exploit",
-    name: "Declaration Exploit",
-    description: "The act of naming a commitment is treated as evidence of the commitment. Form: declaring something is taken to mean doing it.",
-    example: '"We are committed to transparency" - the declaration is the entire commitment; no structural form follows.',
-    falsifiability_variant: 'The act of declaring a falsifiable commitment is treated as evidence the commitment is falsifiable ("our round configuration declares the indicators; that declaration is itself the falsifiability"). Remediation: declarations are pre-commitment instruments but do not satisfy verification source, drift detection, or disclosure obligation by themselves.'
-  },
-  {
-    id: "precision-facade",
-    name: "Precision Facade",
-    description: "The language appears specific but the specificity does not carry operational content. Numbers without units; thresholds without conditions; named metrics without definitions.",
-    example: '"Grantees achieve 23.7% improvement" - precise-looking but the metric is not operationally defined.',
-    falsifiability_variant: 'The claim appears specific but the specificity does not carry falsifiability content ("a 23.7% improvement in the named metric" where the metric is not actually defined or measured by an independent source). Remediation: precision is necessary but not sufficient; precision must be backed by named verifying source and named drift detection.'
-  },
-  {
-    id: "partial-instantiation",
-    name: "Partial Instantiation",
-    description: "A Frame 2 structure is partially implemented while a Frame 1 assumption does the remaining work. Some elements named; others assumed.",
-    example: 'A grant program names operational definitions for outputs but leaves outcomes as "stakeholder-judged" without a stakeholder mechanism specification.',
-    falsifiability_variant: "A falsifiability structure is partially implemented while an unfalsifiable assumption does the remaining work (pre-commitment published; verifying source named; drift detection left to grantee self-report). Remediation: name the missing element explicitly. Partial form is admissible if documented."
-  },
-  {
-    id: "direction-without-destination",
-    name: "Direction Without Destination",
-    description: "The language names motion toward a goal without specifying the goal. The direction is invoked but the destination is unstated.",
-    example: '"Working toward systemic change" - direction named; what would count as systemic change is unstated.',
-    falsifiability_variant: 'The claim names motion toward an outcome without specifying the outcome ("the program will strengthen the ecosystem"). Remediation: name the destination per Obligation Mode entry-gate requirement. A directional claim with no destination cannot be falsified.'
-  },
-  {
-    id: "vocabulary-without-architecture",
-    name: "Vocabulary Without Architecture",
-    description: "Frame 2 terms are used without the structural requirements Frame 2 implies. The words appear; the form does not.",
-    example: 'A document uses "operationally defined" without applying the independent-observer test to the operational definitions.',
-    falsifiability_variant: "Falsifiability vocabulary is used without the structural requirements falsifiability implies (a framework described as operating at Tier 5 Falsifiable but lacking any of the four elements). Remediation: vocabulary use must be backed by structural elements."
-  },
-  {
-    id: "correct-map-wrong-territory",
-    name: "Correct Map / Wrong Territory",
-    description: "Frame 2 language accurately describes a different context but not the one it is applied to. The map is precise; it just is not the map of this place.",
-    example: "A coordination protocol imports the precision-first invariant from a regulatory context but operates under voluntary publication without the regulatory infrastructure.",
-    falsifiability_variant: "Falsifiability language accurately describes a different context but not the one it is applied to (importing falsifiability from regulatory context to voluntary publication without naming the structural difference). Remediation: name the territory the falsifiability claim operates in; do not import vocabulary from a different territory without naming the structural difference."
-  },
-  {
-    id: "frozen-map",
-    name: "Frozen Map",
-    description: "Frame 2 language that was accurate at specification has not been updated as conditions changed. The form was once aligned; it no longer is.",
-    example: "A specification cites an API endpoint as the verifying source; the endpoint has since been deprecated; the specification has not been updated.",
-    falsifiability_variant: "Falsifiability language that was accurate at specification has not been updated as conditions changed (a verifying source has changed its API or publication mechanism, making it no longer queryable as specified). Remediation: per Element 2, the verifying source must remain queryable; changes to source availability require updates to the configuration."
-  }
-];
-function getFunctioningCheckMode(id) {
-  return FUNCTIONING_CHECK_MODES.find((m) => m.id === id);
-}
-function getAllFunctioningCheckModeIds() {
-  return FUNCTIONING_CHECK_MODES.map((m) => m.id);
-}
-
-// packages/frame-language-mcp-server/src/three-frames.ts
-var THREE_FRAMES = {
-  frames: [
-    {
-      frame: 1,
-      access: "Seasonal expressions: what is visible and measurable at the surface. Frame 1 takes this access to be complete. The root system is invisible or unrecognized as the continuing thing.",
-      failure_mode: "Preferred direction: this passes or fails; this season is life and that one is death. The whole truth is not accessible from this level.",
-      guna: {
-        name: "Tamas",
-        description: "Density, inertia, fixity. The native mode is resistance to seeing through the present configuration. Not corruption or stupidity; a quality of nature that produces fixity.",
-        failure: "The plant is dead in winter because the current visible state is taken to be the whole truth."
-      }
-    },
-    {
-      frame: 2,
-      access: "Conditions the Innate Totality generates: structural requirements, configurations, named arrangements that enable or constrain seasonal expressions. Can hold multiple valid states, adapt given enough time, recognize systemic patterns.",
-      failure_mode: "Preferred configuration space: these structural arrangements are healthy, those are pathological. Frame 2's preference for structural health over pathology is not error - it is Frame 2 doing its job correctly. But the preference is still there and creates a bounded configuration space outside of which Frame 2 cannot assess correctly.",
-      guna: {
-        name: "Rajas",
-        description: "Activity, movement, striving through conditions. Dynamic engagement with the configuration space, named arrangements, response to conditions, adaptation over time. Rajas does the work of Frame 2 correctly.",
-        failure: "The activity and configuration-preference become the identity rather than the path."
-      }
-    },
-    {
-      frame: 3,
-      access: "The Innate Totality itself - more precisely, the orientation that can operate from that level rather than from within the expression or the condition. Frame 3 is defined by this access, not merely correlated with it.",
-      failure_mode: "Identification with the Innate Totality and refusing compositional movement regardless of circumstances. Not abstention or neutrality: claiming the totality as an identity and using that identity to avoid the seasonal expressions the totality is always already making. Attachment to non-attachment is the same failure mode at a more sophisticated register.",
-      guna: {
-        name: "Sattva",
-        description: "Clarity, illumination, balance. The quality that can see the Innate Totality rather than only the expressions or the conditions. Genuinely clearer than rajas or tamas - and the traditional teaching is precise about this.",
-        failure: "Sattva is itself a guna, still within prakriti (manifest nature). Clinging to sattva is clinging to a quality of nature. Clarity mistaken for completion."
-      }
-    }
-  ],
-  trigunatita: {
-    description: 'Beyond the three gunas. The term the Samkhya tradition uses for what "Innate Totality" is approaching from the structural description side. Not a fourth guna, not a position above the other three. The recognition that holds all three as constitutive expressions of the same whole without being any of them.',
-    relation_to_sattva: "Frame 3 does NOT point toward sattva as its destination. Frame 3 points toward trigunatita.",
-    relation_to_frame_3: "The orientation from which tamas, rajas, and sattva are all expressions of the same Innate Totality, with no preferred guna. The Frame 3 access level pointing toward trigunatita is the structural form Frame 3 takes when it is not failing into sattvic attachment."
-  },
-  innate_totality: "The whole of what a given object of consideration is, prior to and inclusive of all its expressions. Not a static set of properties but a dynamic unity. Innate (not constructed, not achieved). Totality (includes all expressions and their apparent opposites). Together: prior to any of its manifestations but includes all of them as the thing it is.",
-  precision_and_non_harming: "Precision and non-harming are the same move described from two positions. Precision is seeing the Innate Totality of what is being engaged with, rather than a preferred seasonal expression. Non-harming is treating the Innate Totality as what it actually is, refusing to exclude any part of it from consideration. The same capacity (contact with the Innate Totality rather than a preferred expression) generates both. PFDS's transclusion language gets a structural mechanism here.",
-  nested_failure_structure: "The three Frames have a nested failure mode structure in which the same error occurs at progressively higher levels of abstraction. Frame 1 has a preferred direction; Frame 2 has a preferred configuration space; Frame 3 (when it fails) has a preferred ontological position. Each failure mode is a more sophisticated version of the same structural event: taking a position relative to the cycle rather than being what holds the cycle. Every move toward Frame 3 creates a more sophisticated version of the thing being transcended, and the sophistication makes the failure mode harder to detect from inside.",
-  bridge_vocabulary_note: "Frame 1 and Frame 2 are bridge vocabulary in some contexts (e.g., PoC normative documents use Multiplex/Uniplex as canonical for coordination architecture frames; Frame 1/Frame 2 are practitioner-facing bridge terms there). At the Frame Language substrate level, Frame 1/2/3 are canonical. Within CROSS+WALKRI applied work, Frame 1/Frame 2 are used as substrate vocabulary; whether to upgrade to Uniplex/Multiplex or other terms is a CROSS+WALKRI-specific decision."
-};
-
-// packages/frame-language-mcp-server/src/regen-check.ts
-var FRAME2_DONE_WELL_VS_IMITATION = `Frame 2 done well produces independently evaluable structural conditions: who owes what to whom, through what mechanism, verifiable by any reader without the organization's cooperation. Frame 2 imitation produces the feeling of that precision without the substance. The operative test: can a party outside the organization verify this condition from the document alone, without relying on the organization's interpretation or cooperation? If not, it is imitation regardless of how structural the vocabulary appears. The sophistication trap applies here specifically: the more rigorous the values framework and the more structural-sounding the vocabulary, the more convincing the imitation, which is why it persists in the ecosystem's most thoughtful documents and in the academic frameworks designed to evaluate them. Values alignment and orientation language performing structural description ("we are regenerative," "we operate from living systems principles," "we prioritize relationships") is Frame 2 imitation, not Frame 2 presence.`;
-var ROUTING_NOTE = 'Most failures from this audit route to frame2_imitation_signals with imitation_type: "values_without_grounding". Exceptions: Check 2 (direction/destination confusion) and Check 4 (theory of build) may surface as foreclosed_protections when the vocabulary actively makes the missing structural condition unimaginable. Check 6 (pre-specification identity capture) routes as a slippage_points finding with slippage_class: "aspirational" plus an arrested finding note.';
-var TRIGGER_CONDITIONS = [
-  'The document uses "regenerative," "regen," or "ReFi" as identity or structural claims.',
-  "The organization describes itself as part of a regenerative movement.",
-  "The document presents a return instrument (credits, tokens, impact certificates) as regenerative."
-];
-var ROS_AUDIT_ROUTING = "When Check 5 produces ros_non_conformance findings, the Regenerative Obligation Standard Audit provides the full structural mechanics assessment the Frame Language check cannot complete alone. This check identifies that a return architecture fails non-fungibility, proximity, or embeddedness at the vocabulary level; the ROS audit determines whether the underlying mechanics satisfy the three validity conditions and whether failures are categorical (instrument architecture wrong) or addressable through adjustment. The two instruments assess different layers and can each fail independently. Run both when the document makes regenerative claims about its return architecture.";
-var REGEN_CHECKS = [
-  {
-    id: "identity-vs-structure",
     number: 1,
-    name: "Identity vs. Structure",
-    description: 'Is "regenerative" describing who the organization is, or what its internal mechanics do? Identity use is Class D2 performative vocabulary. Detection: does "what makes this regenerative?" produce values, orientations, or community memberships, or independently evaluable structural conditions?',
-    routing: "identity_marker"
+    name: "Operational definition",
+    requirement: "A term is operationally defined if and only if its presence or absence can be determined by an independent observer using only the definition and observable evidence. Terms that require interpretation by a privileged party are not operationally defined.",
+    underSpecificationFailure: "When a term is too vague, it cannot be applied consistently. The instrument cannot establish that a violation occurred.",
+    overSpecificationFailure: "A definition can be too specific. When it excludes genuine cases because they do not match the prescribed form (rather than because they fail the purpose) it trades one precision problem for another. The instrument will miss real instances of what it was built to detect.",
+    exampleFromPfds: `The Wheel of Consent illustrates the corrective: by decomposing "consent" into a two-axis structure, it makes presence or absence determinable by an independent observer without access to the parties' intentions. OCAP and CARE apply the same move to "data sovereignty" and "ethical use" respectively.`
   },
   {
-    id: "direction-vs-destination",
     number: 2,
-    name: "Direction vs. Destination",
-    description: "Does the document describe regeneration as what is funded externally (destination) or how internal extraction and return mechanics operate (direction)? The Regenerative Obligation Standard applies to direction. A system funding externally regenerative projects while failing the validity conditions for its own contributors is not structurally regenerative. Route as D2 when internal mechanics are absent from the claim.",
-    routing: "direction_destination_confusion"
+    name: "Complete taxonomy",
+    requirement: "A taxonomy is complete if and only if it specifies what falls outside all of its categories. A taxonomy that classifies everything within its stated scope but provides no mechanism for handling edge cases has hidden a precision deficit.",
+    underSpecificationFailure: "A taxonomy with no procedure for cases that fit no category has hidden a gap.",
+    overSpecificationFailure: "A taxonomy can also create too many categories. When it imposes more distinctions than the phenomenon actually has, or demands a classification before the information to make it exists, real cases get forced into boxes that do not fit. The taxonomy stops being an instrument for understanding and becomes an obstacle to it.",
+    exampleFromPfds: `Ostrom's eight design principles illustrate the corrective: they replace the holistic judgment "this is well-governed" with a partial order of independently checkable structural conditions, each of which specifies what satisfying and failing to satisfy it looks like.`
   },
   {
-    id: "from-specification",
     number: 3,
-    name: "FROM Specification",
-    description: 'Can the document name what is being restored, from what depleted state, through what mechanism? Two distinct failure modes. FROM ABSENT: No FROM is named at all. The document describes what is being built but not what depleted condition it addresses. Route as D2. FROM TOO VAST: A FROM is named, but at a scale that cannot ground any specific intervention. "Ecological collapse," "metacrisis," "extractive capitalism," "the meaning crisis," "legacy systems" name real conditions, but at a scale where any action aligned with the label is automatically strategic. Nothing can be excluded. The test: given this FROM, what would the organization NOT build, and who would NOT be served? If the FROM cannot answer that question (if everything plausible in the regen space remains equally justified) the FROM is too vast to be operational. This is the more structurally significant failure: the organization believes it has a diagnosis because a real condition was named. The absence of felt gap makes correction harder. Route as D2 with a note distinguishing vast FROM from absent FROM. The correction is not "name a FROM" but "narrow the FROM to a scale at which specific interventions can be excluded."',
-    routing: "from_specification_gap (FROM absent); vast_from (FROM too vast)"
+    name: "Precise detection instrument",
+    requirement: "A detection instrument is precise if and only if it can distinguish its target state from the most likely false-positive states. An instrument that cannot explain what it would not detect is not precise.",
+    underSpecificationFailure: "An instrument that cannot specify its false-negative boundary is not precise. It cannot establish what it would fail to detect.",
+    overSpecificationFailure: "A detection instrument can eliminate every false positive by narrowing its target state; in doing so, it can systematically miss what it was designed to find. Zero false positives and a coordination purpose that goes unserved can coexist.",
+    exampleFromPfds: "The Adverse-Signal Engagement Principle (ASEP) Core Standard illustrates the corrective: by defining what counts as an adverse signal and what does not, it establishes the false-negative boundary explicitly, making it possible to determine not only what the instrument detects but what it would fail to detect and why."
   },
   {
-    id: "theory-of-change-vs-theory-of-build",
     number: 4,
-    name: "Theory of Change vs. Theory of Build",
-    description: "Does the document specify the mechanism connecting infrastructure to regenerative outcomes, or assume outcomes follow from the infrastructure? Detection: remove the infrastructure from the argument. Does the outcome claim retain support? If not, the document is theory of build. Route as D2.",
-    routing: "theory_of_build"
+    name: "Precise coordination process",
+    requirement: "A coordination process is precise if and only if the conditions for initiating, continuing, and concluding the process are operationally defined. A process that depends on the good judgment of participants at critical junctures has substituted human discretion for structural precision.",
+    underSpecificationFailure: "Discretion at critical junctures substitutes judgment for structure.",
+    overSpecificationFailure: "A coordination process can also be too elaborate to use. When its conditions are more demanding than the need they address, parties who genuinely need it cannot get through it. The process is technically complete (every step defined, every condition specified) while the conflict or structural problem it was designed to address remains exactly where it was.",
+    exampleFromPfds: "Ostrom's principles of monitored enforcement and graduated sanctions illustrate the corrective."
   },
   {
-    id: "regenerative-obligation-conformance",
     number: 5,
-    name: "Regenerative Obligation Conformance",
-    description: "Does the return architecture satisfy non-fungibility, proximity, and embeddedness simultaneously? Check for categorical disqualifiers: additionality logic, SROI aggregation, temporal deferral trap (Stance B declarations substituted for proximate return delivery). Route non-conformant instruments as D2 imitation of the embeddedness or proximity conditions.",
-    routing: "ros_non_conformance"
+    name: "Detection system completeness",
+    requirement: "A detection system is complete if and only if the failure to respond to a detection output is itself detectable without requiring the cooperation of the party that failed to respond.",
+    underSpecificationFailure: "A system that can observe a failure but cannot observe its own inaction in the presence of that observation has an undocumented false-negative class at the interface between detection and response.",
+    overSpecificationFailure: "An escalation mechanism over-specifies when ordinary variation in timing triggers escalation. The result is escalation as background noise: a signal that fires so often it stops being informative.",
+    exampleFromPfds: "A time-governed escalation mechanism: unacknowledged detection outputs transition through defined states that become progressively more visible and procedurally consequential."
   },
   {
-    id: "pre-specification-identity-capture",
     number: 6,
-    name: "Pre-specification Identity Capture",
-    description: 'Has "regenerative" acquired identity weight before structural conditions were specified? Apply the identity formation arc test: can the community state structural requirements for the term without defensiveness? If not, note as arrested D2 finding. Cultural architecture work is required alongside vocabulary work; forcing specification triggers defensive consolidation.',
-    routing: "identity_capture"
+    name: "Specification precise about failure modes (defense in depth)",
+    requirement: "A specification is precise about its failure modes if and only if no critical property depends on a single defensive mechanism whose failure would leave that property entirely undefended.",
+    underSpecificationFailure: "A critical property protected by only one mechanism has an undocumented failure mode: the failure of the mechanism itself.",
+    overSpecificationFailure: "Defensive mechanisms can also pile up past the point of usefulness. When too many overlapping mechanisms protect the same property, they start to contradict each other, generate false violation readings, or collectively impose a burden so heavy that operating the system becomes structurally unachievable. Defense in depth becomes defense through inaccessibility.",
+    exampleFromPfds: "A layered detection architecture in which each tier operates with different trust assumptions and a different attack surface. The Adverse-Signal Engagement Principle illustrates this at the adverse signal processing layer."
   },
   {
-    id: "temporal-deferral",
     number: 7,
-    name: "Temporal Deferral",
-    description: "Is the organization claiming regenerative stance while deferring structural regenerative work indefinitely? Detection: does the claim use present-tense language but describe future-conditional conditions? Temporal deferral in regenerative claims appears as pledges, visions, and Stance B declarations without a current proximate return architecture. Route as D2.",
-    routing: "temporal_deferral"
+    name: "External falsifiability",
+    requirement: "A specification is externally falsifiable if and only if its architecture contains no structural mechanism that prevents an independent observer's challenge from reaching the precision deficit record.",
+    underSpecificationFailure: "Internal falsifiability, a claim that those who specified it can verify from within their own framework, does not satisfy the falsifiability requirement of this standard. A system whose precision claims are internally verifiable but structurally insulated from independent challenge has demonstrated self-consistency, not falsifiability.",
+    overSpecificationFailure: "A challenge pathway can be over-specified too. When mounting a valid challenge requires so many procedural steps that no independent actor with legitimate standing can actually complete one, the pathway exists formally while remaining structurally inaccessible.",
+    exampleFromPfds: "A specification architecture in which the precision deficit record is reachable by observers who did not produce the specification."
   },
   {
-    id: "financial-conversion",
     number: 8,
-    name: "Financial Conversion",
-    description: `Does the document explicitly reframe a product purchase, membership fee, or service payment as a regenerative investment without specifying the return architecture that would make the investment claim valid? Detection: language that names a financial exchange as something other than what it is: "you are not paying for a learning journey; you are contributing to Earth's regeneration through this planetary network." Non-fungibility, proximity, and embeddedness are all absent; mission identity substitutes for structural return architecture. Distinct from Check 5 ros_non_conformance in that the product relationship is explicitly named and then denied rather than simply unaddressed. Route as D2, detection_type: financial_conversion.`,
-    routing: "financial_conversion"
+    name: "Descriptive completeness (typological declaration)",
+    requirement: "A specification is descriptively complete if and only if it declares the classes of description it draws from (operative classes) and names at least one class of description where its vocabulary ends (boundary classes), using a structured list with operative and boundary labels and naming the Descriptive Typology Map version referenced.",
+    underSpecificationFailure: "A specification can pass all six preceding corollaries within the classes it uses while still containing a structural blind spot: the absence of entire descriptive classes produces no internal signal, because every term defined, every taxonomy bounded, and every detection instrument specified remains within the vocabulary the specification already has.",
+    overSpecificationFailure: "A typological declaration over-specifies when it claims operative coverage of descriptive classes the specification's vocabulary cannot actually support. The scope claim generates expectations no document in that vocabulary can meet.",
+    exampleFromPfds: "Scientific measurement instruments: an instrument specified with a declared measurement range and resolution limit states both what it measures precisely and the conditions under which its readings become invalid."
   },
   {
-    id: "commons-without-governance",
     number: 9,
-    name: "Commons Without Governance",
-    description: "Does the document describe building a commons (shared resource pool, collective knowledge system, network infrastructure, community learning system) without applying the structural conditions under which commons succeed? Detection: commons-building vocabulary (shared resources, collective learning, distributed network, pooled resources, learning exchange) present alongside absence of: (1) clearly defined membership boundaries specifying who participates and on what terms; (2) monitoring architecture by accountable parties; (3) graduated response mechanisms; (4) accessible conflict resolution mechanisms. Absence of any two or more constitutes the finding. This is not theory_of_build; it is specifically the commons institutional form being constructed without the empirically established structural conditions for that form. Route as D2, detection_type: commons_without_governance.",
-    routing: "commons_without_governance"
-  }
-];
-var REGEN_IMITATION_TYPES = [
-  {
-    id: "propagation_without_feedback",
-    name: "Propagation without feedback",
-    description: 'An organization explicitly excludes detection or feedback architecture from its strategy, justified by the complexity or scale of the problem. Distinct from theory_of_build in that the absence is named as a feature, not an oversight. Canonical form: "We cannot know which seeds will germinate, therefore we do not try to detect which ones do." The vast_from typically provides the justification. Route as propagation_without_feedback.'
+    name: "Interpretive precision (contextual baseline)",
+    requirement: "A detection system is interpretively precise if and only if its assessment architecture requires a contextual baseline statement before initial assessment when identical measurement outputs would indicate structurally distinct conditions requiring different responses.",
+    underSpecificationFailure: "A system without this requirement has an undocumented false-negative class at the interpretation layer: correct readings for one condition produce incorrect response prescriptions for the other.",
+    overSpecificationFailure: "A baseline requirement over-specifies when establishing it takes longer than the detection it is meant to enable, or when its conditions are so exact that no real organizational case can satisfy them. The requirement has become the obstacle to what it was supposed to make possible.",
+    exampleFromPfds: "The structural inheritance statement: an organization's current coordination state cannot be accurately classified without knowing the structural conditions it was founded within or inherited."
   },
   {
-    id: "governance_deferral",
-    name: "Governance deferral",
-    description: 'Governance architecture explicitly deferred to after network or community formation rather than constituted before it. Canonical form: "The network will establish its own governance and coordination mechanisms among the members." Route as governance_deferral.'
-  },
-  {
-    id: "sovereignty_without_derivation",
-    name: "Sovereignty without derivation",
-    description: "A value (sovereignty, freedom, regeneration, autonomy) asserted as foundational without specifying the structural and social conditions from which it derives. The FROM is the value itself, making the derivation circular. Distinct from from_specification_gap (absent FROM) in that the FROM is present but self-referential. Route as sovereignty_without_derivation."
+    number: 10,
+    name: "Claim-object grounding",
+    requirement: "An evaluation claim is grounded only when the type of object the claim is about has been declared: either a criterion (a directly observable property, or a property with an established external validation standard) or a construct (an abstract property not directly observable, requiring systematization and proxy specification before measurement can proceed). For construct claims, operational grounding requires a nomological network declaration naming the sub-constructs, the observable criteria that proxy for each, and the expected relationships between them. Coverage adequacy applies to both claim types: the evidence must address the case space the claim requires, not merely declare the evaluation's scope limits.",
+    underSpecificationFailure: "An evaluation claim without a declared claim-object type cannot be assessed for whether the evidence supports it: the evidence standard for criterion claims and construct claims differs structurally. A construct claim without a nomological network declaration has no declared basis for determining whether the measurement is measuring the intended construct or a correlated surface property or a subset of it.",
+    overSpecificationFailure: "A nomological network requirement that demands complete documentation of all construct relationships before any construct-based evaluation can proceed blocks construct-based assessment entirely. A declared-partial nomological network naming what is established and explicitly identifying the gaps is in a better precision state than an undeclared or absent one, and is the correct operating state when the network is under development.",
+    exampleFromPfds: null
   }
 ];
-function getRegenCheck(id) {
-  return REGEN_CHECKS.find((c) => c.id === id);
-}
-function getAllRegenCheckIds() {
-  return REGEN_CHECKS.map((c) => c.id);
+var PFDS_COROLLARY_COUNT = PFDS_COROLLARIES.length;
+function getPfdsCorollary(number3) {
+  return PFDS_COROLLARIES.find((c) => c.number === number3);
 }
 
-// packages/frame-language-mcp-server/src/create-server.ts
-var CheckWatchlistInputSchema = external_exports.object({
-  term: external_exports.string().describe("The term to check against the Frame 1 watchlist (case-insensitive).")
+// packages/csis-mcp-server/src/structural-patterns.ts
+var STRUCTURAL_PATTERNS = [
+  {
+    id: "transition-narrative",
+    name: "Transition Narrative",
+    arrangement: "A leadership or control change is framed through narrative before sensemaking can open on what the change means structurally. The framing forecloses the questions that would surface capability gaps and obligation directions.",
+    standardsInvolved: ["Sensemaking", "Precision-First Design", "Adverse-Signal Engagement Principle"],
+    observableSignature: "Participants cannot describe what structural capacity changed during the transition, or why the previous structural arrangement failed and what the new one was designed to address differently.",
+    maturityStatus: "original-six"
+  },
+  {
+    id: "hidden-factory-collapse",
+    name: "Hidden Factory Collapse",
+    arrangement: "Coordination work is sustained by invisible capacity (most often Mission battery) that does not appear in coordinating records or compensation structures. The coordination system runs on this work without measuring it. When the person or group carrying it depletes or exits, the system cannot diagnose what was lost because it never registered what was present.",
+    standardsInvolved: ["Four Batteries Capacity", "Sensemaking", "Adverse-Signal Engagement Principle"],
+    observableSignature: "Capacity loss registers as coordinating failure; the system produces explanations for what went wrong that do not include the invisible work that was sustaining it.",
+    maturityStatus: "original-six"
+  },
+  {
+    id: "termination-reflex",
+    name: "Termination Reflex",
+    arrangement: "Absent conflict transformation infrastructure, conflicts resolve through termination (departure, fork, dissolution, vote to exclude) rather than transformation. The system reads conflict as a system error requiring removal rather than structural information requiring processing.",
+    standardsInvolved: ["Conflict Transformation", "Adverse-Signal Engagement Principle"],
+    observableSignature: "The coordinating record shows conflict events followed by termination votes, departures, or structural splits without evidence that the conflict was opened as a question the system needed to answer.",
+    maturityStatus: "original-six"
+  },
+  {
+    id: "specialist-concentration",
+    name: "Specialist Concentration",
+    arrangement: "One person or team holds coordination-dimension and specialization-dimension power simultaneously, without the distinction visible in coordinating records. The system cannot distinguish contribution from concentration because both look identical from outside.",
+    standardsInvolved: ["Structural Power Obligation", "Information Asymmetry Classification", "Adverse-Signal Engagement Principle"],
+    observableSignature: "Removal or departure of one actor produces cascading structural failure disproportionate to any single contributor, revealing that the coordination system was structurally dependent in ways it had not acknowledged.",
+    maturityStatus: "original-six"
+  },
+  {
+    id: "reframing-loop",
+    name: "Reframing Loop",
+    arrangement: "Adverse signals are reprocessed as less threatening interpretations (natural evolution, transitional difficulty, temporary friction, misunderstanding) rather than structurally engaged. Each reframe completes the adverse signal processing cycle without producing a structural response.",
+    standardsInvolved: ["Adverse-Signal Engagement Principle", "Precision-First Design", "Sensemaking"],
+    observableSignature: "Looking back at a series of exchanges, each adverse signal has a documented response that terminates the signal without altering the structural condition that generated it.",
+    maturityStatus: "original-six"
+  },
+  {
+    id: "drift-pattern",
+    name: "Drift Pattern",
+    arrangement: "Power, consent, or capacity erodes gradually through accumulation of small adjustments, each individually defensible, that collectively produce structural gaps visible only when the system encounters external pressure. The standards that would detect drift are not in place, so the system has confidence it is healthy while the erosion proceeds.",
+    standardsInvolved: ["Structural Power Obligation", "Structural Consent Legibility", "Information Asymmetry Classification"],
+    observableSignature: "A system that was functioning within its founding conditions encounters a novel pressure and cannot account for why its coordination capacity is lower than expected. The coordinating record shows incremental changes, each uncontroversial at the time, that together altered the structural conditions without any single decision being identifiable as the cause.",
+    maturityStatus: "original-six"
+  },
+  {
+    id: "mission-justified-hidden-factory",
+    name: "Mission-Justified Hidden Factory",
+    arrangement: "An organization's stated mission actively frames its coordination work as not-coordination, making the Hidden Factory philosophically mandated rather than accidentally produced. The mission vocabulary justifies why the coordination work being done cannot be measured or compensated as coordination work.",
+    standardsInvolved: ["Four Batteries Capacity", "Sensemaking", "Precision-First Design"],
+    observableSignature: "An organization whose stated mission requires reducing its own coordination footprint is simultaneously doing significant coordination work that does not appear in any coordinating record. When challenged on this, the organization invokes the mission vocabulary as the explanation for why the work is not coordination.",
+    maturityStatus: "working-hypothesis-from-specific-evaluation"
+  },
+  {
+    id: "document-without-process",
+    name: "Document Without Process",
+    arrangement: "Structural decisions are conveyed through policy documents produced without a visible sensemaking process. Future participants receive the resolution frame without the reasoning that produced it: no named initiating disruption, no documented liminal phase, no evidence basis for the resolution, no stated revision conditions.",
+    standardsInvolved: ["Sensemaking", "Precision-First Design", "Adverse-Signal Engagement Principle"],
+    observableSignature: "The document generates sustained debate about what it means and what it commits the issuing party to, because participants disagree about the underlying question the document was answering. That disagreement cannot be resolved by reading the document more carefully; it requires the sensemaking process that was absent.",
+    maturityStatus: "working-hypothesis-from-specific-evaluation"
+  },
+  {
+    id: "jurisdictional-capture",
+    name: "Jurisdictional Capture",
+    arrangement: 'An entity with development or operational responsibility informally claims a domain boundary ("product decisions are ours," "technical choices are ours"). Over time this claimed boundary is treated as formal by both parties. When an action within the claimed domain has material financial consequences for the coordinating body, the body discovers it has no structural mechanism to contest the action before it occurs.',
+    standardsInvolved: ["Precision-First Design", "Information Asymmetry Classification", "Structural Power Obligation", "Structural Consent Legibility"],
+    observableSignature: "The coordinating body discovers a materially consequential action by a related entity through external investigation rather than disclosure. The related entity's justification invokes a domain boundary that was never formally specified. Available response options are limited to: accept the action, conduct an adversarial coordinating process, or threaten exit.",
+    maturityStatus: "working-hypothesis-from-specific-evaluation"
+  },
+  {
+    id: "hidden-factory-self-extraction",
+    name: "Hidden Factory Self-Extraction",
+    arrangement: "An entity doing significant invisible coordination work that the system depends on, finding no structural path to recognition and legitimate compensation, extracts value unilaterally from within its operational domain. Distinct from Hidden Factory Collapse where invisible workers deplete and exit; this is the resolution path when the invisible worker holds operational control and the system provides no legitimate compensation mechanism.",
+    standardsInvolved: ["Four Batteries Capacity", "Information Asymmetry Classification", "Adverse-Signal Engagement Principle", "Structural Consent Legibility"],
+    observableSignature: "An entity that has been providing significant operational capacity to a system takes a unilateral action that redirects value from the system to itself. When confronted, the entity invokes its past contributions and risk absorption as justification. The system cannot evaluate this justification because the invisible work was never measured.",
+    maturityStatus: "working-hypothesis-from-specific-evaluation"
+  }
+];
+function getStructuralPattern(id) {
+  return STRUCTURAL_PATTERNS.find((p) => p.id === id);
+}
+
+// packages/csis-mcp-server/src/descriptive-classes.ts
+var DESCRIPTIVE_CLASSES = [
+  {
+    id: "structural-mechanical",
+    name: "Structural-mechanical",
+    characterizes: "Load-bearing and tension-distribution properties of coordination structures. Whether structural elements are adequate to sustain the coordination forces they carry.",
+    boundary: "Semantic and definitional precision; subjective experience of operating under the structure; how structures respond to temporal pressure patterns."
+  },
+  {
+    id: "temporal-dynamic",
+    name: "Temporal-dynamic",
+    characterizes: "How coordination structures respond to the temporal pattern of pressure. The rhythm and frequency dynamics of coordination forces. Frequency-dynamic sub-aspect is particularly load-bearing.",
+    boundary: "The structure and magnitude of specification requirements; the load-bearing properties of structural elements at rest."
+  },
+  {
+    id: "epistemic-perceptual",
+    name: "Epistemic-perceptual",
+    characterizes: "What makes a term operationally defined, a claim falsifiable, a taxonomy complete, and a detection instrument distinguishable from its most likely false positives. The precision and operationalization sub-aspect is where PFDS primarily operates.",
+    boundary: "The felt experience of operating under epistemically precise instruments; the structural load-bearing properties of mechanisms."
+  },
+  {
+    id: "relational-topological",
+    name: "Relational-topological",
+    characterizes: "Coordination process structure: the conditions under which a coordination process is precisely specifiable and a detection system is structurally complete relative to the roles required to respond to it.",
+    boundary: "The substantive content of relations (what kind of relationship exists); the felt experience of participating in the coordination process."
+  },
+  {
+    id: "felt-experience",
+    name: "Felt-experience",
+    characterizes: "The subjective quality of operating under a coordination instrument. Whether a specification feels fair, transparent, or well-designed to those who use it.",
+    boundary: "Structural accessibility of protection (which IS inside scope of PFDS Section 2 ceiling direction); the structural-mechanical, temporal-dynamic, epistemic-perceptual, and relational-topological properties of the coordination instrument."
+  },
+  {
+    id: "action-structural",
+    name: "Action-structural",
+    characterizes: "The structural properties of actions that coordination instruments structure. The causal architecture of coordination actions: how actions produce their effects at the structural level.",
+    boundary: "Semantic and definitional precision of the instrument; the load-bearing properties of the structures the actions operate within."
+  }
+];
+function getDescriptiveClass(id) {
+  return DESCRIPTIVE_CLASSES.find((c) => c.id === id);
+}
+
+// packages/csis-mcp-server/src/create-server.ts
+var PFDS_STANDARD_URL = getStandardGithubUrl(
+  STANDARDS.find((s) => s.id === "pfds")
+);
+var ListStandardsInputSchema = external_exports.object({
+  family: external_exports.enum(["compressive", "generative", "all"]).optional().default("all").describe("Filter standards by family. Default: all ten.")
 });
-var CheckAdmissibilityInputSchema = external_exports.object({
-  case_id: external_exports.string().optional().describe(
-    "Optional: a specific admissibility case to return. If omitted, returns all seven cases."
+var GetFoundationalCommitmentsInputSchema = external_exports.object({}).strict();
+var LookupCorollaryInputSchema = external_exports.object({
+  number: external_exports.number().int().min(1).max(PFDS_COROLLARY_COUNT).describe("Corollary number 1 through 9.")
+});
+var LookupStructuralPatternInputSchema = external_exports.object({
+  id: external_exports.string().describe(
+    "Pattern id. One of: transition-narrative, hidden-factory-collapse, termination-reflex, specialist-concentration, reframing-loop, drift-pattern, mission-justified-hidden-factory, document-without-process, jurisdictional-capture, hidden-factory-self-extraction."
   )
 });
-var Frame2FunctioningCheckInputSchema = external_exports.object({
-  mode_id: external_exports.string().optional().describe(
-    "Optional: a specific failure mode to return. If omitted, returns all eight modes."
+var LookupDescriptiveClassInputSchema = external_exports.object({
+  id: external_exports.string().describe(
+    "Class id. One of: structural-mechanical, temporal-dynamic, epistemic-perceptual, relational-topological, felt-experience, action-structural."
   )
 });
-var LookupThreeFramesInputSchema = external_exports.object({}).strict();
-var AuditTextInputSchema = external_exports.object({
-  text: external_exports.string().describe("The text to audit for Frame 1 watchlist hits.")
+var GetInheritanceGraphInputSchema = external_exports.object({
+  specialty: external_exports.string().optional().describe(
+    'Optional: a FOCAL domain (Form Of Coordination Activity Locus) to place in the inheritance graph (e.g., "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation"). A FOCAL domain rests on the coordination floors and is held to the precision instruments. If not provided, returns the canonical structure with only the established FOCAL domains (PoC, CROSS+WALKRI).'
+  )
 });
-var RegenRealityCheckInputSchema = external_exports.object({
-  id: external_exports.string().optional().describe(
-    "Optional: a specific regen check to return by id. If omitted, returns all nine checks plus the Frame 2 imitation types and routing context."
+var AuditAgainstCorollaryInputSchema = external_exports.object({
+  corollary_number: external_exports.number().int().min(1).max(PFDS_COROLLARY_COUNT).describe("Corollary number 1 through 9 to apply as a structural test."),
+  text: external_exports.string().optional().describe(
+    "Optional: the specification text, claim, or document to audit. If omitted, the tool returns the corollary structural test framework without applying it."
   )
 });
 var OUTPUT_SCHEMAS = {
-  check_watchlist: ["term", "on_watchlist", "entry", "admissibility_note"],
-  check_admissibility: ["total", "cases", "note"],
-  frame2_functioning_check: ["total", "modes", "note"],
-  lookup_three_frames: [
-    "frames",
-    "trigunatita",
-    "innate_totality",
-    "precision_and_non_harming",
-    "nested_failure_structure",
-    "bridge_vocabulary_note"
+  list_standards: ["total", "family_filter", "standards", "note"],
+  get_foundational_commitments: [
+    "unifiedPrinciple",
+    "unityExplanation",
+    "precisionWithoutNonHarming",
+    "nonHarmingWithoutPrecision",
+    "outcome",
+    "inheritanceHierarchy"
   ],
-  audit_text: ["total_watchlist_hits", "terms_found", "hits", "note"],
-  regen_reality_check: [
-    "total_checks",
-    "checks",
-    "frame2_done_well_vs_imitation",
-    "frame2_imitation_types",
-    "routing_note",
-    "ros_audit_routing",
-    "trigger_conditions",
+  lookup_corollary: ["corollary", "note"],
+  lookup_structural_pattern: ["pattern", "note"],
+  lookup_descriptive_class: ["descriptive_class", "all_six_classes", "corollary_8_reference"],
+  audit_against_corollary: [
+    "corollary",
+    "structural_test",
+    "source_reference",
+    "audit_input_text_provided",
     "note"
+  ],
+  get_inheritance_graph_with_specialty: [
+    "root",
+    "precision_instruments",
+    "coordination_floors",
+    "meta_standard",
+    "frame_language",
+    "suite",
+    "applied_specialties",
+    "inheritance_order_rule"
   ]
 };
-var SERVER_VERSION = "0.1.0";
+var SERVER_VERSION = "0.3.0";
+var SERVER_NAME = "csis";
 var PROVENANCE = {
-  server: "frame-language",
+  server: "csis",
   serverVersion: SERVER_VERSION,
   encodes: {
-    "frame-language-term-registry": REGISTRY_VERSION
+    "csis-suite": STANDARDS.map((s) => `${s.id}@${s.version}`).join(", ")
   }
 };
 function createMcpServer() {
   const server = new Server(
     {
-      name: "frame-language",
+      name: "csis",
       version: SERVER_VERSION
     },
     {
@@ -19235,76 +20182,100 @@ function createMcpServer() {
     return {
       tools: withOutputSchemas([
         {
-          name: "check_watchlist",
-          description: "Check a term against the Frame Language watchlist of Frame 1 vocabulary. Returns whether the term is on the watchlist, why it imports Frame 1 framing, the canonical replacement pattern, primitive anchors where applicable, and common phrasings with their Frame 2 equivalents.",
+          name: "list_standards",
+          description: "List the ten standards of the Coordination Structural Integrity Suite (CSIS). Returns canonical names, short ids, family (compressive or generative), current version, GitHub paths, GitHub URLs, and brief descriptions sourced from the suite README. Use this to discover what standards exist, then fetch full standard text from the GitHub URL when substantive work requires the source.",
           inputSchema: {
             type: "object",
             properties: {
-              term: {
+              family: {
                 type: "string",
-                description: "The term to check (case-insensitive)."
-              }
-            },
-            required: ["term"]
-          }
-        },
-        {
-          name: "check_admissibility",
-          description: "Return the seven admissible-use cases for Frame 1 terms per the Frame Language Pre-Replacement Admissibility primitive. A Frame 1 term is admissible without replacement in one of these seven cases. In all other cases, replacement is required. Use this to determine whether a specific Frame 1 usage is admissible or whether replacement applies.",
-          inputSchema: {
-            type: "object",
-            properties: {
-              case_id: {
-                type: "string",
-                description: "Optional. Specific case to return. Available: citation-use, detection-use, contextual-description, developmental-bridge, naming-the-stage, communication-medium, documentary-record."
+                enum: ["compressive", "generative", "all"],
+                description: "Filter by family. Default: all ten standards."
               }
             }
           }
         },
         {
-          name: "frame2_functioning_check",
-          description: "Return the eight Frame 2 functioning check failure modes. A term expressed in Frame 2 vocabulary may still fail to function as Frame 2 in one of eight ways. Use this to audit whether a Frame 2 claim functions as Frame 2 in practice. Each mode includes a falsifiability-context variant from the Falsifiability Architecture document.",
-          inputSchema: {
-            type: "object",
-            properties: {
-              mode_id: {
-                type: "string",
-                description: "Optional. Specific failure mode to return. Available: transcendence-claim, declaration-exploit, precision-facade, partial-instantiation, direction-without-destination, vocabulary-without-architecture, correct-map-wrong-territory, frozen-map."
-              }
-            }
-          }
-        },
-        {
-          name: "lookup_three_frames",
-          description: "Return the three Frames of Frame Language with the guna typology mapping. Frame 1 (access: seasonal expressions; guna: tamas), Frame 2 (access: configurations and conditions; guna: rajas), Frame 3 (access: Innate Totality; guna: sattva). Includes the trigunatita orientation (beyond the three gunas; what Frame 3 actually points toward), the nested failure mode structure, the precision-and-non-harming unity, and a note on bridge vocabulary use.",
+          name: "get_foundational_commitments",
+          description: "Return the foundational commitments of CSIS: the unified principle of precision and non-harming (held together via transclusion as PFDS specifies, not as two principles held externally); why holding either alone fails; and the content-inheritance structure rooted at PFDS (the root commitment; two cross-domain families under it, the precision instruments of CRAFT and WALKRI and the coordination floors of the nine other CSIS standards, siblings to each other, with Frame Language as the root's twin articulation rather than an instrument; FOCAL domains such as PoC and CROSS+WALKRI resting on the coordination floors and held to the precision instruments). The normative force of CSIS on derived work is context-dependent: actively constraining during specification design and revision; receding to background during routine operation. Includes the general principle that inheritance order is independent of chronological order.",
           inputSchema: {
             type: "object",
             properties: {}
           }
         },
         {
-          name: "audit_text",
-          description: "Audit a block of text against the Frame Language watchlist. Returns each watchlist term that appears in the text, the number of occurrences, the watchlist entry (why Frame 1, replacement pattern, primitive anchors, common phrasings). Use this for own-voice writing audits before publication. NOTE: this tool flags terms; it does not apply the Pre-Replacement Admissibility check automatically. For each flagged term, the user must determine whether the usage is admissible (citation use, detection use, etc.) per the seven cases.",
+          name: "lookup_corollary",
+          description: "Return one of the nine corollaries of the Precision-First Design Standard. Each corollary specifies its precision condition in two directions: under-specification failure mode and over-specification failure mode. Includes worked examples from PFDS Section 4 where applicable.",
           inputSchema: {
             type: "object",
             properties: {
-              text: {
-                type: "string",
-                description: "The text to audit."
+              number: {
+                type: "integer",
+                minimum: 1,
+                maximum: PFDS_COROLLARY_COUNT,
+                description: "Corollary number 1 through 9."
               }
             },
-            required: ["text"]
+            required: ["number"]
           }
         },
         {
-          name: "regen_reality_check",
-          description: 'Return the Regenerative Claim Audit (Regen Reality Check): nine independent checks for documents that claim to be regenerative, use "regen" as an identity marker, operate in the Web3 regen space, or present as a ReFi instrument. Each check can fail while the others pass. Returns the checks, the Frame 2 done well vs. imitation contrast, the new Frame 2 imitation types (propagation without feedback, governance deferral, sovereignty without derivation), routing notes, trigger conditions, and the Regenerative Obligation Standard Audit cross-reference. Pass an optional id to return a single check.',
+          name: "lookup_structural_pattern",
+          description: "Return one of the ten named structural patterns from the Suite Structural Patterns Primer. A structural pattern is a recurring arrangement across multiple standards that produces a recognizable failure signature. Returns the structural arrangement, which standards are involved, the observable signature, and the maturity status (original-six derived from cross-context analysis, or working-hypothesis from specific evaluations).",
           inputSchema: {
             type: "object",
             properties: {
               id: {
                 type: "string",
-                description: "Optional. Specific check to return. Available: identity-vs-structure, direction-vs-destination, from-specification, theory-of-change-vs-theory-of-build, regenerative-obligation-conformance, pre-specification-identity-capture, temporal-deferral, financial-conversion, commons-without-governance."
+                description: "Pattern id. Available: transition-narrative, hidden-factory-collapse, termination-reflex, specialist-concentration, reframing-loop, drift-pattern, mission-justified-hidden-factory, document-without-process, jurisdictional-capture, hidden-factory-self-extraction."
+              }
+            },
+            required: ["id"]
+          }
+        },
+        {
+          name: "lookup_descriptive_class",
+          description: "Return one of the six descriptive classes from the Descriptive Typology Map (referenced by PFDS Corollary 8). Each class characterizes a structurally distinct dimension along which a phenomenon can be described. Use to audit a specification's operative and boundary classes per Corollary 8.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+                description: "Class id. Available: structural-mechanical, temporal-dynamic, epistemic-perceptual, relational-topological, felt-experience, action-structural."
+              }
+            },
+            required: ["id"]
+          }
+        },
+        {
+          name: "audit_against_corollary",
+          description: "Apply a PFDS corollary as a structural test on a specification, claim, or document. Returns the corollary's precision-first invariant (under-specification failure mode and over-specification failure mode), the structural test framework, and a prompt template for applying the test to provided text. Use this to audit whether a specification satisfies a specific corollary, or to diagnose which precision failure mode a problematic specification is exhibiting. Per the substrate discipline: this tool surfaces the structural framework; substantive PFDS work still requires reading the full standard.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              corollary_number: {
+                type: "integer",
+                minimum: 1,
+                maximum: PFDS_COROLLARY_COUNT,
+                description: "Corollary number 1 through 9 to apply."
+              },
+              text: {
+                type: "string",
+                description: "Optional: the specification text, claim, or document to audit. If omitted, returns the structural test framework alone."
+              }
+            },
+            required: ["corollary_number"]
+          }
+        },
+        {
+          name: "get_inheritance_graph_with_specialty",
+          description: "Return the content-inheritance structure with an optional named FOCAL domain placed correctly. Without an argument: returns the root (the PFDS commitment), the two cross-domain families under it (the precision instruments of CRAFT and WALKRI, with Frame Language as the root's twin articulation rather than an instrument; the coordination floors of the nine other CSIS standards), CRAFT as the one meta-standard and sibling of the floors, and PoC and CROSS+WALKRI as established FOCAL domains resting on the floors and held to the instruments. With a specialty argument: places the named FOCAL domain as a sibling of PoC and CROSS+WALKRI. Note: this is the content-inheritance graph (a tree), not the constitutive interaction (a mesh, described in the interaction-architecture document); the normative force of CSIS on derived work is context-dependent, active during design and revision and background during routine operation.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              specialty: {
+                type: "string",
+                description: 'Optional. A FOCAL domain to place in the graph. Examples: "AI evaluation", "ESG reporting", "scientific research integrity", "policy evaluation".'
               }
             }
           }
@@ -19316,27 +20287,52 @@ function createMcpServer() {
     const { name, arguments: args } = request.params;
     try {
       const __result = await (async () => {
-        if (name === "check_watchlist") {
-          const input = CheckWatchlistInputSchema.parse(args ?? {});
-          const entry = getWatchlistEntry(input.term);
-          if (!entry) {
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify(
-                    {
-                      term: input.term,
-                      on_watchlist: false,
-                      note: `Term "${input.term}" is not on the Frame 1 watchlist. The watchlist contains ${WATCHLIST.length} terms.`,
-                      all_watchlist_terms: getAllWatchlistTerms()
-                    },
-                    null,
-                    2
-                  )
-                }
-              ]
-            };
+        if (name === "list_standards") {
+          const input = ListStandardsInputSchema.parse(args ?? {});
+          const filtered = input.family === "all" ? STANDARDS : getStandardsByFamily(input.family);
+          const standardsWithUrls = filtered.map((s) => ({
+            name: s.name,
+            id: s.id,
+            family: s.family,
+            version: s.version,
+            githubPath: s.githubPath,
+            githubUrl: getStandardGithubUrl(s),
+            description: s.description
+          }));
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(
+                  {
+                    total: standardsWithUrls.length,
+                    family_filter: input.family,
+                    standards: standardsWithUrls,
+                    note: "Metadata pointers. The substrate discipline requires that full standards be read directly when substantive PFDS, ASEP, or other corollary work is performed; fetch source content from githubUrl in those cases."
+                  },
+                  null,
+                  2
+                )
+              }
+            ]
+          };
+        }
+        if (name === "get_foundational_commitments") {
+          GetFoundationalCommitmentsInputSchema.parse(args ?? {});
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(FOUNDATIONAL_COMMITMENTS, null, 2)
+              }
+            ]
+          };
+        }
+        if (name === "lookup_corollary") {
+          const input = LookupCorollaryInputSchema.parse(args ?? {});
+          const corollary = getPfdsCorollary(input.number);
+          if (!corollary) {
+            throw new Error(`Corollary ${input.number} not found. Available: 1 through 9.`);
           }
           return {
             content: [
@@ -19344,10 +20340,8 @@ function createMcpServer() {
                 type: "text",
                 text: JSON.stringify(
                   {
-                    term: input.term.toLowerCase(),
-                    on_watchlist: true,
-                    entry,
-                    admissibility_note: "Watchlist hit indicates Frame 1 vocabulary that requires replacement in own-voice writing UNLESS one of the seven Pre-Replacement Admissibility cases applies. Use check_admissibility to review the cases."
+                    corollary,
+                    note: `PFDS structural data. Full corollary text and surrounding context are at the PFDS standard: ${PFDS_STANDARD_URL}`
                   },
                   null,
                   2
@@ -19356,24 +20350,12 @@ function createMcpServer() {
             ]
           };
         }
-        if (name === "check_admissibility") {
-          const input = CheckAdmissibilityInputSchema.parse(args ?? {});
-          if (input.case_id) {
-            const adminCase = getAdmissibilityCase(input.case_id);
-            if (!adminCase) {
-              const ids = getAllAdmissibilityCaseIds().join(", ");
-              throw new Error(
-                `Admissibility case "${input.case_id}" not found. Available: ${ids}.`
-              );
-            }
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify({ case: adminCase }, null, 2)
-                }
-              ]
-            };
+        if (name === "lookup_structural_pattern") {
+          const input = LookupStructuralPatternInputSchema.parse(args ?? {});
+          const pattern = getStructuralPattern(input.id);
+          if (!pattern) {
+            const availableIds = STRUCTURAL_PATTERNS.map((p) => p.id).join(", ");
+            throw new Error(`Structural pattern "${input.id}" not found. Available: ${availableIds}.`);
           }
           return {
             content: [
@@ -19381,9 +20363,8 @@ function createMcpServer() {
                 type: "text",
                 text: JSON.stringify(
                   {
-                    total: ADMISSIBILITY_CASES.length,
-                    cases: ADMISSIBILITY_CASES,
-                    note: "A Frame 1 term is admissible without replacement if it matches one of these seven cases. In all other cases, replacement is required per the Frame Language Replacement Procedure Categories primitive."
+                    pattern,
+                    note: "Full pattern details with worked examples are in the Suite Structural Patterns Primer: https://github.com/coordination-structural-integrity-suite/suite/blob/main/tensegrity-suite/overview/suite-structural-patterns-primer-0_1_2.md"
                   },
                   null,
                   2
@@ -19392,24 +20373,12 @@ function createMcpServer() {
             ]
           };
         }
-        if (name === "frame2_functioning_check") {
-          const input = Frame2FunctioningCheckInputSchema.parse(args ?? {});
-          if (input.mode_id) {
-            const mode = getFunctioningCheckMode(input.mode_id);
-            if (!mode) {
-              const ids = getAllFunctioningCheckModeIds().join(", ");
-              throw new Error(
-                `Functioning check mode "${input.mode_id}" not found. Available: ${ids}.`
-              );
-            }
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify({ mode }, null, 2)
-                }
-              ]
-            };
+        if (name === "lookup_descriptive_class") {
+          const input = LookupDescriptiveClassInputSchema.parse(args ?? {});
+          const dclass = getDescriptiveClass(input.id);
+          if (!dclass) {
+            const availableIds = DESCRIPTIVE_CLASSES.map((c) => c.id).join(", ");
+            throw new Error(`Descriptive class "${input.id}" not found. Available: ${availableIds}.`);
           }
           return {
             content: [
@@ -19417,9 +20386,9 @@ function createMcpServer() {
                 type: "text",
                 text: JSON.stringify(
                   {
-                    total: FUNCTIONING_CHECK_MODES.length,
-                    modes: FUNCTIONING_CHECK_MODES,
-                    note: "The eight modes are the ways a Frame 2 claim can fail to function as Frame 2 even when the vocabulary is correct. Apply to any specification that uses Frame 2 vocabulary to check whether the structural form is operating."
+                    descriptive_class: dclass,
+                    all_six_classes: DESCRIPTIVE_CLASSES.map((c) => c.id),
+                    corollary_8_reference: "PFDS Corollary 8 (Descriptive completeness): a specification declares which classes it draws from (operative) and at least one class where its vocabulary ends (boundary). Use these six classes to apply the typological declaration."
                   },
                   null,
                   2
@@ -19428,76 +20397,108 @@ function createMcpServer() {
             ]
           };
         }
-        if (name === "lookup_three_frames") {
-          LookupThreeFramesInputSchema.parse(args ?? {});
+        if (name === "audit_against_corollary") {
+          const input = AuditAgainstCorollaryInputSchema.parse(args ?? {});
+          const corollary = getPfdsCorollary(input.corollary_number);
+          if (!corollary) {
+            throw new Error(`Corollary ${input.corollary_number} not found. Available: 1 through 9.`);
+          }
+          const structuralTest = {
+            apply_in_two_directions: "A precision-first audit checks both directions. (1) Under-specification: does the text fail to prevent the under-specification failure mode named below? (2) Over-specification: does the text exhibit the over-specification failure mode named below? A specification can fail in either direction independently.",
+            under_specification_check: corollary.underSpecificationFailure,
+            over_specification_check: corollary.overSpecificationFailure,
+            requirement_to_satisfy: corollary.requirement,
+            worked_example_from_pfds: corollary.exampleFromPfds
+          };
+          const payload = {
+            corollary: {
+              number: corollary.number,
+              name: corollary.name
+            },
+            structural_test: structuralTest,
+            source_reference: `PFDS Section 2 (Corollaries) and Section 4 (Worked Examples). Full standard: ${PFDS_STANDARD_URL}`
+          };
+          if (input.text) {
+            const promptTemplate = `Apply PFDS Corollary ${corollary.number} (${corollary.name}) as a structural test on the following text.
+
+REQUIREMENT (what the corollary mandates):
+${corollary.requirement}
+
+UNDER-SPECIFICATION FAILURE MODE (one direction of imprecision):
+${corollary.underSpecificationFailure}
+
+OVER-SPECIFICATION FAILURE MODE (the other direction of imprecision):
+${corollary.overSpecificationFailure}
+
+` + (corollary.exampleFromPfds ? `WORKED EXAMPLE FROM PFDS:
+${corollary.exampleFromPfds}
+
+` : "") + `TEXT TO AUDIT:
+${input.text}
+
+Return a structured audit:
+{
+  "verdict": "satisfies" | "fails-under" | "fails-over" | "fails-both" | "indeterminate",
+  "under_specification_finding": string,
+  "over_specification_finding": string,
+  "specific_passages": [{ "passage": string, "issue": string, "direction": "under" | "over" }],
+  "remediation": string
+}
+
+Apply the corollary as a precision-first invariant: both failure directions must be checked independently. The substrate discipline requires that the verdict be defensible by reference to specific passages, not impressionistic.`;
+            payload["audit_input_text_provided"] = true;
+            payload["prompt_template"] = promptTemplate;
+            payload["note"] = "Send the prompt_template to a language model to perform the corollary audit. The tool itself surfaces the structural test; the LLM applies it.";
+          } else {
+            payload["audit_input_text_provided"] = false;
+            payload["note"] = "No text provided. Returned the structural test framework. Call again with the text argument to receive a prompt template for applying the audit.";
+          }
           return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(THREE_FRAMES, null, 2)
-              }
-            ]
+            content: [{ type: "text", text: JSON.stringify(payload, null, 2) }]
           };
         }
-        if (name === "audit_text") {
-          const input = AuditTextInputSchema.parse(args ?? {});
-          const hits = scanTextForWatchlist(input.text);
-          const totalHits = hits.reduce((sum, h) => sum + h.occurrences, 0);
-          return {
-            content: [
+        if (name === "get_inheritance_graph_with_specialty") {
+          const input = GetInheritanceGraphInputSchema.parse(args ?? {});
+          const baseHierarchy = FOUNDATIONAL_COMMITMENTS.inheritanceHierarchy;
+          const graph = {
+            root: baseHierarchy.root,
+            precision_instruments: baseHierarchy.precisionInstruments,
+            coordination_floors: baseHierarchy.coordinationFloors,
+            meta_standard: baseHierarchy.craft,
+            frame_language: baseHierarchy.frameLanguage,
+            suite: baseHierarchy.csis,
+            applied_specialties: [
               {
-                type: "text",
-                text: JSON.stringify(
-                  {
-                    total_watchlist_hits: totalHits,
-                    terms_found: hits.length,
-                    hits,
-                    note: totalHits > 0 ? "Each hit must be evaluated against the Pre-Replacement Admissibility seven cases. Citation use of source-framework terms, citation use of CROSS+WALKRI primitive names (e.g., Beneficiary Validation Mechanism), and other admissible-use cases are NOT replacement triggers. Own-voice use of these terms is. Use check_admissibility to review the seven cases." : "No watchlist terms found in the audited text. Note that this audit only catches the watchlist terms; other Frame Language failures (Frame 2 functioning check failures, etc.) require separate audits."
-                  },
-                  null,
-                  2
-                )
+                name: "Proof of Coordination (PoC)",
+                description: baseHierarchy.poc,
+                established: true,
+                focal: true
+              },
+              {
+                name: "CROSS+WALKRI",
+                description: baseHierarchy.crossWalkri,
+                established: true,
+                domain: "grants",
+                focal: true
               }
-            ]
+            ],
+            inheritance_order_rule: baseHierarchy.inheritanceOrderRule
           };
-        }
-        if (name === "regen_reality_check") {
-          const input = RegenRealityCheckInputSchema.parse(args ?? {});
-          if (input.id) {
-            const check2 = getRegenCheck(input.id);
-            if (!check2) {
-              const ids = getAllRegenCheckIds().join(", ");
-              throw new Error(
-                `Regen check "${input.id}" not found. Available: ${ids}.`
-              );
-            }
-            return {
-              content: [
-                {
-                  type: "text",
-                  text: JSON.stringify({ check: check2 }, null, 2)
-                }
-              ]
-            };
+          if (input.specialty) {
+            graph.applied_specialties.push({
+              name: input.specialty,
+              description: `${input.specialty} placed as a prospective FOCAL domain: if its defining activity is multiple parties brought into coordination, it rests on the coordination floors and is held to the precision instruments (CRAFT and WALKRI), inheriting from the root commitment, as a sibling of PoC and CROSS+WALKRI. If the named work is instead a precision instrument or a meta-standard (for example CRAFT), it belongs in the precision-instrument family as a sibling of the coordination floors, not as a FOCAL domain; CRAFT is already built at specification v0.4.0.`,
+              established: false,
+              prospective: true,
+              focal: true,
+              note: "Placement is prospective. Apply the FOCAL test first: can an independent observer name the parties whose activity must be brought into coordination as the defining feature. A new FOCAL domain would require its own primitives, schemas, and compatibility statements, all inheriting the coordination floors and held to the precision instruments. See the Cross-Domain Applicability Analysis (held in reserve at CROSS+WALKRI corpus)."
+            });
           }
           return {
             content: [
               {
                 type: "text",
-                text: JSON.stringify(
-                  {
-                    total_checks: REGEN_CHECKS.length,
-                    checks: REGEN_CHECKS,
-                    frame2_done_well_vs_imitation: FRAME2_DONE_WELL_VS_IMITATION,
-                    frame2_imitation_types: REGEN_IMITATION_TYPES,
-                    routing_note: ROUTING_NOTE,
-                    ros_audit_routing: ROS_AUDIT_ROUTING,
-                    trigger_conditions: TRIGGER_CONDITIONS,
-                    note: "Run this audit as a domain-specific extension of the standard Frame Language analysis when a document makes regenerative claims. Each of the nine checks is independent and can fail while the others pass. The operative test throughout is external verification: can a party outside the organization verify the condition from the document alone?"
-                  },
-                  null,
-                  2
-                )
+                text: JSON.stringify(graph, null, 2)
               }
             ]
           };
@@ -19512,14 +20513,45 @@ function createMcpServer() {
   return server;
 }
 
-// packages/frame-language-mcp-server/src/index.ts
-async function main() {
-  const server = createMcpServer();
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error(`Frame Language MCP server v${SERVER_VERSION} running on stdio`);
-}
-main().catch((err) => {
-  console.error("Fatal error:", err);
-  process.exit(1);
+// packages/csis-mcp-server/src/http.ts
+var PORT = Number(process.env["PORT"] ?? 3e3);
+var httpServer = createHttpServer(async (req, res) => {
+  if (req.url === "/health" || req.url === "/") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ status: "ok", server: SERVER_NAME, version: SERVER_VERSION }));
+    return;
+  }
+  if (req.url === "/mcp") {
+    if (req.method === "GET") {
+      res.writeHead(405, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Use POST for Streamable HTTP or see /health" }));
+      return;
+    }
+    if (req.method === "POST") {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const body = Buffer.concat(chunks).toString("utf8");
+      let parsedBody;
+      try {
+        parsedBody = JSON.parse(body);
+      } catch {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Invalid JSON" }));
+        return;
+      }
+      const transport = new StreamableHTTPServerTransport({
+        sessionIdGenerator: () => crypto.randomUUID()
+      });
+      const server = createMcpServer();
+      await server.connect(transport);
+      await transport.handleRequest(req, res, parsedBody);
+      return;
+    }
+  }
+  res.writeHead(404, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ error: "Not found. MCP endpoint is POST /mcp" }));
+});
+httpServer.listen(PORT, () => {
+  console.error(`${SERVER_NAME} MCP server v${SERVER_VERSION} listening on port ${PORT}`);
+  console.error(`MCP endpoint: http://localhost:${PORT}/mcp`);
 });

@@ -1,0 +1,18 @@
+# Reliable build for the Frame Language MCP HTTP server.
+# Standard Node image so pnpm installs to a PATH location and just works,
+# avoiding the nixpacks/corepack PATH and version issues.
+FROM node:22-slim
+WORKDIR /app
+
+# Remove any corepack shims, then install pnpm directly (goes to /usr/local/bin, on PATH).
+RUN corepack disable 2>/dev/null || true
+RUN npm install -g pnpm@10
+
+# Install the workspace, typecheck-build, then bundle the HTTP server.
+COPY . .
+RUN pnpm install --no-frozen-lockfile
+RUN pnpm build && pnpm bundle:http
+
+# Railway provides PORT; the server reads it and serves /health and /mcp.
+EXPOSE 3000
+CMD ["node", "frame-language-server-http.mjs"]
