@@ -18,60 +18,56 @@ CSIS is the substrate; Frame Language is derived from CSIS and operates as a pre
 
 ---
 
-## MCP server installation
+## Using the servers
 
-### From the registry
+Both servers are hosted as public HTTP endpoints, and are also published to npm and JSR, so you can connect the hosted server with nothing to install or run either locally. This section covers the common cases; the full reference for every method is [Using the MCP servers](https://github.com/durgadasji/standards-index/blob/main/using-the-mcp-servers.md).
 
-Both servers publish to [jsr.io](https://jsr.io) under `@proof-of-coord`:
+`structural-integrity` is the Coordination Structural Integrity Suite server; `frame-language` is the Dimensional Frame Language server. The registry names are compressed because the registry caps each half of a package name at twenty characters; the full names are what the servers report.
+
+### Hosted (no install)
+
+- CSIS: `https://csis-production.up.railway.app/mcp`
+- Frame Language: `https://frame-language-production.up.railway.app/mcp`
+
+Point any MCP client at these. In Claude Code:
 
 ```bash
-npx jsr add @proof-of-coord/structural-integrity
-npx jsr add @proof-of-coord/frame-language
+claude mcp add --transport http csis https://csis-production.up.railway.app/mcp
+claude mcp add --transport http frame-language https://frame-language-production.up.railway.app/mcp
 ```
 
-`structural-integrity` is the Coordination Structural Integrity Suite server. `frame-language` is the Dimensional Frame Language server. The install names are compressed because the registry caps both halves of a package name at twenty characters; the full names are what the servers report and what the documentation uses throughout.
+### Run locally from npm or JSR (no clone)
 
-### Zero-install
+```bash
+claude mcp add csis -- npx -y @proof-of-coord/structural-integrity
+claude mcp add frame-language -- npx -y @proof-of-coord/frame-language
+```
 
-Clone this repo, then point your MCP client at the bundled `.mjs` outputs. This path is always current with the source: continuous integration rebuilds the bundles on every push and fails if they differ from what is committed.
+Or with Deno from JSR: `deno run -A jsr:@proof-of-coord/structural-integrity` (and `frame-language` in place of the last segment).
+
+### Run from a local clone
+
+Clone this repo and point your MCP client at the bundled `.mjs` outputs. This path stays current with source: continuous integration rebuilds the bundles on every push and fails if they differ from what is committed.
 
 ```bash
 git clone https://github.com/coordination-structural-integrity-suite/tools.git
-cd tools
-pnpm install
-pnpm build
-pnpm bundle
+cd tools && pnpm install && pnpm build && pnpm bundle
 ```
-
-Add both servers to your MCP client config:
 
 ```json
 {
   "mcpServers": {
-    "csis": {
-      "command": "node",
-      "args": ["/path/to/tools/csis-server.mjs"]
-    },
-    "frame-language": {
-      "command": "node",
-      "args": ["/path/to/tools/frame-language-server.mjs"]
-    }
+    "csis": { "command": "node", "args": ["/absolute/path/to/tools/csis-server.mjs"] },
+    "frame-language": { "command": "node", "args": ["/absolute/path/to/tools/frame-language-server.mjs"] }
   }
 }
-```
-
-For Claude Code:
-
-```bash
-claude mcp add csis "node /path/to/tools/csis-server.mjs"
-claude mcp add frame-language "node /path/to/tools/frame-language-server.mjs"
 ```
 
 Restart the client for the new servers to be picked up.
 
 ---
 
-## CSIS MCP server tools (v0.3.0)
+## CSIS MCP server tools (v0.3.1)
 
 **list_standards**: Enumerate the ten CSIS standards (seven compressive plus three generative) with canonical names, ids, versions, GitHub paths and URLs, and brief descriptions sourced from the suite README.
 
@@ -89,9 +85,9 @@ Restart the client for the new servers to be picked up.
 
 ---
 
-## Frame Language MCP server tools (v0.1.0)
+## Frame Language MCP server tools (v0.1.1)
 
-**check_watchlist**: Check a term against the Frame 1 watchlist. Returns whether the term is on the watchlist, why it imports Frame 1 framing, the canonical replacement pattern, primitive anchors, and common phrasings with their Frame 2 equivalents. The watchlist holds thirty-three terms, drawn from a single canonical term registry rather than a hand-maintained list, so the server and the registry cannot drift apart. Known limit: matching is on the exact term, so inflected forms are not caught. "empowering" does not trigger the "empowerment" entry.
+**check_watchlist**: Check a term against the Frame 1 watchlist. Returns whether the term is on the watchlist, why it imports Frame 1 framing, the canonical replacement pattern, primitive anchors, and common phrasings with their Frame 2 equivalents. The watchlist holds thirty-two terms, drawn from a single canonical term registry rather than a hand-maintained list, so the server and the registry cannot drift apart. Known limit: matching is on the exact term, so inflected forms are not caught. "empowering" does not trigger the "empowerment" entry.
 
 **check_admissibility**: Return the seven Pre-Replacement Admissibility cases. A Frame 1 term is admissible without replacement if it matches one of these seven cases: citation use, detection use, contextual description, developmental bridge, naming the stage, communication medium, documentary record.
 
@@ -129,10 +125,10 @@ The substrate vocabulary surfaced by these servers (the CSIS standards and the F
 
 ## Verification
 
-Every push runs typecheck, build and the test suite across Node 20, 22 and 24, and rebuilds the bundles to confirm they match source. Publishing is gated on the same checks: a tag alone does not publish.
+Every push runs typecheck, build and the test suite across Node 22 and 24, and rebuilds the bundles to confirm they match source. Publishing is gated on the same checks: a tag alone does not publish.
 
 ```bash
-pnpm test          # 50 tests
+pnpm test          # 56 tests
 pnpm typecheck
 pnpm bundle        # regenerate the zero-install entry points
 ```

@@ -4,13 +4,13 @@ MCP server exposing Frame Language precision discipline as AI tools.
 
 Frame Language is the precision methodology derived from the Coordination Structural Integrity Suite (CSIS). It operates substrate-level across PoC, CROSS+WALKRI, and other coordination specialty work that inherits from CSIS. This server makes the discipline operationally available through MCP tools.
 
-## v0.1.0 tools
+## Tools (v0.1.1)
 
 **check_watchlist(term)**
 
 Check a term against the Frame 1 watchlist. Returns whether the term is on the watchlist, why it imports Frame 1 framing, the canonical replacement pattern, primitive anchors, and common phrasings with their Frame 2 equivalents.
 
-Watchlist terms: accountability, governance, transparency, stakeholder, oversight, compliance, enforcement, legitimacy, empowerment, fiduciary, credibility, mandatory.
+The watchlist holds thirty-two terms (for example accountability, governance, transparency, stakeholder, oversight), drawn from a single canonical term registry rather than a hand-maintained list, so the server and the registry cannot drift apart. Matching is on the exact term, so inflected forms are not caught.
 
 **check_admissibility(case_id?)**
 
@@ -28,38 +28,25 @@ Return the three Frames of Frame Language with the guna typology mapping. Frame 
 
 Scan a block of text for Frame 1 watchlist hits. Returns terms found, occurrence counts, and the watchlist entries. The tool flags terms; user must determine whether each usage is admissible per the seven cases.
 
-## Installation
+**regen_reality_check(check_id?)**
+
+Return the nine regenerative reality checks with the Frame 2 imitation types and routing context. Applies where a document makes regenerative claims. The operative test throughout is external verification: can a party outside the organization verify the condition from the document alone.
+
+## Using this server
+
+This server is hosted at `https://frame-language-production.up.railway.app/mcp`, and is published to npm as `@proof-of-coord/frame-language` and to JSR as `jsr:@proof-of-coord/frame-language`.
+
+Connect the hosted server (nothing to install), or run it locally from the package:
 
 ```bash
-pnpm install
-pnpm build
-pnpm bundle
+# hosted, no install
+claude mcp add --transport http frame-language https://frame-language-production.up.railway.app/mcp
+
+# or run locally from npm, no clone
+claude mcp add frame-language -- npx -y @proof-of-coord/frame-language
 ```
 
-The bundled output is at `server.mjs` for the zero-install path.
-
-### MCP client configuration
-
-For Claude Code:
-
-```bash
-claude mcp add frame-language "node /Users/regischapman/frame-language-mcp-server/server.mjs"
-```
-
-Or edit your MCP config file directly:
-
-```json
-{
-  "mcpServers": {
-    "frame-language": {
-      "command": "node",
-      "args": ["/path/to/frame-language-mcp-server/server.mjs"]
-    }
-  }
-}
-```
-
-Restart Claude Code for the new server to be picked up.
+The full reference for every connection method (hosted, npm, JSR, and a local clone) is [Using the MCP servers](https://github.com/durgadasji/standards-index/blob/main/using-the-mcp-servers.md).
 
 ## Architecture
 
@@ -88,4 +75,3 @@ Apache-2.0, matching the CSIS suite convention for code artifacts. The substrate
 
 - `github.com/coordination-structural-integrity-suite/suite` (CSIS standards; Frame Language Foundational Vocabulary Specification in `tensegrity-suite/overview/`)
 - `github.com/CrossWalkri/tools` (CROSS+WALKRI MCP server, sibling pattern)
-- Local CSIS MCP server scaffold at `/Users/regischapman/csis-mcp-server/`

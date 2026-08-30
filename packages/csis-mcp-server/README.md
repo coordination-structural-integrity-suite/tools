@@ -6,9 +6,9 @@ The Coordination Structural Integrity Suite (CSIS) is ten structural standards f
 
 This server provides metadata and structural access to CSIS through MCP tools. The substrate discipline requires that substantive PFDS or other standard-level work read the full standard directly rather than substituting summaries; this server returns pointers and structural data rather than displacing the source.
 
-## v0.2.0 working server
+## Tools (v0.3.1)
 
-Six tools implemented:
+Seven tools:
 
 **list_standards**
 
@@ -20,7 +20,7 @@ Return the foundational commitments: the unified principle of precision and non-
 
 **lookup_corollary**
 
-Return one of the nine PFDS corollaries. Each corollary specifies its precision condition in two directions: under-specification failure mode and over-specification failure mode. Includes worked examples from PFDS Section 4 where applicable.
+Return one of the ten PFDS corollaries. Each corollary specifies its precision condition in two directions: under-specification failure mode and over-specification failure mode. Includes worked examples from PFDS Section 4 where applicable.
 
 **lookup_structural_pattern**
 
@@ -34,61 +34,35 @@ Return one of the six descriptive classes from the Descriptive Typology Map (ref
 
 Return the substrate inheritance hierarchy. Optionally place a named coordination specialty (e.g., "AI evaluation", "ESG reporting") as a sibling of PoC and CROSS+WALKRI under CSIS.
 
+**audit_against_corollary**
+
+Apply a PFDS corollary as a precision-first structural test on a specification, claim, or document. Returns the corollary's under- and over-specification failure modes, its requirement, and a worked example, plus a prompt template for applying the audit when text is provided.
+
 ## Planned tools (future versions)
 
-- `audit_against_corollary(text, corollary_id)` - structural audit of text against a corollary
 - `lookup_naming_decision(decision_number)` - PoC terminology conventions entries (if PoC has a separate MCP server, this stays there; otherwise served from PoC server)
 
-## Installation
+## Using this server
 
-### Prerequisites
+This server is hosted at `https://csis-production.up.railway.app/mcp`, and is published to npm as `@proof-of-coord/structural-integrity` and to JSR as `jsr:@proof-of-coord/structural-integrity`.
 
-- Node.js 20 or later
-- pnpm (or npm)
-
-### Install dependencies
+Connect the hosted server (nothing to install), or run it locally from the package:
 
 ```bash
-pnpm install
+# hosted, no install
+claude mcp add --transport http csis https://csis-production.up.railway.app/mcp
+
+# or run locally from npm, no clone
+claude mcp add csis -- npx -y @proof-of-coord/structural-integrity
 ```
 
-### Build
-
-```bash
-pnpm build
-pnpm bundle
-```
-
-The bundled output is at `server.mjs` for the zero-install path.
-
-### MCP client configuration
-
-Add the server to your MCP client configuration. For Claude Code, the simplest path is:
-
-```bash
-claude mcp add csis "node /Users/regischapman/csis-mcp-server/server.mjs"
-```
-
-Or edit your MCP config file directly:
-
-```json
-{
-  "mcpServers": {
-    "csis": {
-      "command": "node",
-      "args": ["/path/to/csis-mcp-server/server.mjs"]
-    }
-  }
-}
-```
-
-Restart Claude Code for the new server to be picked up.
+The full reference for every connection method (hosted, npm, JSR, and a local clone) is [Using the MCP servers](https://github.com/durgadasji/standards-index/blob/main/using-the-mcp-servers.md).
 
 ## Architecture
 
 Single-package TypeScript project. Data files in `src/standards.ts`, `src/foundational-commitments.ts`, `src/corollaries.ts`, `src/structural-patterns.ts`, and `src/descriptive-classes.ts` hold the structural metadata. The MCP server in `src/index.ts` wires the data to tool calls.
 
-v0.2.0 expands from the v0.1.0 scaffold by adding four data files and four tool handlers. Future versions will add audit operations and naming-decision lookups.
+Future versions may add PoC naming-decision lookups.
 
 ## License
 
