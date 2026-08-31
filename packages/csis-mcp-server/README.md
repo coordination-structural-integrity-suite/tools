@@ -56,7 +56,7 @@ claude mcp add --transport http csis https://csis-production.up.railway.app/mcp
 claude mcp add csis -- npx -y @proof-of-coord/structural-integrity
 ```
 
-The full reference for every connection method (hosted, npm, JSR, and a local clone) is [Using the MCP servers](https://github.com/durgadasji/standards-index/blob/main/using-the-mcp-servers.md).
+The four MCP servers are listed at [integritysuite.org/built](https://integritysuite.org/built), and the full reference for every connection method (hosted, npm, JSR, and a local clone) is [Using the MCP servers](https://github.com/durgadasji/standards-index/blob/main/using-the-mcp-servers.md).
 
 ## Architecture
 

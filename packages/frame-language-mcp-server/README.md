@@ -46,7 +46,7 @@ claude mcp add --transport http frame-language https://frame-language-production
 claude mcp add frame-language -- npx -y @proof-of-coord/frame-language
 ```
 
-The full reference for every connection method (hosted, npm, JSR, and a local clone) is [Using the MCP servers](https://github.com/durgadasji/standards-index/blob/main/using-the-mcp-servers.md).
+The four MCP servers are listed at [integritysuite.org/built](https://integritysuite.org/built), and the full reference for every connection method (hosted, npm, JSR, and a local clone) is [Using the MCP servers](https://github.com/durgadasji/standards-index/blob/main/using-the-mcp-servers.md).
 
 ## Architecture
 
