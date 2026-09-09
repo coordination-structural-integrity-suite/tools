@@ -18140,7 +18140,7 @@ var STANDARDS = [
     name: "Information Asymmetry Classification Standard",
     id: "iacs",
     family: "compressive",
-    version: "0.1.26",
+    version: "0.1.27",
     githubPath: "tensegrity-suite/compressive/standards/standards-3_0-information-asymmetry-0_1_26.md",
     description: "Classifies the six information asymmetry classes (positional, temporal, interpretive, relational, complexity, omission) and specifies what each requires structurally."
   },
