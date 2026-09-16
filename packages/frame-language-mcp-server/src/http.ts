@@ -88,7 +88,7 @@ const httpServer = createHttpServer(async (req, res) => {
 
       try {
         const transport = new StreamableHTTPServerTransport({
-          sessionIdGenerator: undefined,
+          sessionIdGenerator: () => crypto.randomUUID(), // TEMP: deliberately broken to test the healthcheck gate
         })
         const server = createMcpServer()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
