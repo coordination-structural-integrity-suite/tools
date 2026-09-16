@@ -18645,7 +18645,6 @@ function withOutputSchemas(tools, schemas) {
 
 // packages/csis-mcp-server/src/standards.ts
 var STANDARDS = [
-  // Tensegrity Compressive Standards (7)
   {
     name: "Precision-First Design Standard",
     id: "pfds",
@@ -18702,7 +18701,6 @@ var STANDARDS = [
     githubPath: "tensegrity-suite/compressive/standards/standards-3_0-structural-power-obligation-0_1_26.md",
     description: "Specifies that power in a coordination system must be matched by obligation directions running in multiple directions toward all cost-bearing parties. Power concentration is precisely defined as power without obligation."
   },
-  // Tensegrity Generative Standards (3)
   {
     name: "Conflict Transformation Standard",
     id: "cts",
