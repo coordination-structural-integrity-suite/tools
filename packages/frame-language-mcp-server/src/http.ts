@@ -45,7 +45,7 @@ const httpServer = createHttpServer(async (req, res) => {
       }
 
       const transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: () => crypto.randomUUID(),
+        sessionIdGenerator: undefined,
       })
       const server = createMcpServer()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -21194,7 +21194,7 @@ var httpServer = createHttpServer(async (req, res) => {
         return;
       }
       const transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: () => crypto.randomUUID()
+        sessionIdGenerator: void 0
       });
       const server = createMcpServer();
       await server.connect(transport);
