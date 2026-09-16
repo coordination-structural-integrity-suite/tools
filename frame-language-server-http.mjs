@@ -21703,10 +21703,41 @@ function createMcpServer() {
 
 // packages/frame-language-mcp-server/src/http.ts
 var PORT = Number(process.env["PORT"] ?? 3e3);
+async function mcpProbe(body) {
+  const res = await fetch(`http://127.0.0.1:${PORT}/mcp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json, text/event-stream" },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(5e3)
+  });
+  const text = (await res.text()).trim();
+  if (text.startsWith("{")) return JSON.parse(text);
+  for (const line of text.split("\n")) {
+    const m = line.match(/^data:\s*(\{.*\})\s*$/);
+    if (m && m[1]) return JSON.parse(m[1]);
+  }
+  throw new Error(`no JSON-RPC message (HTTP ${res.status})`);
+}
+async function mcpSelfCheck() {
+  const init = await mcpProbe({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "healthcheck", version: "0" } } });
+  if (init.error) throw new Error(`initialize: ${init.error.message}`);
+  const list = await mcpProbe({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} });
+  if (list.error) throw new Error(`tools/list: ${list.error.message}`);
+  const n = list.result?.tools?.length ?? 0;
+  if (n === 0) throw new Error("tools/list returned no tools");
+  return n;
+}
 var httpServer = createHttpServer(async (req, res) => {
   if (req.url === "/health" || req.url === "/") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ status: "ok", server: SERVER_NAME, version: SERVER_VERSION }));
+    try {
+      const tools = await mcpSelfCheck();
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ status: "ok", server: SERVER_NAME, version: SERVER_VERSION, tools }));
+    } catch (err) {
+      console.error(`[health] MCP self-check failed: ${err.message}`);
+      res.writeHead(503, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ status: "unhealthy", server: SERVER_NAME, error: err.message }));
+    }
     return;
   }
   if (req.url === "/mcp") {
@@ -21727,12 +21758,20 @@ var httpServer = createHttpServer(async (req, res) => {
         res.end(JSON.stringify({ error: "Invalid JSON" }));
         return;
       }
-      const transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: void 0
-      });
-      const server = createMcpServer();
-      await server.connect(transport);
-      await transport.handleRequest(req, res, parsedBody);
+      try {
+        const transport = new StreamableHTTPServerTransport({
+          sessionIdGenerator: void 0
+        });
+        const server = createMcpServer();
+        await server.connect(transport);
+        await transport.handleRequest(req, res, parsedBody);
+      } catch (err) {
+        console.error(`[mcp] request failed: ${err.stack ?? err.message}`);
+        if (!res.headersSent) {
+          res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32603, message: "Internal server error" } }));
+        }
+      }
       return;
     }
   }
