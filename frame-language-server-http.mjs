@@ -21760,8 +21760,7 @@ var httpServer = createHttpServer(async (req, res) => {
       }
       try {
         const transport = new StreamableHTTPServerTransport({
-          sessionIdGenerator: () => crypto.randomUUID()
-          // TEMP: deliberately broken to test the healthcheck gate
+          sessionIdGenerator: void 0
         });
         const server = createMcpServer();
         await server.connect(transport);
