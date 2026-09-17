@@ -10,6 +10,8 @@ This repo contains two MCP servers, each surfacing a different layer of the subs
 
 Both servers are licensed Apache 2.0, matching the CSIS suite repo's convention for code artifacts. The CSIS standards and the Frame Language Foundational Vocabulary Specification themselves are CC BY 4.0 specifications and live in the suite repo.
 
+**Machine-readable fetch surface.** These MCP servers are the *call* surface, an assessment or lookup computed on request. The standards also ship a *fetch* surface for a consumer that ingests them as static data: a per-standard JSON Schema, a typed register of provisions, and conformant and non-conformant examples, indexed by a family manifest. It lives as one source in a separate repo, **[Polymathie-Studio/tools](https://github.com/Polymathie-Studio/tools)** (sources under `machine-readable/`, the generated schemas under `schema/csis/`); start from the **[family manifest](https://raw.githubusercontent.com/Polymathie-Studio/tools/main/schema/csis/csis-manifest.json)**. This CSIS MCP server's `standards.ts` is generated from that same machine-readable layer, so the two surfaces derive from one source and cannot drift.
+
 ---
 
 ## Why two servers in one repo
