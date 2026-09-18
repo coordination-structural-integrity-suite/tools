@@ -18649,7 +18649,7 @@ var STANDARDS = [
     name: "Precision-First Design Standard",
     id: "pfds",
     family: "compressive",
-    version: "2.4.3",
+    version: "2.5.0",
     githubPath: "tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_4_3.md",
     description: "The suite meta-standard. Specifies what precision requires across every standard. Precision-First Design is the discipline of keeping instruments precise enough that violations are detectable and compliance meaningful, before deployment, not after a failure has made those questions urgent. Defines two foundational principles: the precision-first invariant (precision deficit and precision imposition as two failure directions of one commitment) and Method-Structure Congruence (the epistemic method used must match the structural character of what is being known; congruence deficits are self-concealing because the absent content leaves no gap marker). Nine corollaries, the precision review checklist, and obligation loop tier requirements."
   },
@@ -18835,6 +18835,22 @@ var PFDS_COROLLARIES = [
     underSpecificationFailure: "An evaluation claim without a declared claim-object type cannot be assessed for whether the evidence supports it: the evidence standard for criterion claims and construct claims differs structurally. A construct claim without a nomological network declaration has no declared basis for determining whether the measurement is measuring the intended construct or a correlated surface property or a subset of it.",
     overSpecificationFailure: "A nomological network requirement that demands complete documentation of all construct relationships before any construct-based evaluation can proceed blocks construct-based assessment entirely. A declared-partial nomological network naming what is established and explicitly identifying the gaps is in a better precision state than an undeclared or absent one, and is the correct operating state when the network is under development.",
     exampleFromPfds: null
+  },
+  {
+    number: 11,
+    name: "Structural solution over taxonomy",
+    requirement: "A classification is structurally precise if and only if every category whose membership an independent observer cannot determine from its label and its stated definition alone is rendered as a typed structure carrying the criteria that individuate it, such that membership becomes determinable from structure and observable evidence.",
+    underSpecificationFailure: "A set of such categories presented as a flat list of labels conceals the individuating criteria; the omission produces no internal signal, because every label remains internally consistent, and a case that matches no category is forced into the nearest one rather than recorded as outside the set. Forcing a case into a category it does not fit is itself a harm.",
+    overSpecificationFailure: "Imposing typed structure on a set whose categories are exhausted by their labels, a closed set with a reliable negative test where an independent observer can determine membership and non-membership from the label and its stated definition alone, adds apparatus without adding precision.",
+    exampleFromPfds: 'The design principles of Ostrom replace the holistic label "well-governed" with a partial order of independently checkable structural conditions.'
+  },
+  {
+    number: 12,
+    name: "Evolutionary precision (stated revision procedure)",
+    requirement: "A specification is evolutionarily precise if and only if it states a procedure for its own revision that an independent observer can determine exists: what triggers a revision, who holds standing to initiate one, and how a proposed change is evaluated against the precision criterion.",
+    underSpecificationFailure: "A specification that assumes it will be maintained but states no revision procedure has left the maintenance obligation implicit and unfalsifiable; an observer cannot determine whether drift is being corrected or silently accumulating, and by the time a deficit forces attention the proportional correction window has closed.",
+    overSpecificationFailure: "A revision procedure so rigid or costly that proportional change is foreclosed and the only correction left is disruptive replacement: the specification ossifies, and the mechanism meant to maintain its precision becomes the obstacle to maintaining it.",
+    exampleFromPfds: "PFDS Sections 6.3 and 6.5 convert elapsed time and proposed changes into procedurally consequential, precision-evaluated steps."
   }
 ];
 var PFDS_COROLLARY_COUNT = PFDS_COROLLARIES.length;
