@@ -2,7 +2,7 @@
  * The twelve corollaries of the Precision-First Design Standard, plus analogous
  * structural conditions from other CSIS standards where applicable.
  *
- * Sourced from PFDS v2.5.0 Section 2. Each corollary specifies its precision
+ * Sourced from PFDS v2.5.1 Section 2. Each corollary specifies its precision
  * condition in two directions: what under-specification fails to prevent, and
  * what over-specification produces. The full text of each corollary lives in
  * the PFDS standard itself; this data structure provides the structural form
@@ -117,7 +117,7 @@ export const PFDS_COROLLARIES: readonly PfdsCorollary[] = [
     number: 8,
     name: 'Descriptive completeness (typological declaration)',
     requirement:
-      'A specification is descriptively complete if and only if it declares the classes of description it draws from (operative classes) and names at least one class of description where its vocabulary ends (boundary classes), using a structured list with operative and boundary labels and naming the Descriptive Typology Map version referenced.',
+      'A specification is descriptively complete if and only if it declares the classes of description it draws from (operative classes) and names at least one class of description where its vocabulary ends (boundary classes), using a structured list with operative and boundary labels drawn from the description-class names registered in the Terminology Conventions Reference, so that changes to the class taxonomy are tracked as reserved-term transitions in that registry rather than as silent breakage.',
     underSpecificationFailure:
       'A specification can pass all six preceding corollaries within the classes it uses while still containing a structural blind spot: the absence of entire descriptive classes produces no internal signal, because every term defined, every taxonomy bounded, and every detection instrument specified remains within the vocabulary the specification already has.',
     overSpecificationFailure:
