@@ -1,6 +1,6 @@
 {
   "name": "@proof-of-coord/structural-integrity",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "MCP server exposing the Coordination Structural Integrity Suite: standards lookup, corollary audit, structural pattern and descriptive class resolution, and the inheritance graph.",
   "license": "Apache-2.0",
   "exports": {

@@ -21216,37 +21216,41 @@ var THREE_FRAMES = {
       frame: 1,
       access: "Seasonal expressions: what is visible and measurable at the surface. Frame 1 takes this access to be complete. The root system is invisible or unrecognized as the continuing thing.",
       failure_mode: "Preferred direction: this passes or fails; this season is life and that one is death. The whole truth is not accessible from this level.",
-      guna: {
-        name: "Tamas",
-        description: "Density, inertia, fixity. The native mode is resistance to seeing through the present configuration. Not corruption or stupidity; a quality of nature that produces fixity.",
-        failure: "The plant is dead in winter because the current visible state is taken to be the whole truth."
+      capacities: {
+        dominance: "Suppression and Projection alternate in dominance, the ordinary swing between dullness and agitation; Perception is present but not steering.",
+        description: "Projection fashions a ready-made object from a suppressed surface, so precision is structurally absent. The rope is veiled and a snake is projected onto it: the raw perception is incomplete but not wrong, and the projection fills the gap.",
+        failure: "The vivid projection is taken for the whole truth: the plant is dead in winter because the current visible state is taken to be all there is."
       }
     },
     {
       frame: 2,
       access: "Conditions the Innate Totality generates: structural requirements, configurations, named arrangements that enable or constrain seasonal expressions. Can hold multiple valid states, adapt given enough time, recognize systemic patterns.",
       failure_mode: "Preferred configuration space: these structural arrangements are healthy, those are pathological. Frame 2's preference for structural health over pathology is not error - it is Frame 2 doing its job correctly. But the preference is still there and creates a bounded configuration space outside of which Frame 2 cannot assess correctly.",
-      guna: {
-        name: "Rajas",
-        description: "Activity, movement, striving through conditions. Dynamic engagement with the configuration space, named arrangements, response to conditions, adaptation over time. Rajas does the work of Frame 2 correctly.",
-        failure: "The activity and configuration-preference become the identity rather than the path."
+      capacities: {
+        dominance: "Projection dominates, grounded by enough Perception to fashion valid structure.",
+        description: "The buildable structural domain, where coordination instruments are made. Building reaches no higher than Frame 2: you cannot compose your way to the source.",
+        failure: "Perceptual clarity misattaches, fastening onto the vocabulary or the instrument rather than looking through it at the conditions and the cost-bearing parties; the preferred configuration becomes the identity rather than the path."
       }
     },
     {
       frame: 3,
       access: "The Innate Totality itself - more precisely, the orientation that can operate from that level rather than from within the expression or the condition. Frame 3 is defined by this access, not merely correlated with it.",
       failure_mode: "Identification with the Innate Totality and refusing compositional movement regardless of circumstances. Not abstention or neutrality: claiming the totality as an identity and using that identity to avoid the seasonal expressions the totality is always already making. Attachment to non-attachment is the same failure mode at a more sophisticated register.",
-      guna: {
-        name: "Sattva",
-        description: "Clarity, illumination, balance. The quality that can see the Innate Totality rather than only the expressions or the conditions. Genuinely clearer than rajas or tamas - and the traditional teaching is precise about this.",
-        failure: "Sattva is itself a guna, still within prakriti (manifest nature). Clinging to sattva is clinging to a quality of nature. Clarity mistaken for completion."
+      capacities: {
+        dominance: "Almost pure Perception.",
+        description: "Pointed toward, never specified. What it points toward is the no-preference orientation, not Perception itself: the highest capacity is still a capacity.",
+        failure: "Full clarity present and compositional movement refused: the seeing treated as a sufficient response. Clinging to the clarity of Perception is still clinging to a capacity, clarity mistaken for completion."
       }
     }
   ],
-  trigunatita: {
-    description: 'Beyond the three gunas. The term the Samkhya tradition uses for what "Innate Totality" is approaching from the structural description side. Not a fourth guna, not a position above the other three. The recognition that holds all three as constitutive expressions of the same whole without being any of them.',
-    relation_to_sattva: "Frame 3 does NOT point toward sattva as its destination. Frame 3 points toward trigunatita.",
-    relation_to_frame_3: "The orientation from which tamas, rajas, and sattva are all expressions of the same Innate Totality, with no preferred guna. The Frame 3 access level pointing toward trigunatita is the structural form Frame 3 takes when it is not failing into sattvic attachment."
+  three_capacities: {
+    description: "Three capacities run in every perception, in some ratio, and the ratio sets the frame. Suppression reduces the clarity of what is present. Projection throws a plausible, ready-made object onto the suppressed surface. Perception recognizes the actual conditions. All three run in every perception and none is ever at zero; a frame is set by which dominates, not by any being absent. A frame blind to a capacity runs it unrecognized, not absent. Resolution is by illumination, not repair: seeing rightly dissolves a projection rather than patching it, which is why disconfirmation is the structural antidote.",
+    source_note: "These are the operational names for what the source tradition calls the three gunas, read as the working of the conditioned field (an Advaita reading; the gunas as such are Samkhya): Suppression the veiling power, Projection the projecting power, Perception the revealing. The source terms are citations here, not the operative vocabulary."
+  },
+  no_preference_orientation: {
+    description: "Holding the three capacities without preferring any. Not a fourth capacity and not a position above the other three; the recognition that holds all three as expressions of the same whole without being any of them.",
+    relation_to_perception: "Frame 3 does not point toward Perception as its destination. The failure structure is nested: a preferred direction in Frame 1, a preferred configuration in Frame 2, a preferred position in Frame 3, each harder to detect from inside.",
+    source_note: "The source tradition names this orientation trigunatita, beyond the three gunas."
   },
   innate_totality: "The whole of what a given object of consideration is, prior to and inclusive of all its expressions. Not a static set of properties but a dynamic unity. Innate (not constructed, not achieved). Totality (includes all expressions and their apparent opposites). Together: prior to any of its manifestations but includes all of them as the thing it is.",
   precision_and_non_harming: "Precision and non-harming are the same move described from two positions. Precision is seeing the Innate Totality of what is being engaged with, rather than a preferred seasonal expression. Non-harming is treating the Innate Totality as what it actually is, refusing to exclude any part of it from consideration. The same capacity (contact with the Innate Totality rather than a preferred expression) generates both. PFDS's transclusion language gets a structural mechanism here.",
@@ -21381,7 +21385,8 @@ var OUTPUT_SCHEMAS = {
   frame2_functioning_check: ["total", "modes", "note"],
   lookup_three_frames: [
     "frames",
-    "trigunatita",
+    "three_capacities",
+    "no_preference_orientation",
     "innate_totality",
     "precision_and_non_harming",
     "nested_failure_structure",
@@ -21399,7 +21404,7 @@ var OUTPUT_SCHEMAS = {
     "note"
   ]
 };
-var SERVER_VERSION = "0.1.1";
+var SERVER_VERSION = "0.2.0";
 var SERVER_NAME = "frame-language";
 var PROVENANCE = {
   server: "frame-language",
@@ -21465,7 +21470,7 @@ function createMcpServer() {
         },
         {
           name: "lookup_three_frames",
-          description: "Return the three Frames of Frame Language with the guna typology mapping. Frame 1 (access: seasonal expressions; guna: tamas), Frame 2 (access: configurations and conditions; guna: rajas), Frame 3 (access: Innate Totality; guna: sattva). Includes the trigunatita orientation (beyond the three gunas; what Frame 3 actually points toward), the nested failure mode structure, the precision-and-non-harming unity, and a note on bridge vocabulary use.",
+          description: "Return the three Frames of Dimensional Frame Language with the capacity ratio that sets each. Three capacities (Suppression, Projection, Perception) run in every perception and none is ever at zero; the dominant one sets the frame. Frame 1 (access: seasonal expressions; Suppression and Projection alternate, Perception present but not steering), Frame 2 (access: configurations and conditions; Projection grounded by enough Perception), Frame 3 (access: the Innate Totality; almost pure Perception, pointing toward the no-preference orientation). Includes the nested failure mode structure, the precision-and-non-harming unity, and a note on bridge vocabulary use.",
           inputSchema: {
             type: "object",
             properties: {}

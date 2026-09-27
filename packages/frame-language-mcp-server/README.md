@@ -22,7 +22,7 @@ Return the eight Frame 2 functioning check failure modes. A term expressed in Fr
 
 **lookup_three_frames()**
 
-Return the three Frames of Frame Language with the guna typology mapping. Frame 1 (tamas), Frame 2 (rajas), Frame 3 (sattva, pointing toward trigunatita). Includes the Innate Totality framing, the nested failure mode structure, the precision-and-non-harming unity statement, and a note on bridge vocabulary use.
+Return the three Frames of Dimensional Frame Language with the capacity ratio that sets each. Three capacities (Suppression, Projection, Perception) run in every perception and none is ever at zero; the dominant one sets the frame. Frame 1 (Suppression and Projection alternate, Perception present but not steering), Frame 2 (Projection grounded by enough Perception), Frame 3 (almost pure Perception, pointing toward the no-preference orientation). Includes the Innate Totality framing, the nested failure mode structure, the precision-and-non-harming unity statement, and a note on bridge vocabulary use.
 
 **audit_text(text)**
 
@@ -57,9 +57,9 @@ The substrate discipline requires that substantive substrate work read the full 
 ## Three frames, not two
 
 Frame Language has THREE frames:
-- **Frame 1**: seasonal expressions (the visible surface; guna: tamas)
-- **Frame 2**: conditions and configurations (the structural arrangement layer; guna: rajas)
-- **Frame 3**: the Innate Totality itself (the orientation that operates from the totality; guna: sattva, pointing toward trigunatita)
+- **Frame 1**: seasonal expressions (the visible surface; Suppression and Projection alternate in dominance, Perception present but not steering)
+- **Frame 2**: conditions and configurations (the structural arrangement layer; Projection grounded by enough Perception)
+- **Frame 3**: the Innate Totality itself (almost pure Perception, pointing toward the no-preference orientation)
 
 This is sharper than the common Frame 1 / Frame 2 binary. The three-frame model is sourced from internal Frame Language lens research.
 

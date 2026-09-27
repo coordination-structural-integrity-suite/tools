@@ -13,7 +13,7 @@
  * - check_watchlist: check a term against the Frame 1 watchlist
  * - check_admissibility: check whether a Frame 1 term use is admissible (seven cases)
  * - frame2_functioning_check: return the eight Frame 2 functioning check modes
- * - lookup_three_frames: return the three Frames with the guna typology mapping
+ * - lookup_three_frames: return the three Frames with the capacity ratio that sets each
  * - audit_text: scan text for Frame 1 watchlist hits and return findings
  *
  * The substrate discipline requires that substrate work read the full source
@@ -123,7 +123,8 @@ const OUTPUT_SCHEMAS: Record<string, readonly string[]> = {
   frame2_functioning_check: ['total', 'modes', 'note'],
   lookup_three_frames: [
     'frames',
-    'trigunatita',
+    'three_capacities',
+    'no_preference_orientation',
     'innate_totality',
     'precision_and_non_harming',
     'nested_failure_structure',
@@ -142,7 +143,7 @@ const OUTPUT_SCHEMAS: Record<string, readonly string[]> = {
   ],
 }
 
-export const SERVER_VERSION = '0.1.1'
+export const SERVER_VERSION = '0.2.0'
 export const SERVER_NAME = 'frame-language'
 
 const PROVENANCE: Provenance = {
@@ -217,7 +218,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: 'lookup_three_frames',
         description:
-          'Return the three Frames of Frame Language with the guna typology mapping. Frame 1 (access: seasonal expressions; guna: tamas), Frame 2 (access: configurations and conditions; guna: rajas), Frame 3 (access: Innate Totality; guna: sattva). Includes the trigunatita orientation (beyond the three gunas; what Frame 3 actually points toward), the nested failure mode structure, the precision-and-non-harming unity, and a note on bridge vocabulary use.',
+          'Return the three Frames of Dimensional Frame Language with the capacity ratio that sets each. Three capacities (Suppression, Projection, Perception) run in every perception and none is ever at zero; the dominant one sets the frame. Frame 1 (access: seasonal expressions; Suppression and Projection alternate, Perception present but not steering), Frame 2 (access: configurations and conditions; Projection grounded by enough Perception), Frame 3 (access: the Innate Totality; almost pure Perception, pointing toward the no-preference orientation). Includes the nested failure mode structure, the precision-and-non-harming unity, and a note on bridge vocabulary use.',
         inputSchema: {
           type: 'object',
           properties: {},

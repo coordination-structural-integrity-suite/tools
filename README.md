@@ -6,7 +6,7 @@ This repo contains two MCP servers, each surfacing a different layer of the subs
 
 1. **CSIS MCP server** (`packages/csis-mcp-server/`) provides structural access to the ten CSIS standards, the ten PFDS corollaries, the ten named structural patterns, the six descriptive classes, the foundational commitments (precision and non-harming as one principle via transclusion), and the substrate inheritance hierarchy. Per the substrate discipline, the server provides pointers and structural metadata, not full standard text. Substantive corollary work continues to require reading the full PFDS or other source standard directly.
 
-2. **Frame Language MCP server** (`packages/frame-language-mcp-server/`) provides operational access to the Frame Language precision discipline derived from CSIS. Six tools cover the watchlist of Frame 1 vocabulary, the seven Pre-Replacement Admissibility cases, the eight Frame 2 functioning-check failure modes (with falsifiability-context variants), the three Frames with the guna typology mapping, a text auditor for own-voice writing, and the regenerative reality check.
+2. **Frame Language MCP server** (`packages/frame-language-mcp-server/`) provides operational access to the Frame Language precision discipline derived from CSIS. Six tools cover the watchlist of Frame 1 vocabulary, the seven Pre-Replacement Admissibility cases, the eight Frame 2 functioning-check failure modes (with falsifiability-context variants), the three Frames with the capacity ratio that sets each, a text auditor for own-voice writing, and the regenerative reality check.
 
 Both servers are licensed Apache 2.0, matching the CSIS suite repo's convention for code artifacts. The CSIS standards and the Frame Language Foundational Vocabulary Specification themselves are CC BY 4.0 specifications and live in the suite repo.
 
@@ -95,7 +95,7 @@ Restart the client for the new servers to be picked up.
 
 **frame2_functioning_check**: Return the eight Frame 2 functioning check failure modes. A term expressed in Frame 2 vocabulary may still fail to function as Frame 2 in one of these ways: transcendence claim, declaration exploit, precision facade, partial instantiation, direction without destination, vocabulary without architecture, correct map / wrong territory, frozen map. Each mode includes a falsifiability-context variant.
 
-**lookup_three_frames**: Return the three Frames of Frame Language with the guna typology mapping. Frame 1 (tamas), Frame 2 (rajas), Frame 3 (sattva, pointing toward trigunatita). Includes the Innate Totality framing and the precision-and-non-harming unity statement.
+**lookup_three_frames**: Return the three Frames of Dimensional Frame Language with the capacity ratio that sets each: three capacities (Suppression, Projection, Perception) run in every perception, none ever at zero, and the dominant one sets the frame. Frame 3 points toward the no-preference orientation. Includes the Innate Totality framing and the precision-and-non-harming unity statement.
 
 **audit_text**: Scan a block of text for Frame 1 watchlist hits. Returns terms found, occurrence counts, and watchlist entries. The tool flags terms; the user determines whether each usage is admissible per the seven cases.
 
