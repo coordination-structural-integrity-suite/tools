@@ -18649,7 +18649,7 @@ var STANDARDS = [
     name: "Precision-First Design Standard",
     id: "pfds",
     family: "compressive",
-    version: "2.5.0",
+    version: "2.5.1",
     githubPath: "tensegrity-suite/compressive/standards/standards-3_0-precision-first-2_4_3.md",
     description: "The suite meta-standard. Specifies what precision requires across every standard. Precision-First Design is the discipline of keeping instruments precise enough that violations are detectable and compliance meaningful, before deployment, not after a failure has made those questions urgent. Defines two foundational principles: the precision-first invariant (precision deficit and precision imposition as two failure directions of one commitment) and Method-Structure Congruence (the epistemic method used must match the structural character of what is being known; congruence deficits are self-concealing because the absent content leaves no gap marker). Nine corollaries, the precision review checklist, and obligation loop tier requirements."
   },
@@ -18715,7 +18715,7 @@ var STANDARDS = [
     family: "generative",
     version: "0.3.7",
     githubPath: "tensegrity-suite/generative/standards/standards-3_0-four-batteries-capacity-0_3_7.md",
-    description: "Specifies the four capacity dimensions that sustain coordination work: Mission battery, Contribution battery, Relational battery, and a fourth. Requires that depletion in any dimension be reportable as a structural condition rather than left as a private experience."
+    description: "Specifies the four capacity conditions that sustain coordination work: the Personal, Relational, Contribution, and Mission batteries, each read on two independent dimensions, charge and developmental state. Requires that depletion in any dimension be reportable as a structural condition rather than left as a private experience."
   },
   {
     name: "Sensemaking Standard",
