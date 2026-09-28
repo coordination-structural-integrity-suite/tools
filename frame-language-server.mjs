@@ -18645,9 +18645,9 @@ function withOutputSchemas(tools, schemas) {
 
 // packages/frame-language-mcp-server/src/term-registry.json
 var term_registry_default = {
-  version: "0.1.0",
-  date: "2026-06-12",
-  description: "Canonical machine-readable Frame 1 vocabulary registry. Merged from three drifted encodings: the Frame Language Grammar Appendix A and Part II tables (human-readable authority), the Frame Language MCP server watchlist (why_frame_1, replacement_pattern, primitive_anchors, common_phrasings), and the analyzer term-registry (imports, replace_with, forecloses, slippage_note). This registry is ABOUT Frame 1 terms, so it names them throughout, which is admissible. The skill, the MCP server, and the analyzer will all derive from this registry in Phase 4.",
+  version: "0.2.0",
+  date: "2026-09-27",
+  description: "Canonical machine-readable Frame 1 vocabulary registry. Merged from three drifted encodings: the Frame Language Grammar Appendix A and Part II tables (human-readable authority), the Frame Language MCP server watchlist (why_frame_1, replacement_pattern, primitive_anchors, common_phrasings), and the analyzer term-registry (imports, replace_with, forecloses, slippage_note); the Frame Language Foundational Vocabulary Specification 1.0.0 recognition table supplies the rows it carries that the other encodings did not. This registry is ABOUT Frame 1 terms, so it names them throughout, which is admissible. The skill, the MCP server, and the analyzer derive from this registry.",
   terms: [
     {
       term: "accountability",
@@ -18679,13 +18679,22 @@ var term_registry_default = {
         {
           frame_1: "accountability runs from X to Y",
           frame_2: "obligation directions run from X to Y with [verification procedure] and [response to non-conformance]"
+        },
+        {
+          frame_1: "accountability directions",
+          frame_2: "Multiplex Obligation Directions"
+        },
+        {
+          frame_1: "accountability line",
+          frame_2: "obligation direction"
         }
       ],
       admissibility_note: null,
       sources: [
         "grammar",
         "mcp",
-        "analyzer"
+        "analyzer",
+        "vocabulary-specification"
       ]
     },
     {
@@ -18952,6 +18961,25 @@ var term_registry_default = {
       ]
     },
     {
+      term: "exit / liquidity event",
+      frame: 1,
+      imports: "Terminal finite-game condition.",
+      frame_2_replacement: [
+        "Dissolution procedure",
+        "succession"
+      ],
+      strengthened_form: null,
+      procedure: null,
+      forecloses: null,
+      slippage_note: null,
+      primitive_anchors: [],
+      common_phrasings: [],
+      admissibility_note: null,
+      sources: [
+        "vocabulary-specification"
+      ]
+    },
+    {
       term: "fiduciary duty",
       frame: 1,
       imports: "A Frame 1 deference claim about a special duty; obligation is binding but narrow, running only to formally named parties (terminal-upward). Alias: the MCP carries this term as 'fiduciary'.",
@@ -19009,13 +19037,22 @@ var term_registry_default = {
         {
           frame_1: "governed by X",
           frame_2: "under X, or subject to X's declared decision-standing rules"
+        },
+        {
+          frame_1: "governance mechanism",
+          frame_2: "coordination instrument"
+        },
+        {
+          frame_1: "governance instrument",
+          frame_2: "coordination instrument"
         }
       ],
       admissibility_note: null,
       sources: [
         "grammar",
         "mcp",
-        "analyzer"
+        "analyzer",
+        "vocabulary-specification"
       ]
     },
     {
@@ -19750,7 +19787,7 @@ var OUTPUT_SCHEMAS = {
     "note"
   ]
 };
-var SERVER_VERSION = "0.2.0";
+var SERVER_VERSION = "0.2.1";
 var PROVENANCE = {
   server: "frame-language",
   serverVersion: SERVER_VERSION,

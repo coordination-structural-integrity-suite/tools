@@ -143,7 +143,7 @@ const OUTPUT_SCHEMAS: Record<string, readonly string[]> = {
   ],
 }
 
-export const SERVER_VERSION = '0.2.0'
+export const SERVER_VERSION = '0.2.1'
 export const SERVER_NAME = 'frame-language'
 
 const PROVENANCE: Provenance = {
